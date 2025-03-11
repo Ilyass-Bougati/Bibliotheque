@@ -45,7 +45,7 @@ CREATE PROCEDURE AssocierCategorieLivre
     @IdCaterie INT
 AS
 BEGIN
-    INSERT INTO TCATEGORISER_LIVRES (IdCaterie, IdLivre)
+    INSERT INTO TCATEGORIES_LIVRES (IdCaterie, IdLivre)
     VALUES (@IdCaterie, @IdLivre);
 END;
 GO
