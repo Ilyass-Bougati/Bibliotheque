@@ -9,7 +9,7 @@ BEGIN
     INSERT INTO TLIVRES (Titre, ISBN, IdLangue, IdAutheur) 
     VALUES (@Titre, @ISBN, @IdLangue, @IdAutheur);
 END;
-GO;
+GO
 
 -- ModifierLivre 
 CREATE PROCEDURE ModifierLivre
@@ -37,7 +37,7 @@ AS
 BEGIN
     DELETE FROM TLIVRES WHERE IdLivre = @IdLivre;
 END;
-Go;
+Go
 
 -- AssocierCategorieLivre
 CREATE PROCEDURE AssocierCategorieLivre
