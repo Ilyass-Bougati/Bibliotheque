@@ -42,11 +42,11 @@ Go;
 -- AssocierCategorieLivre
 CREATE PROCEDURE AssocierCategorieLivre
     @IdLivre INT,
-    @IdCaterie INT
+    @idCategorie INT
 AS
 BEGIN
-    INSERT INTO TCATEGORIES_LIVRES (IdCaterie, IdLivre)
-    VALUES (@IdCaterie, @IdLivre);
+    INSERT INTO TCATEGORIES_LIVRES (idCategorie, IdLivre)
+    VALUES (@idCategorie, @IdLivre);
 END;
 GO
 
