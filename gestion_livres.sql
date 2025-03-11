@@ -6,8 +6,8 @@ CREATE PROCEDURE AjouterLivre
     @IdAutheur INT
 AS
 BEGIN
-    INSERT INTO TLIVRES (Titre, ISBN, IdLangue, IdAutheur) 
-    VALUES (@Titre, @ISBN, @IdLangue, @IdAutheur);
+    INSERT INTO TLIVRES (Titre, ISBN, IdLangue) 
+    VALUES (@Titre, @ISBN, @IdLangue);
 END;
 GO
 
