@@ -22,7 +22,7 @@ BEGIN
     SET
         review = @Review
     WHERE 
-        TREVIEWS.IdReview = @IdReview
+        IdReview = @IdReview
 END
 
 --PROC 4
@@ -36,5 +36,5 @@ BEGIN
     FROM 
         TREVIEWS
     WHERE 
-        TREVIEWS.IdReview = @IdReview
+        IdReview = @IdReview
 END
