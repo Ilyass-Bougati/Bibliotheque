@@ -1,4 +1,4 @@
-CREATE PROCEDURE MODIFIER_EXEMPLAIRE
+CREATE PROCEDURE ModifierExemplaire
 	@IdExemplaire AS INT,
 	@Localisation AS VARCHAR(100),
 	@Disponible AS bit
@@ -15,7 +15,7 @@ END
 GO
 
 
-CREATE PROCEDURE Ajouter_Exemplaire 
+CREATE PROCEDURE AjouterExemplaire 
 	@Idlivre AS iNT,
 	@Localisation AS VARCHAR(100),
 	@Disponible AS bit
@@ -28,7 +28,7 @@ END
 GO
 
 
-CREATE PROCEDURE Supprimer_Exemplaire
+CREATE PROCEDURE SupprimerExemplaire
 	@IdExemplaire AS INT
 AS
 BEGIN
