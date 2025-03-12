@@ -4,13 +4,15 @@ CREATE PROCEDURE AjouterLivre
     @ISBN VARCHAR(20),
     @IdLangue INT,
     @NomAuteur VARCHAR(50),
-    @PrenomAuteur VARCHAR(50)
+    @PrenomAuteur VARCHAR(50),
+    @Categorie NVARCHAR(50)
 AS
 BEGIN
     SET NOCOUNT ON;
 
     DECLARE @IdAuteur INT;
     DECLARE @IdLivre INT;
+    DECLARE @IdCategorie INT;
     
     -- Vérifie si l'auteur existe déjà
     SELECT @IdAuteur = IdAuteur
@@ -25,6 +27,19 @@ BEGIN
         SET @IdAuteur = SCOPE_IDENTITY(); -- SCOPE_IDENTITY() retourne la dernière valeur IDENTITY insérée.
     END;
 
+    -- Vérifie si la catégorie existe déjà
+    SELECT @IdCategorie = IdCategorie
+    FROM TCATEGORIES
+    WHERE NomCategorie = @Categorie;
+    
+    -- Si elle n'existe pas, insère la catégorie dans TCATEGORIES
+    IF @IdCategorie IS NULL
+    BEGIN
+        INSERT INTO TCATEGORIES (NomCategorie)
+        VALUES (@Categorie);
+        SET @IdCategorie = SCOPE_IDENTITY();
+    END;
+
     -- Insère le livre dans TLIVRES
     INSERT INTO TLIVRES (Titre, ISBN, IdLangue)
     VALUES (@Titre, @ISBN, @IdLangue);
@@ -34,6 +49,10 @@ BEGIN
     -- Établit la relation entre le livre et l'auteur dans TAUTEURS_LIVRES
     INSERT INTO TAUTEURS_LIVRES (IdAuteur, IdLivre)
     VALUES (@IdAuteur, @IdLivre);
+
+    -- Établit la relation entre le livre et la catégorie dans TLIVRES_CATEGORIES
+    INSERT INTO TLIVRES_CATEGORIES (IdLivre, IdCategorie)
+    VALUES (@IdLivre, @IdCategorie);
     
 END;
 GO
