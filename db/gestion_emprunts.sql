@@ -9,24 +9,23 @@ AS
 BEGIN
 
 --Verifie si le client est sanctionne
+--DEPRECATED ! : is to change once the new schema is decided.
 DECLARE @Etat_Client AS INT
 
-SELECT 
-    @Etat_Client = COUNT(CLIENTS)
+SELECT
+    @Etat_Client = INTERDICTION
 FROM
     (
-        SELECT 
-            idClient AS CLIENTS
-        FROM 
+        SELECT
+            interdit as INTERDICTION
+        FROM
             TCLIENTS
         WHERE
-            idClient = @IdClient
-        AND 
-            interdit = 0
+            IdClient = @IdClient
     ) AS TEMP1
 
 
-IF @Etat_Client = 0
+IF @Etat_Client = 1
 BEGIN
     PRINT 'Le client est sanctionne .'
     RETURN
@@ -35,22 +34,21 @@ END
 -- Verifie si l'exemplaire en question est libre :
 DECLARE @Etat_Livre AS INT
 SELECT 
-    @Etat_Livre = COUNT(LIVRES)
+    @Etat_Livre = DISPONIBLE
 FROM
     (
-        SELECT 
-            IdExemplaire AS LIVRES
+        SELECT
+            disponible as DISPONIBLE
         FROM
-            TEXEMPLAIRES
+            TCLIENTS
         WHERE
             IdExemplaire = @IdExemplaire
-        AND
-            disponible = 1
     )AS TEMP2
 
 IF @Etat_Livre = 0
 BEGIN
     PRINT 'l''exemplaire n''est pas disponible.'
+    RETURN
 END
 
 INSERT INTO TEMPRUNTS(IdClient , IdExemplaire , DateEmprunt , DateRetour)
@@ -67,6 +65,7 @@ END
 
 --PROC 7
 CREATE PROCEDURE RetournerLivre
+@IdLivre AS INT
 @IdEmprunt AS INT
 
 AS
