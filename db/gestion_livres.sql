@@ -3,7 +3,7 @@
 CREATE PROCEDURE AjouterLivre
     @Titre VARCHAR(100),
     @ISBN VARCHAR(20),
-    @IdLangue INT,
+    @NomLangue VARCHAR(50),
     @NomAuteur VARCHAR(50),
     @PrenomAuteur VARCHAR(50),
     @Categorie NVARCHAR(50),
@@ -15,13 +15,65 @@ BEGIN
     DECLARE @IdLivre INT;
     DECLARE @IdCategorie INT;
     DECLARE @IdEditeur INT;
+    DECLARE @IdLangue INT;
 
-    IF @IdLangue IS NOT NULL AND NOT EXISTS (
-        SELECT 1 FROM TLANGUES WHERE IdLangue = @IdLangue
-    )
+    IF dbo.Validate_empty(@Titre) = 0
     BEGIN
-        PRINT 'Erreur : La langue specifiee n existe pas.';
+        PRINT 'Erreur : Le titre du livre ne peut pas etre vide.';
         RETURN;
+    END;
+
+    IF dbo.Validate_empty(@ISBN) = 0
+    BEGIN
+        PRINT 'Erreur : L ISBN ne peut pas etre vide.';
+        RETURN;
+    END;
+
+    IF dbo.Validate_empty(@NomAuteur) = 0
+    BEGIN
+        PRINT 'Erreur : Le nom de l auteur ne peut pas etre vide.';
+        RETURN;
+    END;
+
+    IF dbo.Validate_empty(@PrenomAuteur) = 0
+    BEGIN
+        PRINT 'Erreur : Le prenom de l auteur ne peut pas etre vide.';
+        RETURN;
+    END;
+
+    IF dbo.Validate_empty(@Categorie) = 0
+    BEGIN
+        PRINT 'Erreur : La categorie ne peut pas etre vide.';
+        RETURN;
+    END;
+
+    IF dbo.Validate_empty(@NomEditeur) = 0
+    BEGIN
+        PRINT 'Erreur : Le nom de l editeur ne peut pas etre vide.';
+        RETURN;
+    END;
+
+    IF dbo.Validate_ISBN(dbo.Trim(@ISBN)) = 0
+    BEGIN
+    PRINT 'Erreur : Format ISBN invalide.';
+    RETURN;
+    END;
+
+    IF dbo.Validate_empty(@NomLangue) = 1
+    BEGIN
+        
+        SELECT @IdLangue = IdLangue
+        FROM TLANGUES
+        WHERE NomLangue = LOWER(dbo.Trim(@NomLangue));
+        
+        IF @IdLangue IS NULL
+        BEGIN
+            EXEC AjouterLangue @NomLangue;
+            
+            SELECT @IdLangue = IdLangue
+            FROM TLANGUES
+            WHERE NomLangue = LOWER(dbo.Trim(@NomLangue));
+        END;
     END;
 
     EXEC AjouterAuteur @NomAuteur, @PrenomAuteur;
@@ -122,7 +174,7 @@ BEGIN
         END;
 
         -- supprimer old categorie associee
-        DELETE FROM TLIVRES_CATEGORIES WHERE IdLivre = @IdLivre;
+        DELETE FROM TCATEGORIES_LIVRES WHERE IdLivre = @IdLivre;
         EXEC AssocierCategorieLivre @IdLivre, @IdCategorie;
     END;
 
@@ -146,7 +198,7 @@ BEGIN
         END;
 
         -- supprimer ancien editeur associe
-        DELETE FROM EDITEURS_LIVRES WHERE IdLivre = @IdLivre;
+        DELETE FROM TEDITEURS_LIVRES WHERE IdLivre = @IdLivre;
         EXEC AssocierEditeurLivre @IdLivre, @IdEditeur;
     END;
 
@@ -158,11 +210,7 @@ BEGIN
         PRINT 'Erreur : La langue specifiee n existe pas.';
         RETURN;
     END;
-END;
-GO
 
-
-    -- Update editor association if a new editor is provided
     IF @NomEditeur IS NOT NULL
     BEGIN
         EXEC AjouterEditeur @NomEditeur;
@@ -171,7 +219,7 @@ GO
         FROM TEDITEURS
         WHERE NomEditeur = LOWER(dbo.Trim(@NomEditeur));
 
-        DELETE FROM EDITEURS_LIVRES WHERE IdLivre = @IdLivre;
+        DELETE FROM TEDITEURS_LIVRES WHERE IdLivre = @IdLivre;
         EXEC AssocierEditeurLivre @IdLivre, @IdEditeur;
     END
 END;
@@ -182,10 +230,40 @@ CREATE PROCEDURE SupprimerLivre
     @IdLivre INT
 AS
 BEGIN
-    DELETE FROM TLIVRES WHERE IdLivre = @IdLivre;
-END;
-Go
+    IF @IdLivre IS NULL OR @IdLivre <= 0
+    BEGIN
+        PRINT 'Erreur : L identifiant de la livre doit etre un nombre positif valide.';
+        RETURN;
+    END;
 
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        
+        IF NOT EXISTS (SELECT 1 FROM TLIVRES WHERE IdLivre = @IdLivre)
+        BEGIN
+            PRINT 'Erreur : Le livre specifie n existe pas.';
+            ROLLBACK;
+            RETURN;
+        END;
+        
+        DECLARE @Titre VARCHAR(100);
+        SELECT @Titre = Titre FROM TLIVRES WHERE IdLivre = @IdLivre;
+        
+        DELETE FROM TAUTEURS_LIVRES WHERE IdLivre = @IdLivre;
+        DELETE FROM TCATEGORIES_LIVRES WHERE IdLivre = @IdLivre;
+        DELETE FROM TEDITEURS_LIVRES WHERE IdLivre = @IdLivre;
+        
+        DELETE FROM TLIVRES WHERE IdLivre = @IdLivre;
+        
+        COMMIT;
+        PRINT 'Le livre "' + @Titre + '" a ete supprime avec succes.';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        PRINT 'Erreur lors de la suppression du livre : ' + ERROR_MESSAGE();
+    END CATCH
+END;
+GO
 
 -- AjouterAuteur
 CREATE PROCEDURE AjouterAuteur
@@ -238,7 +316,16 @@ CREATE PROCEDURE ModifierAuteur
     @PrenomAuteur VARCHAR(50)
 AS
 BEGIN
-    SET NOCOUNT ON;
+    IF dbo.Validate_empty(@NomAuteur) = 0
+    BEGIN
+        PRINT 'Erreur : Le non de l auteur du livre ne peut pas etre vide.';
+        RETURN;
+    END
+    IF dbo.Validate_empty(@PrenomAuteur) = 0
+    BEGIN
+        PRINT 'Erreur : Le prenon de l auteur du livre ne peut pas etre vide.';
+        RETURN;
+    END
     UPDATE TAUTEURS
     SET NomAuteur = LOWER(dbo.Trim(@NomAuteur)),
         PrenomAuteur = LOWER(dbo.Trim(@PrenomAuteur))
@@ -247,12 +334,47 @@ END;
 GO
 
 -- SupprimerAuteur
-CREATE PROCEDURE SupprimerAuteur
-    @IdAuteur INT
+CREATE PROCEDURE SupprimerCategorie
+    @IdCategorie INT
 AS
 BEGIN
-    SET NOCOUNT ON;
-    DELETE FROM TAUTEURS WHERE IdAuteur = @IdAuteur;
+    
+    IF @IdCategorie IS NULL OR @IdCategorie <= 0
+    BEGIN
+        PRINT 'Erreur : L identifiant de la categorie doit etre un nombre positif valide.';
+        RETURN;
+    END;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        
+        IF NOT EXISTS (SELECT 1 FROM TCATEGORIES WHERE IdCategorie = @IdCategorie)
+        BEGIN
+            PRINT 'Erreur : La categorie specifiee n existe pas.';
+            ROLLBACK;
+            RETURN;
+        END;
+        
+        DECLARE @NomCategorie VARCHAR(50);
+        SELECT @NomCategorie = NomCategorie FROM TCATEGORIES WHERE IdCategorie = @IdCategorie;
+        
+        IF EXISTS (SELECT 1 FROM TCATEGORIES_LIVRES WHERE IdCategorie = @IdCategorie)
+        BEGIN
+            PRINT 'Erreur : Impossible de supprimer cette categorie car elle est utilisee par des livres.';
+            PRINT 'Nombre de livres concernés : ' + CAST((SELECT COUNT(*) FROM TCATEGORIES_LIVRES WHERE IdCategorie = @IdCategorie) AS VARCHAR);
+            ROLLBACK;
+            RETURN;
+        END;
+        
+        DELETE FROM TCATEGORIES WHERE IdCategorie = @IdCategorie;
+        
+        COMMIT;
+        PRINT 'La categorie "' + @NomCategorie + '" a ete supprimee avec succes.';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        PRINT 'Erreur lors de la suppression de la categorie : ' + ERROR_MESSAGE();
+    END CATCH
 END;
 GO
 
@@ -292,7 +414,7 @@ CREATE PROCEDURE AssocierEditeurLivre
     @IdEditeur INT
 AS
 BEGIN
-    INSERT INTO TEDITEURS_LIVRES (IdEditeur, IdLivre)
+    INSERT INTO TTEDITEURS_LIVRES (IdEditeur, IdLivre)
     VALUES (@IdEditeur, @IdLivre);
 END;
 GO
@@ -303,7 +425,12 @@ CREATE PROCEDURE ModifierEditeur
     @NomEditeur VARCHAR(50)
 AS
 BEGIN
-    SET NOCOUNT ON;
+    IF dbo.Validate_empty(@NomEditeur) = 0
+    BEGIN
+        PRINT 'Erreur : Le titre Editeur du livre ne peut pas etre vide.';
+        RETURN;
+    END
+
     UPDATE TEDITEURS
     SET NomEditeur = LOWER(dbo.Trim(@NomEditeur))
     WHERE IdEditeur = @IdEditeur;
@@ -315,8 +442,43 @@ CREATE PROCEDURE SupprimerEditeur
     @IdEditeur INT
 AS
 BEGIN
-    SET NOCOUNT ON;
-    DELETE FROM TEDITEURS WHERE IdEditeur = @IdEditeur;
+    IF @IdEditeur IS NULL OR @IdEditeur <= 0
+    BEGIN
+        PRINT 'Erreur : L identifiant de la livre doit etre un nombre positif valide.';
+        RETURN;
+    END;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        
+        IF NOT EXISTS (SELECT 1 FROM TEDITEURS WHERE IdEditeur = @IdEditeur)
+        BEGIN
+            PRINT 'Erreur : L editeur specifie n existe pas.';
+            ROLLBACK;
+            RETURN;
+        END;
+        
+
+        DECLARE @NomEditeur VARCHAR(50);
+        SELECT @NomEditeur = NomEditeur FROM TEDITEURS WHERE IdEditeur = @IdEditeur;
+        
+        IF EXISTS (SELECT 1 FROM TEDITEURS_LIVRES WHERE IdEditeur = @IdEditeur)
+        BEGIN
+            PRINT 'Erreur : Impossible de supprimer cet diteur car il est utilise par des livres.';
+            PRINT 'Nombre de livres concernes : ' + CAST((SELECT COUNT(*) FROM TEDITEURS_LIVRES WHERE IdEditeur = @IdEditeur) AS VARCHAR);
+            ROLLBACK;
+            RETURN;
+        END;
+        
+        DELETE FROM TEDITEURS WHERE IdEditeur = @IdEditeur;
+        
+        COMMIT;
+        PRINT 'L editeur "' + @NomEditeur + '" a ete supprime avec succes.';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        PRINT 'Erreur lors de la suppression de l editeur : ' + ERROR_MESSAGE();
+    END CATCH
 END;
 GO
 
@@ -346,7 +508,6 @@ BEGIN
     BEGIN
         PRINT 'La Categorie ' + @Categorie + ' existe deja';
     END
-
 END;
 GO
 
@@ -367,7 +528,11 @@ CREATE PROCEDURE ModifierCategorie
     @NomCategorie VARCHAR(50)
 AS
 BEGIN
-    SET NOCOUNT ON;
+    IF dbo.Validate_empty(@NomCategorie) = 0
+    BEGIN
+        PRINT 'Erreur : La Categorie du livre ne peut pas etre vide.';
+        RETURN;
+    END
     UPDATE TCATEGORIES
     SET NomCategorie = LOWER(dbo.Trim(@NomCategorie))
     WHERE IdCategorie = @IdCategorie;
@@ -376,11 +541,145 @@ GO
 
 
 -- SupprimerCategorie
-CREATE PROCEDURE SupprimerCategorie
-    @IdCategorie INT
+CREATE PROCEDURE SupprimerAuteur
+    @IdAuteur INT
 AS
 BEGIN
-    SET NOCOUNT ON;
-    DELETE FROM TCATEGORIES WHERE IdCategorie = @IdCategorie;
+    IF @IdAuteur IS NULL OR @IdAuteur <= 0
+    BEGIN
+        PRINT 'Erreur : L identifiant de l auteur doit etre un nombre positif valide.';
+        RETURN;
+    END;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        
+        IF NOT EXISTS (SELECT 1 FROM TAUTEURS WHERE IdAuteur = @IdAuteur)
+        BEGIN
+            PRINT 'Erreur : L auteur specifie n existe pas.';
+            ROLLBACK;
+            RETURN;
+        END;
+        
+        DECLARE @NomAuteur VARCHAR(50);
+        DECLARE @PrenomAuteur VARCHAR(50);
+        SELECT @NomAuteur = NomAuteur, @PrenomAuteur = PrenomAuteur 
+        FROM TAUTEURS WHERE IdAuteur = @IdAuteur;
+        
+        IF EXISTS (SELECT 1 FROM TAUTEURS_LIVRES WHERE IdAuteur = @IdAuteur)
+        BEGIN
+            PRINT 'Erreur : Impossible de supprimer cet auteur car il est associe a des livres.';
+            PRINT 'Nombre de livres concernes : ' + CAST((SELECT COUNT(*) FROM TAUTEURS_LIVRES WHERE IdAuteur = @IdAuteur) AS VARCHAR);
+            ROLLBACK;
+            RETURN;
+        END;
+        
+        DELETE FROM TAUTEURS WHERE IdAuteur = @IdAuteur;
+        
+        COMMIT;
+        PRINT 'L auteur "' + @PrenomAuteur + ' ' + @NomAuteur + '" a ete supprime avec succes.';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        PRINT 'Erreur lors de la suppression de l auteur : ' + ERROR_MESSAGE();
+    END CATCH
+END;
+GO
+
+-- AjouterLangue
+CREATE PROCEDURE AjouterLangue
+    @NomLangue VARCHAR(50)
+AS
+BEGIN
+    
+    IF dbo.Validate_empty(@NomLangue) = 0
+    BEGIN
+        PRINT 'L entree est vide. Veuillez fournir un nom de langue valide.';
+        RETURN;
+    END
+    
+    DECLARE @Langue VARCHAR(50) = LOWER(dbo.Trim(@NomLangue));
+    
+    IF NOT EXISTS (SELECT 1 FROM TLANGUES WHERE LOWER(NomLangue) = @Langue)
+    BEGIN
+        INSERT INTO TLANGUES (NomLangue)
+        VALUES (@Langue);
+        PRINT 'La langue ' + @NomLangue + ' a ete ajoutee avec succes.';
+    END
+    ELSE
+    BEGIN
+        PRINT 'La langue ' + @NomLangue + ' existe deja.';
+    END
+END
+GO
+
+-- ModifierLangue
+CREATE PROCEDURE ModifierLangue
+    @IdLangue INT,
+    @NomLangue VARCHAR(50)
+AS
+BEGIN
+    
+    IF NOT EXISTS (SELECT 1 FROM TLANGUES WHERE IdLangue = @IdLangue)
+    BEGIN
+        PRINT 'Erreur : La langue specifiee n existe pas.';
+        RETURN;
+    END
+    
+    IF dbo.Validate_empty(@NomLangue) = 0
+    BEGIN
+        PRINT 'L entree est vide. Veuillez fournir un nom de langue valide.';
+        RETURN;
+    END
+    
+    DECLARE @Langue VARCHAR(50) = LOWER(dbo.Trim(@NomLangue));
+    
+    IF EXISTS (SELECT 1 FROM TLANGUES WHERE LOWER(NomLangue) = @Langue AND IdLangue <> @IdLangue)
+    BEGIN
+        PRINT 'Erreur : Une langue avec ce nom existe deja.';
+        RETURN;
+    END
+    
+    UPDATE TLANGUES
+    SET NomLangue = @Langue
+    WHERE IdLangue = @IdLangue;
+    
+    PRINT 'La langue a ete modifiee avec succes.';
+END;
+GO
+
+-- SupprimerLangue
+CREATE PROCEDURE SupprimerLangue
+    @IdLangue INT
+AS
+BEGIN
+    
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        
+        IF NOT EXISTS (SELECT 1 FROM TLANGUES WHERE IdLangue = @IdLangue)
+        BEGIN
+            PRINT 'Erreur : La langue specifiee n existe pas.';
+            ROLLBACK;
+            RETURN;
+        END
+        
+        IF EXISTS (SELECT 1 FROM TLIVRES WHERE IdLangue = @IdLangue)
+        BEGIN
+            PRINT 'Erreur : Impossible de supprimer cette langue car elle est utilisee par des livres.';
+            PRINT 'Nombre de livres concernes : ' + CAST((SELECT COUNT(*) FROM TLIVRES WHERE IdLangue = @IdLangue) AS VARCHAR);
+            ROLLBACK;
+            RETURN;
+        END
+        
+        DELETE FROM TLANGUES WHERE IdLangue = @IdLangue;
+        
+        COMMIT;
+        PRINT 'La langue a ete supprimee avec succes.';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        PRINT 'Erreur lors de la suppression de la langue : ' + ERROR_MESSAGE();
+    END CATCH
 END;
 GO
