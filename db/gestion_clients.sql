@@ -7,6 +7,15 @@ CREATE PROCEDURE AjouterClient
 	@Ville VARCHAR(50)
 AS
 BEGIN
+	-- trimming and lowercasing the variables
+	SET @Nom = LOWER(dbo.Trim(@Nom))
+	SET @Prenom = LOWER(dbo.Trim(@Prenom))
+	SET @Email = LOWER(dbo.Trim(@Email))
+	SET @CIN = LOWER(dbo.Trim(@CIN))
+	SET @PhoneNumber = LOWER(dbo.Trim(@PhoneNumber))
+	SET @Ville = LOWER(dbo.Trim(@Ville))
+
+
 	-- checking of the inputs are correct
 	-- checking if the nom or prenom or or ville CIN are empty
 	IF dbo.Validate_empty(@Nom) = 0
@@ -46,7 +55,14 @@ BEGIN
 
 	-- inserting the client
     INSERT INTO TCLIENTS(Nom, Prenom, CIN, Email, PhoneNumber, Ville)
-	VALUES (@Nom, @Prenom, @CIN, @Email, @PhoneNumber, @Ville)
+	VALUES (
+		@Nom, 
+		@Prenom, 
+		@CIN, 
+		@Email, 
+		@PhoneNumber, 
+		@Ville
+	)
 END
 GO
 
@@ -61,6 +77,15 @@ CREATE PROCEDURE ModifierClient
 	@Ville VARCHAR(50)
 AS
 BEGIN
+		-- trimming and lowercasing the variables
+	SET @Nom = LOWER(dbo.Trim(@Nom))
+	SET @Prenom = LOWER(dbo.Trim(@Prenom))
+	SET @Email = LOWER(dbo.Trim(@Email))
+	SET @CIN = LOWER(dbo.Trim(@CIN))
+	SET @PhoneNumber = LOWER(dbo.Trim(@PhoneNumber))
+	SET @Ville = LOWER(dbo.Trim(@Ville))
+
+
 	-- checking of the inputs are correct
 	-- checking if the nom or prenom or or ville CIN are empty
 	IF dbo.Validate_empty(@Nom) = 0
@@ -98,7 +123,6 @@ BEGIN
 		RETURN
 	END
 
-
     UPDATE
 		TCLIENTS
 	SET
@@ -124,16 +148,3 @@ BEGIN
 		idClient = @IdClient
 END
 GO
-
-
-CREATE PROCEDURE InterditClient
-	@IdClient INT
-AS
-BEGIN
-	UPDATE
-		TCLIENTS
-	SET
-		interdit = 1
-	WHERE
-		idClient = @IdClient
-END
