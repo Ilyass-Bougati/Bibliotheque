@@ -25,7 +25,7 @@ CREATE TABLE TNOTIFICATIONS (
 CREATE TABLE TABONNEMENTS_TYPE (
   IdAbonnementType INT IDENTITY(1,1) PRIMARY KEY,
   AbonnementType VARCHAR(20) NOT NULL -- here you might want to set a default value depending on the abonnement type
-        CHECK (AbonnementType IN ('Type 1', 'Type 2')),
+      CHECK (AbonnementType IN ('Type 1', 'Type 2')),
   NbEmpruntMax INT,
   Dure INT,
   Prix DECIMAL(10,2)
@@ -58,7 +58,7 @@ CREATE TABLE TLIVRES (
   ISBN VARCHAR(20) UNIQUE NOT NULL,
   IdLangue INT NOT NULL,
   CONSTRAINT FK_LIVRES_LANGUE FOREIGN KEY (IdLangue)
-      REFERENCES TLANGUES(IdLangue) ON DELETE CASCADE -- Here Deleting a language will delete all books in that language
+  REFERENCES TLANGUES(IdLangue) ON DELETE CASCADE -- Here Deleting a language will delete all books in that language
 );
 
 -- Table TEXEMPLAIRES

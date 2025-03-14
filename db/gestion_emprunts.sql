@@ -1,55 +1,87 @@
---PROC 6
+--Emprunter livre
 CREATE PROCEDURE EmprunterLivre
-@IdClient AS INT,
+@IdAbonnement AS INT,
 @IdExemplaire AS INT,
 @DateEmprunt AS DATETIME,
-@DateRetour AS DATETIME
 
 AS
 BEGIN
 
---Verifie si le client est sanctionne
---DEPRECATED ! : is to change once the new schema is decided.
-DECLARE @Etat_Client AS INT
+-- Verify that the client is not under a penalty
+DECLARE @EtatClient AS VARCHAR(20)
+SELECT @EtatClient = LOWER(Etat)
+FROM(
+    SELECT
+        Etat
+    FROM
+        TABONNEMENTS
+    WHERE
+        @IdAbonnement = IdAbonnement
+    )AS TEMP1
 
-SELECT
-    @Etat_Client = INTERDICTION
-FROM
-    (
-        SELECT
-            interdit as INTERDICTION
-        FROM
-            TCLIENTS
-        WHERE
-            IdClient = @IdClient
-    ) AS TEMP1
-
-
-IF @Etat_Client = 1
+IF @EtatClient != 'actif'
 BEGIN
-    PRINT 'Le client est sanctionne .'
+    PRINT 'L''abonnement n''est pas eligible a un emprunt'
     RETURN
 END
 
--- Verifie si l'exemplaire en question est libre :
-DECLARE @Etat_Livre AS INT
-SELECT 
-    @Etat_Livre = DISPONIBLE
+--Verify that the book is not reserved
+DECLARE @EtatLivre AS BIT
+SELECT @EtatLivre = Disponibilite
 FROM
     (
         SELECT
-            disponible as DISPONIBLE
-        FROM
-            TCLIENTS
+            Disponible
+        AS 
+            Disponibilite
+        FROM 
+            TEXEMPLAIRES
         WHERE
             IdExemplaire = @IdExemplaire
     )AS TEMP2
 
-IF @Etat_Livre = 0
+IF @EtatLivre = 0
 BEGIN
     PRINT 'l''exemplaire n''est pas disponible.'
     RETURN
 END
+
+--Verify that the client didn't go over the maximum amount of loans
+DECLARE @NbEmpruntMax AS INT
+DECLARE @NbEmprunt AS INT
+
+SELECT @NbEmpruntMax = NbEmpMax
+FROM
+    (
+        SELECT
+            NbEmpruntMax AS NbEmpMax
+        FROM 
+            TABONNEMENTS_TYPE JOIN TABONNEMENTS 
+            ON 
+            TABONNEMENTS_TYPE.IdAbonnementType  = TABONNEMENTS.IdAbonnementType
+        WHERE
+            IdAbonnement = @IdAbonnement
+    )AS TEMP3
+
+SELECT @NbEmprunt = NbEmp
+FROM
+    (
+        SELECT
+            COUNT(IdEmprunt) AS NbEmp
+        FROM 
+            TEMPRUNTS
+        WHERE
+            IdAbonnement = @IdAbonnement
+    )AS TEMP4
+
+IF @NbEmpruntMax = @NbEmprunt
+BEGIN
+    PRINT 'Le client a atteint le nombre maximal de livres empruntes'
+    RETURN
+END
+
+DECLARE @DateRetour AS DATETIME
+SELECT @DateRetour = DATEADD(day , 15 , @DateEmprunt)
 
 INSERT INTO TEMPRUNTS(IdClient , IdExemplaire , DateEmprunt , DateRetour)
 VALUES(@IdClient , @IdExemplaire , @DateEmprunt , @DateRetour)
@@ -63,76 +95,56 @@ WHERE
 
 END
 
---PROC 7
+--Retourner livre
 CREATE PROCEDURE RetournerLivre
-@IdLivre AS INT
-@IdEmprunt AS INT
+@IdExemplaire AS INT
+@IdClient AS INT
 
 AS
 BEGIN
+--Check if the client is returning the book in the agreed upon return date
+DECLARE @DateRetourEffective AS DATETIME
+DECLARE @DateRetourInitiale AS DATETIME
 
-DECLARE @DateRetourEffectif AS DATETIME
-SELECT @DateRetourEffectif = GETDATE()
-
-DECLARE @Difference AS INT
-SELECT @Difference = DATEDIFF(day , @DateRetourEffectif , DateRetourPevue)
-
+SELECT @DateRetourEffective = GETDATE()
+SELECT @DateRetourInitiale = DateRetourIn
 FROM
     (
-        SELECT 
-            TOP 1 DateRetour AS DateRetourPevue
+        SELECT
+            DateRetour AS DateRetourIn
         FROM
             TEMPRUNTS
         WHERE
-            IdEmprunt = @IdEmprunt
-    )AS TDATE
+            IdExemplaire = @IdExemplaire
+    ) AS TEMP1
 
-DECLARE @IdClient AS INT
-SELECT @IdClient = CLIENT
-
-FROM
-    (
-        SELECT 
-            TOP 1 IdClient AS CLIENT
-        FROM 
-            TCLIENTS
-        WHERE 
-            IdClient = @IdClient
-    )AS TCLIENT
-
-DECLARE @IdExemplaire AS INT
-SELECT @IdExemplaire = IDex
-
-FROM
-    (
-        SELECT 
-            TOP 1 IdExemplaire AS IDex
-        FROM
-            TEMPRUNTS
-        WHERE
-            IdEmprunt = @IdEmprunt
-    )AS TEXEMPLAIRE
-
-IF @Difference < 0
+IF DATEDIFF(day , @DateRetourEffective ,@DateRetourInitiale) < 0
 BEGIN
-    UPDATE 
-        TCLIENTS
-    SET 
-        interdit = 1
-    WHERE
-        IdClient = @IdClient
+    --Insert penalty procedure here :
+    --Proposed arguments : 
+        -- + Retard DATETIME
+        -- + IdAbonnement INT
 END
+
+--String type argument needed to describe the state of the returned book :
+--However :
+    -- + How much should that string hold ?
+    -- + What are its possible values ?
+
+-- Once we settle down on these , then this procedure can be finished
+
+DELETE FROM TEMPRUNTS
+WHERE IdExemplaire = @IdExemplaire
+
+--If the "Disponible" attribute is affected by a book being rented then this
+--block is changing it , however , be it not necessary , I shall remove it.
 
 UPDATE
     TEXEMPLAIRES
 SET
-    disponible = 1
+    Disponible = 1
 WHERE
     IdExemplaire = @IdExemplaire
 
-DELETE FROM
-    TEMPRUNTS
-WHERE
-    IdEmprunt = @IdEmprunt
 
 END
