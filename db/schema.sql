@@ -37,8 +37,8 @@ CREATE TABLE TABONNEMENTS (
   IdClient INT NOT NULL,
   IdAbonnementType INT NOT NULL,
   DateDebut DATETIME DEFAULT GETDATE(),
-  EtatAbonnement VARCHAR(20) NOT NULL DEFAULT 'Actif' 
-        CHECK (EtatAbonnement IN ('Actif', 'Expiré', 'Suspendu', 'Annulé', 'Banni')),
+  EtatAbonnement VARCHAR(20) NOT NULL DEFAULT 'actif' 
+        CHECK (EtatAbonnement IN ('actif', 'expire', 'suspendu', 'annule', 'banni')),
   CONSTRAINT FK_ABONNEMENTS_CLIENT FOREIGN KEY (IdClient)
       REFERENCES TCLIENTS(idClient) ON DELETE CASCADE,
   CONSTRAINT FK_ABONNEMENTS_TYPE FOREIGN KEY (IdAbonnementType)
@@ -91,8 +91,8 @@ CREATE TABLE TPENALITE (
   IdEmprunt INT,
   Motif VARCHAR(20),
   Montant DECIMAL(10,2),
-  EtatPenalite VARCHAR(20) NOT NULL DEFAULT 'En cours' 
-        CHECK (EtatPenalite IN ('En cours', 'Payee', 'Annulee')), 
+  EtatPenalite VARCHAR(20) NOT NULL DEFAULT 'en cours' 
+        CHECK (EtatPenalite IN ('en cours', 'payee', 'annulee')), 
   DatePenalite DATETIME DEFAULT GETDATE(),
   CONSTRAINT FK_PENALITE_ABONNEMENTS FOREIGN KEY (IdAbonnement) -- Also here if we want to keep a record
       REFERENCES TABONNEMENTS(IdAbonnement) ON DELETE CASCADE, -- we need to remove the DELETE CASCADE
