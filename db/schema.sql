@@ -3,7 +3,7 @@ CREATE TABLE TCLIENTS (
   idClient INT IDENTITY(1,1) PRIMARY KEY,
   Nom VARCHAR(50) NOT NULL,
   Prenom VARCHAR(50) NOT NULL,
-  CIN VARCHAR(20) NOT NULL,
+  CIN VARCHAR(20) UNIQUE NOT NULL,
   Email VARCHAR(100),
   PhoneNumber VARCHAR(20),
   Ville VARCHAR(50)
@@ -13,7 +13,8 @@ CREATE TABLE TCLIENTS (
 CREATE TABLE TNOTIFICATIONS (
   IdNotification INT IDENTITY(1,1) PRIMARY KEY,
   IdClient INT NOT NULL,
-  NotificationType VARCHAR(20),
+  NotificationType VARCHAR(20) NOT NULL
+        CHECK (NotificationType IN ('Type 1', 'Type 2')), -- you need to add notification type
   NotificationText NVARCHAR(MAX),
   NotificationDate DATETIME DEFAULT GETDATE(),
   CONSTRAINT FK_NOTIFICATIONS_CLIENT FOREIGN KEY (IdClient)
@@ -22,8 +23,10 @@ CREATE TABLE TNOTIFICATIONS (
 
 -- Table TABONNEMENTS_TYPE
 CREATE TABLE TABONNEMENTS_TYPE (
-  IdTypeAbonnement INT IDENTITY(1,1) PRIMARY KEY,
-  TypeAbonnements VARCHAR(20),
+  IdAbonnementType INT IDENTITY(1,1) PRIMARY KEY,
+  AbonnementType VARCHAR(20) NOT NULL -- here you might want to set a default value depending on the abonnement type
+        CHECK (AbonnementType IN ('Type 1', 'Type 2')),
+  NbEmpruntMax INT,
   Dure INT,
   Prix DECIMAL(10,2)
 );
@@ -32,14 +35,14 @@ CREATE TABLE TABONNEMENTS_TYPE (
 CREATE TABLE TABONNEMENTS (
   IdAbonnement INT IDENTITY(1,1) PRIMARY KEY,
   IdClient INT NOT NULL,
-  IdTypeAbonnement INT NOT NULL,
+  IdAbonnementType INT NOT NULL,
   DateDebut DATETIME DEFAULT GETDATE(),
-  Status VARCHAR(20) NOT NULL DEFAULT 'Actif' 
-        CHECK (Status IN ('Actif', 'Expiré', 'Suspendu', 'Annulé', 'Banni')),
+  EtatAbonnement VARCHAR(20) NOT NULL DEFAULT 'Actif' 
+        CHECK (EtatAbonnement IN ('Actif', 'Expiré', 'Suspendu', 'Annulé', 'Banni')),
   CONSTRAINT FK_ABONNEMENTS_CLIENT FOREIGN KEY (IdClient)
       REFERENCES TCLIENTS(idClient) ON DELETE CASCADE,
-  CONSTRAINT FK_ABONNEMENTS_TYPE FOREIGN KEY (IdTypeAbonnement)
-      REFERENCES TABONNEMENTS_TYPE(IdTypeAbonnement) ON DELETE CASCADE
+  CONSTRAINT FK_ABONNEMENTS_TYPE FOREIGN KEY (IdAbonnementType)
+      REFERENCES TABONNEMENTS_TYPE(IdAbonnementType) -- here we can't just Cascading Deletes we need to be sure there is no active sub with this type 
 );
 
 -- Table TLANGUES
@@ -52,17 +55,17 @@ CREATE TABLE TLANGUES (
 CREATE TABLE TLIVRES (
   IdLivre INT IDENTITY(1,1) PRIMARY KEY,
   Titre VARCHAR(100) NOT NULL,
-  ISBN VARCHAR(20) NOT NULL,
+  ISBN VARCHAR(20) UNIQUE NOT NULL,
   IdLangue INT NOT NULL,
   CONSTRAINT FK_LIVRES_LANGUE FOREIGN KEY (IdLangue)
-      REFERENCES TLANGUES(IdLangue) ON DELETE CASCADE
+      REFERENCES TLANGUES(IdLangue) ON DELETE CASCADE -- Here Deleting a language will delete all books in that language
 );
 
 -- Table TEXEMPLAIRES
 CREATE TABLE TEXEMPLAIRES (
   IdExemplaire INT IDENTITY(1,1) PRIMARY KEY,
   IdLivre INT NOT NULL,
-  Disponible BIT,
+  Disponible BIT NOT NULL DEFAULT 1,
   Localisation VARCHAR(100),
   CONSTRAINT FK_EXEMPLAIRES_LIVRES FOREIGN KEY (IdLivre)
       REFERENCES TLIVRES(IdLivre) ON DELETE CASCADE
@@ -75,10 +78,10 @@ CREATE TABLE TEMPRUNTS (
   IdExemplaire INT NOT NULL,
   DateEmprunt DATETIME DEFAULT GETDATE(),
   DateRetour DATETIME,
-  CONSTRAINT FK_EMPRUNTS_CLIENT FOREIGN KEY (IdClient)
-      REFERENCES TCLIENTS(idClient) ON DELETE CASCADE,
-  CONSTRAINT FK_EMPRUNTS_EXEMPLAIRE FOREIGN KEY (IdExemplaire)
-      REFERENCES TEXEMPLAIRES(IdExemplaire) ON DELETE CASCADE
+  CONSTRAINT FK_EMPRUNTS_CLIENT FOREIGN KEY (IdClient) -- you can't delete the client without deleting the loans related to hem
+      REFERENCES TCLIENTS(idClient) ON DELETE NO ACTION,  -- to prevent deleting a client that still have a loan
+  CONSTRAINT FK_EMPRUNTS_EXEMPLAIRE FOREIGN KEY (IdExemplaire) -- if we want to keep borrowing history we need to set
+      REFERENCES TEXEMPLAIRES(IdExemplaire) ON DELETE CASCADE -- DELETE CASCADE OFF in both these CONSTRAINT
 );
 
 -- Table TPENALITE
@@ -88,11 +91,11 @@ CREATE TABLE TPENALITE (
   IdEmprunt INT,
   Motif VARCHAR(20),
   Montant DECIMAL(10,2),
-  Status VARCHAR(20) NOT NULL DEFAULT 'En cours' 
-        CHECK (Status IN ('En cours', 'Payée', 'Annulée')), 
+  EtatPenalite VARCHAR(20) NOT NULL DEFAULT 'En cours' 
+        CHECK (EtatPenalite IN ('En cours', 'Payee', 'Annulee')), 
   DatePenalite DATETIME DEFAULT GETDATE(),
-  CONSTRAINT FK_PENALITE_ABONNEMENTS FOREIGN KEY (IdAbonnement)
-      REFERENCES TABONNEMENTS(IdAbonnement),
+  CONSTRAINT FK_PENALITE_ABONNEMENTS FOREIGN KEY (IdAbonnement) -- Also here if we want to keep a record
+      REFERENCES TABONNEMENTS(IdAbonnement) ON DELETE CASCADE, -- we need to remove the DELETE CASCADE
   CONSTRAINT FK_PENALITE_TEMPRUNTS FOREIGN KEY (IdEmprunt)
       REFERENCES TEMPRUNTS(IdEmprunt)
 );
@@ -116,7 +119,7 @@ CREATE TABLE TREVIEWS (
   IdLivre INT NOT NULL,
   Review NVARCHAR(MAX) NOT NULL,
   CONSTRAINT FK_REVIEWS_CLIENT FOREIGN KEY (IdClient)
-      REFERENCES TCLIENTS(idClient) ON DELETE CASCADE,
+      REFERENCES TCLIENTS(idClient), -- it's ok to have a reviews even if the client is gone
   CONSTRAINT FK_REVIEWS_LIVRE FOREIGN KEY (IdLivre)
       REFERENCES TLIVRES(IdLivre) ON DELETE CASCADE
 );
