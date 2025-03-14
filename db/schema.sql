@@ -18,7 +18,7 @@ CREATE TABLE TNOTIFICATIONS (
   NotificationText NVARCHAR(MAX),
   NotificationDate DATETIME DEFAULT GETDATE(),
   CONSTRAINT FK_NOTIFICATIONS_CLIENT FOREIGN KEY (IdClient)
-      REFERENCES TCLIENTS(idClient) ON DELETE CASCADE
+      REFERENCES TCLIENTS(IdClient) ON DELETE CASCADE
 );
 
 -- Table TABONNEMENTS_TYPE
@@ -40,7 +40,7 @@ CREATE TABLE TABONNEMENTS (
   EtatAbonnement VARCHAR(20) NOT NULL DEFAULT 'actif' 
         CHECK (EtatAbonnement IN ('actif', 'expire', 'suspendu', 'annule', 'banni')),
   CONSTRAINT FK_ABONNEMENTS_CLIENT FOREIGN KEY (IdClient)
-      REFERENCES TCLIENTS(idClient) ON DELETE CASCADE,
+      REFERENCES TCLIENTS(IdClient) ON DELETE CASCADE,
   CONSTRAINT FK_ABONNEMENTS_TYPE FOREIGN KEY (IdAbonnementType)
       REFERENCES TABONNEMENTS_TYPE(IdAbonnementType) -- here we can't just Cascading Deletes we need to be sure there is no active sub with this type 
 );
@@ -79,7 +79,7 @@ CREATE TABLE TEMPRUNTS (
   DateEmprunt DATETIME DEFAULT GETDATE(),
   DateRetour DATETIME,
   CONSTRAINT FK_EMPRUNTS_CLIENT FOREIGN KEY (IdClient) -- you can't delete the client without deleting the loans related to hem
-      REFERENCES TCLIENTS(idClient) ON DELETE NO ACTION,  -- to prevent deleting a client that still have a loan
+      REFERENCES TCLIENTS(IdClient) ON DELETE NO ACTION,  -- to prevent deleting a client that still have a loan
   CONSTRAINT FK_EMPRUNTS_EXEMPLAIRE FOREIGN KEY (IdExemplaire) -- if we want to keep borrowing history we need to set
       REFERENCES TEXEMPLAIRES(IdExemplaire) ON DELETE CASCADE -- DELETE CASCADE OFF in both these CONSTRAINT
 );
@@ -107,7 +107,7 @@ CREATE TABLE TRESERVATIONS (
   IdLivre INT NOT NULL,
   DateReservation DATETIME DEFAULT GETDATE(),
   CONSTRAINT FK_RESERVATIONS_CLIENT FOREIGN KEY (IdClient)
-      REFERENCES TCLIENTS(idClient) ON DELETE CASCADE,
+      REFERENCES TCLIENTS(IdClient) ON DELETE CASCADE,
   CONSTRAINT FK_RESERVATIONS_LIVRE FOREIGN KEY (IdLivre)
       REFERENCES TLIVRES(IdLivre) ON DELETE CASCADE
 );
@@ -119,7 +119,7 @@ CREATE TABLE TREVIEWS (
   IdLivre INT NOT NULL,
   Review NVARCHAR(MAX) NOT NULL,
   CONSTRAINT FK_REVIEWS_CLIENT FOREIGN KEY (IdClient)
-      REFERENCES TCLIENTS(idClient), -- it's ok to have a reviews even if the client is gone
+      REFERENCES TCLIENTS(IdClient), -- it's ok to have a reviews even if the client is gone
   CONSTRAINT FK_REVIEWS_LIVRE FOREIGN KEY (IdLivre)
       REFERENCES TLIVRES(IdLivre) ON DELETE CASCADE
 );
