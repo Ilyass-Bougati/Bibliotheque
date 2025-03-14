@@ -7,6 +7,44 @@ CREATE PROCEDURE AjouterClient
 	@Ville VARCHAR(50)
 AS
 BEGIN
+	-- checking of the inputs are correct
+	-- checking if the nom or prenom or or ville CIN are empty
+	IF dbo.Validate_empty(@Nom) = 0
+	BEGIN
+		PRINT 'Le nom est vide'
+		RETURN
+	END
+	IF dbo.Validate_empty(@Prenom) = 0
+	BEGIN
+		PRINT 'Le Prenom est vide'
+		RETURN
+	END
+	IF dbo.Validate_empty(@CIN) = 0
+	BEGIN
+		PRINT 'Le CIN est vide'
+		RETURN
+	END
+	IF dbo.Validate_empty(@Ville) = 0
+	BEGIN
+		PRINT 'Le Ville est vide'
+		RETURN
+	END
+
+	-- checking that the phone number is valide
+	IF dbo.Validate_phonenumber(@PhoneNumber) = 0
+	BEGIN
+		PRINT 'Le numero de telephone est non valide'
+		RETURN
+	END
+
+	-- checking if the email is invalide
+	IF dbo.Validate_email(@email) = 0
+	BEGIN
+		PRINT 'Le email est non valide'
+		RETURN
+	END
+
+	-- inserting the client
     INSERT INTO TCLIENTS(Nom, Prenom, CIN, Email, PhoneNumber, Ville)
 	VALUES (@Nom, @Prenom, @CIN, @Email, @PhoneNumber, @Ville)
 END
@@ -23,6 +61,44 @@ CREATE PROCEDURE ModifierClient
 	@Ville VARCHAR(50)
 AS
 BEGIN
+	-- checking of the inputs are correct
+	-- checking if the nom or prenom or or ville CIN are empty
+	IF dbo.Validate_empty(@Nom) = 0
+	BEGIN
+		PRINT 'Le nom est vide'
+		RETURN
+	END
+	IF dbo.Validate_empty(@Prenom) = 0
+	BEGIN
+		PRINT 'Le Prenom est vide'
+		RETURN
+	END
+	IF dbo.Validate_empty(@CIN) = 0
+	BEGIN
+		PRINT 'Le CIN est vide'
+		RETURN
+	END
+	IF dbo.Validate_empty(@Ville) = 0
+	BEGIN
+		PRINT 'Le Ville est vide'
+		RETURN
+	END
+
+	-- checking that the phone number is valide
+	IF dbo.Validate_phonenumber(@PhoneNumber) = 0
+	BEGIN
+		PRINT 'Le numero de telephone est non valide'
+		RETURN
+	END
+
+	-- checking if the email is invalide
+	IF dbo.Validate_email(@email) = 0
+	BEGIN
+		PRINT 'Le email est non valide'
+		RETURN
+	END
+
+
     UPDATE
 		TCLIENTS
 	SET
