@@ -7,8 +7,7 @@ CREATE TABLE TCLIENTS (
   CIN VARCHAR(20),
   Email VARCHAR(100),
   PhoneNumber VARCHAR(20),
-  Ville VARCHAR(50),
-  interdit BIT DEFAULT 0
+  Ville VARCHAR(50)
 );
 
 
@@ -195,5 +194,5 @@ CREATE TABLE TPENALITES (
   CONSTRAINT FK_PENALITES_ABONNEMENT FOREIGN KEY (IdAbonnement)
       REFERENCES TABONNEMENTS(IdAbonnement) ON DELETE CASCADE, -- to be revised with abdellah later
   CONSTRAINT FK_PENALITES_EMPRUNT FOREIGN KEY (IdEmprunt)
-      REFERENCES TEMPRUNTS(IdEmprunt) ON DELETE CASCADE -- needs to be looked into
+      REFERENCES TEMPRUNTS(IdEmprunt) -- needs to be looked into
 );
