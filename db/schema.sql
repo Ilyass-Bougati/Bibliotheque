@@ -74,12 +74,12 @@ CREATE TABLE TEXEMPLAIRES (
 -- Table TEMPRUNTS
 CREATE TABLE TEMPRUNTS (
   IdEmprunt INT IDENTITY(1,1) PRIMARY KEY,
-  IdClient INT NOT NULL,
+  IdAbonnement INT NOT NULL,
   IdExemplaire INT NOT NULL,
   DateEmprunt DATETIME DEFAULT GETDATE(),
   DateRetour DATETIME,
-  CONSTRAINT FK_EMPRUNTS_CLIENT FOREIGN KEY (IdClient) -- you can't delete the client without deleting the loans related to hem
-      REFERENCES TCLIENTS(IdClient) ON DELETE NO ACTION,  -- to prevent deleting a client that still have a loan
+  CONSTRAINT FK_EMPRUNTS_ABONNEMENT FOREIGN KEY (IdAbonnement) -- you can't delete the client without deleting the loans related to hem
+      REFERENCES TABONNEMENTS(IdAbonnement) ON DELETE NO ACTION,  -- to prevent deleting a client that still have a loan
   CONSTRAINT FK_EMPRUNTS_EXEMPLAIRE FOREIGN KEY (IdExemplaire) -- if we want to keep borrowing history we need to set
       REFERENCES TEXEMPLAIRES(IdExemplaire) ON DELETE CASCADE -- DELETE CASCADE OFF in both these CONSTRAINT
 );
