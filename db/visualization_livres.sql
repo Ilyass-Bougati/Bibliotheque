@@ -22,7 +22,9 @@ BEGIN
         TLANGUES.NomLangue AS Langue,
         STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
         STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories,
-        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs
+        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs,
+        AVG(TREVIEWS.Notation) AS NotationMoyenne,
+        COUNT(TREVIEWS.IdReview) AS NombreAvis
     FROM TLIVRES
     LEFT JOIN TLANGUES ON  TLIVRES.IdLangue = TLANGUES.IdLangue
     LEFT JOIN TAUTEURS_LIVRES ON  TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
@@ -31,6 +33,7 @@ BEGIN
     LEFT JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
     LEFT JOIN TEDITEURS_LIVRES ON  TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
     LEFT JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+    LEFT JOIN TREVIEWS ON TLIVRES.IdLivre = TREVIEWS.IdLivre
     WHERE  TLIVRES.IdLivre = @IdLivre
     GROUP BY  TLIVRES.IdLivre,  TLIVRES.Titre,  TLIVRES.ISBN, TLANGUES.NomLangue 
 END
@@ -47,7 +50,9 @@ BEGIN
         TLANGUES.NomLangue AS Langue,
         STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
         STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories,
-        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs
+        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs,
+        AVG(TREVIEWS.Notation) AS NotationMoyenne,
+        COUNT(TREVIEWS.IdReview) AS NombreAvis
     FROM TLIVRES
     LEFT JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
     LEFT JOIN TAUTEURS_LIVRES ON TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
@@ -56,6 +61,7 @@ BEGIN
     LEFT JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
     LEFT JOIN TEDITEURS_LIVRES ON TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
     LEFT JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+    LEFT JOIN TREVIEWS ON TLIVRES.IdLivre = TREVIEWS.IdLivre
     GROUP BY TLIVRES.IdLivre, TLIVRES.Titre, TLIVRES.ISBN, TLANGUES.NomLangue
     ORDER BY TLIVRES.Titre 
 END
@@ -552,4 +558,84 @@ BEGIN
     GROUP BY TLANGUES.NomLangue
     ORDER BY COUNT(DISTINCT  TLIVRES.IdLivre) DESC 
 END 
+GO
+
+-- Afficher les livres in a spicific raiting range
+CREATE PROCEDURE AfficherLivresParNotation
+    @NotationMinimum INT = 0,
+    @NotationMaximum INT = 10
+AS
+BEGIN
+    IF @NotationMinimum < 0 OR @NotationMinimum > 10 OR @NotationMaximum < 0 OR @NotationMaximum > 10
+    BEGIN
+        PRINT 'Erreur: La notation doit etre entre 0 et 10.'
+        RETURN
+    END
+
+    SELECT 
+        TLIVRES.IdLivre,
+        TLIVRES.Titre,
+        TLIVRES.ISBN,
+        TLANGUES.NomLangue AS Langue,
+        STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
+        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories,
+        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs,
+        AVG(TREVIEWS.Notation) AS NotationMoyenne,
+        COUNT(TREVIEWS.IdReview) AS NombreAvis
+    FROM TLIVRES
+    LEFT JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
+    LEFT JOIN TAUTEURS_LIVRES ON TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
+    LEFT JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+    LEFT JOIN TCATEGORIES_LIVRES ON TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
+    LEFT JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+    LEFT JOIN TEDITEURS_LIVRES ON TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
+    LEFT JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+    LEFT JOIN TREVIEWS ON TLIVRES.IdLivre = TREVIEWS.IdLivre
+    GROUP BY TLIVRES.IdLivre, TLIVRES.Titre, TLIVRES.ISBN, TLANGUES.NomLangue
+    HAVING AVG(TREVIEWS.Notation) >= @NotationMinimum AND AVG(TREVIEWS.Notation) <= @NotationMaximum
+    ORDER BY NotationMoyenne DESC, TLIVRES.Titre
+END
+GO
+
+-- Afficher the top n raited books
+CREATE PROCEDURE AfficherLivresTopNotes
+    @NombreLivres INT = 10,
+    @MinimumAvis INT = 3
+AS
+BEGIN
+    IF @NombreLivres <= 0
+    BEGIN
+        PRINT 'Erreur: Le nombre de livres doit etre positif.'
+        RETURN
+    END
+
+    IF @MinimumAvis <= 0
+    BEGIN
+        PRINT 'Erreur: Le nombre minimum d avis doit etre positif.'
+        RETURN
+    END
+
+    SELECT TOP (@NombreLivres)
+        TLIVRES.IdLivre,
+        TLIVRES.Titre,
+        TLIVRES.ISBN,
+        TLANGUES.NomLangue AS Langue,
+        STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
+        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories,
+        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs,
+        AVG(TREVIEWS.Notation) AS NotationMoyenne,
+        COUNT(TREVIEWS.IdReview) AS NombreAvis
+    FROM TLIVRES
+    LEFT JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
+    LEFT JOIN TAUTEURS_LIVRES ON TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
+    LEFT JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+    LEFT JOIN TCATEGORIES_LIVRES ON TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
+    LEFT JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+    LEFT JOIN TEDITEURS_LIVRES ON TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
+    LEFT JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+    INNER JOIN TREVIEWS ON TLIVRES.IdLivre = TREVIEWS.IdLivre
+    GROUP BY TLIVRES.IdLivre, TLIVRES.Titre, TLIVRES.ISBN, TLANGUES.NomLangue
+    HAVING COUNT(TREVIEWS.IdReview) >= @MinimumAvis
+    ORDER BY NotationMoyenne DESC, NombreAvis DESC, TLIVRES.Titre
+END
 GO
