@@ -41,9 +41,7 @@ END
 
 --PROC 4
 CREATE PROCEDURE SupprimerAvis
-@IdReview AS INT,
-@Review AS NVARCHAR(MAX)
-
+@IdReview AS INT
 AS
 BEGIN
     DELETE 
