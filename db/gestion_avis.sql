@@ -6,6 +6,13 @@ CREATE PROCEDURE AjouterAvis
 
 AS
 BEGIN
+    -- Checking if the review is empy or null
+    IF dbo.Validate_empty(@Review) = 0
+    BEGIN
+        PRINT('l avis est vide')
+        RETURN
+    END
+
     INSERT INTO TREVIEWS(IdClient , IdLivre , review)
     VALUES (@IdClient , @IdLivre , @Review)
 END
@@ -17,6 +24,13 @@ CREATE PROCEDURE ModifierAvis
 
 AS
 BEGIN
+    -- Checking if the review is empy or null
+    IF dbo.Validate_empty(@Review) = 0
+    BEGIN
+        PRINT('l avis est vide')
+        RETURN
+    END
+
     UPDATE 
         TREVIEWS 
     SET
@@ -27,9 +41,7 @@ END
 
 --PROC 4
 CREATE PROCEDURE SupprimerAvis
-@IdReview AS INT,
-@Review AS NVARCHAR(MAX)
-
+@IdReview AS INT
 AS
 BEGIN
     DELETE 

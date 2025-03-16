@@ -54,8 +54,8 @@ BEGIN
 
     IF dbo.Validate_ISBN(dbo.Trim(@ISBN)) = 0
     BEGIN
-    PRINT 'Erreur : Format ISBN invalide.' 
-    RETURN 
+        PRINT 'Erreur : Format ISBN invalide.' 
+        RETURN 
     END 
 
     IF dbo.Validate_empty(@NomLangue) = 1

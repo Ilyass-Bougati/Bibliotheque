@@ -23,6 +23,14 @@ CREATE PROCEDURE AjouterAbonnement
     @AbonnementType VARCHAR(50)
 AS 
 BEGIN
+
+    -- Checking if the type is empy or null
+    IF dbo.Validate_empty(@AbonnementType) = 0
+    BEGIN
+        PRINT('le type est vide')
+        RETURN
+    END
+
     -- getting the type of subscription
     SET @AbonnementType = dbo.Trim(LOWER(@AbonnementType))
     DECLARE @IdAbonnementType INT
@@ -54,6 +62,21 @@ CREATE PROCEDURE ModifierAbonnement
     @Etat VARCHAR(50)
 AS
 BEGIN
+
+    -- Checking if the type is empy or null
+    IF dbo.Validate_empty(@AbonnementType) = 0
+    BEGIN
+        PRINT('le type est vide')
+        RETURN
+    END
+
+        -- Checking if the etat is empy or null
+    IF dbo.Validate_empty(@Etat) = 0
+    BEGIN
+        PRINT('l etat est vide')
+        RETURN
+    END
+
     -- getting the type of subscription
     SET @AbonnementType = dbo.Trim(LOWER(@AbonnementType))
     DECLARE @IdAbonnementType INT
