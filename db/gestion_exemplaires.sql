@@ -26,9 +26,17 @@ CREATE PROCEDURE AjouterExemplaire
 	@Disponible AS bit
 AS
 BEGIN
+    -- Checking if the localisation is empy or null
+    IF dbo.Validate_empty(@Localisation) = 0
+    BEGIN
+        PRINT('le localisation est vide')
+        RETURN
+    END
+
+
 	INSERT INTO	
-		TEXEMPLAIRES (IdLivre,localisation,disponible)
-		VALUES (@Idlivre, @Localisation, @Disponible)
+		TEXEMPLAIRES (IdLivre, localisation, disponible)
+		VALUES (@Idlivre, LOWER(dbo.Trim(@Localisation)), @Disponible)
 END
 GO
 
