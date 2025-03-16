@@ -6,7 +6,7 @@ CREATE PROCEDURE EnvoyerNotification
 
 AS
 BEGIN
-    -- Checking if the review is empy or null
+    -- Checking if the notification text is empy or null
     IF dbo.Validate_empty(@NotificationText) = 0
     BEGIN
         PRINT('le notification est vide')
