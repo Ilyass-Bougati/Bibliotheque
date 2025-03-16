@@ -1,14 +1,19 @@
 CREATE PROCEDURE ModifierExemplaire
 	@IdExemplaire AS INT,
-	@Localisation AS VARCHAR(100),
-	@Disponible AS bit
+	@Localisation AS VARCHAR(100)
 AS
 BEGIN
+    -- Checking if the localisation is empy or null
+    IF dbo.Validate_empty(@Localisation) = 0
+    BEGIN
+        PRINT('le localisation est vide')
+        RETURN
+    END
+
 	UPDATE
 		TEXEMPLAIRES
 	SET
-		localisation = @Localisation,
-		disponible = @Disponible
+		localisation = LOWER(dbo.Trim(@Localisation))
 	WHERE
 		IdExemplaire = @IdExemplaire
 END
