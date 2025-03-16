@@ -6,7 +6,7 @@ BEGIN
 	INSERT INTO TRESERVATIONS (IdClient, IdLivre)
 	VALUES (@IdClient, @IdLivre)
 END
-
+GO
 
 CREATE PROCEDURE SuprimerReservation
 	@IdReservation INT
@@ -17,3 +17,4 @@ BEGIN
 	WHERE
 		IdReservation = @IdReservation
 END
+GO

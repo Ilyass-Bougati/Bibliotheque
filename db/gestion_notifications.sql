@@ -2,7 +2,7 @@
 CREATE PROCEDURE EnvoyerNotification
 @IdClient AS INT,
 @NotificationText AS NVARCHAR(MAX),
-@IdType AS INT
+@NotificationType AS VARCHAR(20)
 
 AS
 BEGIN
@@ -13,7 +13,8 @@ BEGIN
         RETURN
     END
 
-    INSERT INTO TNOTIFICATIONS(IdClient , IdNotificationType , NotificationText)
-    VALUES (@IdClient , @IdType , @NotificationText)
+    INSERT INTO TNOTIFICATIONS(IdClient , NotificationType , NotificationText)
+    VALUES (@IdClient , @NotificationType , @NotificationText)
 
 END
+GO
