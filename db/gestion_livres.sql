@@ -98,6 +98,9 @@ BEGIN
     EXEC AssocierAuteurLivre @IdLivre, @IdAuteur 
     EXEC AssocierCategorieLivre @IdLivre, @IdCategorie 
     EXEC AssocierEditeurLivre @IdLivre, @IdEditeur 
+
+    PRINT 'Le livre a ete ajoute avec succes.' 
+
 END 
 GO
 
@@ -209,6 +212,7 @@ BEGIN
         PRINT 'Erreur : La langue specifiee n existe pas.' 
         RETURN 
     END 
+    PRINT 'Le livre a ete modifiee avec succes.' 
 END 
 GO
 
@@ -232,6 +236,19 @@ BEGIN
             ROLLBACK 
             RETURN 
         END 
+        
+        IF EXISTS (
+            SELECT 1 
+            FROM TEMPRUNTS
+            INNER JOIN TEXEMPLAIRES ON TEMPRUNTS.IdExemplaire = TEXEMPLAIRES.IdExemplaire
+            WHERE TEXEMPLAIRES.IdLivre = @IdLivre 
+            AND TEMPRUNTS.DateRetour IS NULL
+        )
+        BEGIN
+            PRINT 'Erreur : Impossible de supprimer ce livre car des exemplaires sont actuellement empruntes.'
+            ROLLBACK
+            RETURN
+        END
         
         DECLARE @Titre VARCHAR(100) 
         SELECT @Titre = Titre FROM TLIVRES WHERE IdLivre = @IdLivre 
@@ -291,6 +308,18 @@ CREATE PROCEDURE AssocierAuteurLivre
     @IdAuteur INT
 AS
 BEGIN
+
+    IF @IdLivre IS NULL
+    BEGIN
+        PRINT 'Erreur : L identifiant du livre est null.'
+        RETURN
+    END
+
+    IF @IdAuteur IS NULL
+    BEGIN
+        PRINT 'Erreur : L identifiant de l auteur est null.'
+        RETURN
+    END
     INSERT INTO TAUTEURS_LIVRES (IdAuteur, IdLivre)
     VALUES (@IdAuteur, @IdLivre) 
 END 
@@ -303,6 +332,12 @@ CREATE PROCEDURE ModifierAuteur
     @PrenomAuteur VARCHAR(50)
 AS
 BEGIN
+    IF NOT EXISTS (SELECT 1 FROM TAUTEURS WHERE IdAuteur = @IdAuteur)
+    BEGIN
+        PRINT 'Erreur : L Auteur specifiee n existe pas.' 
+        RETURN 
+    END
+
     IF dbo.Validate_empty(@NomAuteur) = 0
     BEGIN
         PRINT 'Erreur : Le non de l auteur du livre ne peut pas etre vide.' 
@@ -316,7 +351,8 @@ BEGIN
     UPDATE TAUTEURS
     SET NomAuteur = LOWER(dbo.Trim(@NomAuteur)),
         PrenomAuteur = LOWER(dbo.Trim(@PrenomAuteur))
-    WHERE IdAuteur = @IdAuteur 
+    WHERE IdAuteur = @IdAuteur
+    PRINT 'L auteurs ' + LOWER(dbo.Trim(@PrenomAuteur)) + ' ' + LOWER(dbo.Trim(@NomAuteur)) + ' a ete modifie avec succes'
 END 
 GO
 
@@ -407,7 +443,19 @@ CREATE PROCEDURE AssocierEditeurLivre
     @IdEditeur INT
 AS
 BEGIN
-    INSERT INTO TTEDITEURS_LIVRES (IdEditeur, IdLivre)
+    IF @IdLivre IS NULL
+    BEGIN
+        PRINT 'Erreur : L identifiant du livre est null.'
+        RETURN
+    END
+
+    IF @IdEditeur IS NULL
+    BEGIN
+        PRINT 'Erreur : L identifiant de l Editeur  est null.'
+        RETURN
+    END
+
+    INSERT INTO TEDITEURS_LIVRES (IdEditeur, IdLivre)
     VALUES (@IdEditeur, @IdLivre) 
 END 
 GO
@@ -516,6 +564,18 @@ CREATE PROCEDURE AssocierCategorieLivre
     @IdCategorie INT
 AS
 BEGIN
+    IF @IdLivre IS NULL
+    BEGIN
+        PRINT 'Erreur : L identifiant du livre est null.'
+        RETURN
+    END
+
+    IF @IdCategorie IS NULL
+    BEGIN
+        PRINT 'Erreur : L identifiant de la Categorie  est null.'
+        RETURN
+    END
+
     INSERT INTO TCATEGORIES_LIVRES (IdCategorie, IdLivre)
     VALUES (@IdCategorie, @IdLivre) 
 END 
@@ -527,6 +587,12 @@ CREATE PROCEDURE ModifierCategorie
     @NomCategorie VARCHAR(50)
 AS
 BEGIN
+    IF NOT EXISTS (SELECT 1 FROM TCATEGORIES WHERE IdCategorie = @IdCategorie)
+    BEGIN
+        PRINT 'Erreur : La Categorie specifiee n existe pas.' 
+        RETURN 
+    END
+
     IF dbo.Validate_empty(@NomCategorie) = 0
     BEGIN
         PRINT 'Erreur : La Categorie du livre ne peut pas etre vide.' 
@@ -535,6 +601,8 @@ BEGIN
     UPDATE TCATEGORIES
     SET NomCategorie = LOWER(dbo.Trim(@NomCategorie))
     WHERE IdCategorie = @IdCategorie 
+
+    PRINT 'La Categorie ' + LOWER(dbo.Trim(@NomCategorie)) + ' a ete modifiee avec succes'
 END 
 GO
 
