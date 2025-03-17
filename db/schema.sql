@@ -13,7 +13,7 @@ CREATE TABLE TCLIENTS (
 CREATE TABLE TNOTIFICATIONS (
   IdNotification INT IDENTITY(1,1) PRIMARY KEY,
   IdClient INT NOT NULL,
-  NotificationType VARCHAR(20) NOT NULL
+  NotificationType VARCHAR(20) NOT NULL,
   NotificationText NVARCHAR(MAX),
   NotificationDate DATETIME DEFAULT GETDATE(),
   CONSTRAINT FK_NOTIFICATIONS_CLIENT FOREIGN KEY (IdClient)
@@ -23,7 +23,7 @@ CREATE TABLE TNOTIFICATIONS (
 -- Table TABONNEMENTS_TYPE
 CREATE TABLE TABONNEMENTS_TYPE (
   IdAbonnementType INT IDENTITY(1,1) PRIMARY KEY,
-  AbonnementType VARCHAR(20) NOT NULL -- here you might want to set a default value depending on the abonnement type
+  AbonnementType VARCHAR(20) NOT NULL, -- here you might want to set a default value depending on the abonnement type
   NbEmpruntMax INT,
   Dure INT,
   Prix DECIMAL(10,2)
@@ -64,7 +64,8 @@ CREATE TABLE TLIVRES (
 CREATE TABLE TEXEMPLAIRES (
   IdExemplaire INT IDENTITY(1,1) PRIMARY KEY,
   IdLivre INT NOT NULL,
-  Disponible BIT NOT NULL DEFAULT 1,
+  Disponibilite VARCHAR(30) DEFAULT 'disponible'
+    CHECK Disponibilite IN ('disponible', 'perdue', 'empruntee'),
   Localisation VARCHAR(100),
   CONSTRAINT FK_EXEMPLAIRES_LIVRES FOREIGN KEY (IdLivre)
       REFERENCES TLIVRES(IdLivre) ON DELETE CASCADE

@@ -70,6 +70,7 @@ BEGIN
     SET EtatAbonnement = 'suspendu'
     WHERE IdAbonnement = @IdAbonnement 
 END
+GO
 
 -- Procédure pour réactiver un abonnement
 CREATE PROCEDURE ReactiverAbonnement
@@ -155,4 +156,4 @@ BEGIN
     SELECT * FROM TPENALITE
     WHERE IdAbonnement = @IdAbonnement AND EtatPenalite = 'en cours'
 END
-
+GO
