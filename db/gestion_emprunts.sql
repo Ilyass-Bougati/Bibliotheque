@@ -2,17 +2,17 @@
 CREATE PROCEDURE EmprunterLivre
 @IdAbonnement AS INT,
 @IdExemplaire AS INT,
-@DateEmprunt AS DATETIME,
+@DateEmprunt AS DATETIME
 
 AS
 BEGIN
 
     -- Verify that the client is not under a penalty
     DECLARE @EtatClient AS VARCHAR(20)
-    SELECT @EtatClient = LOWER(Etat) -- etat should be lowercase by default
+    SELECT @EtatClient = LOWER(EtatAbonnement) -- etat should be lowercase by default
     FROM(
         SELECT
-            Etat
+            EtatAbonnement
         FROM
             TABONNEMENTS
         WHERE
@@ -81,8 +81,8 @@ BEGIN
     DECLARE @DateRetour AS DATETIME
     SELECT @DateRetour = DATEADD(day , 15 , @DateEmprunt)
 
-    INSERT INTO TEMPRUNTS(IdClient , IdExemplaire , DateEmprunt , DateRetour)
-    VALUES(@IdClient , @IdExemplaire , @DateEmprunt , @DateRetour)
+    INSERT INTO TEMPRUNTS(IdAbonnement , IdExemplaire , DateEmprunt , DateRetour)
+    VALUES(@IdAbonnement , @IdExemplaire , @DateEmprunt , @DateRetour)
 
     UPDATE 
         TEXEMPLAIRES
@@ -92,59 +92,44 @@ BEGIN
         IdExemplaire = @IdExemplaire
 
 END
-
-
-
+GO
 
 
 --Retourner livre
 CREATE PROCEDURE RetournerLivre
 @IdExemplaire AS INT
-@IdClient AS INT
 
 AS
 BEGIN
-    --Check if the client is returning the book in the agreed upon return date
-    DECLARE @DateRetourEffective AS DATETIME
-    DECLARE @DateRetourInitiale AS DATETIME
-
-    SELECT @DateRetourEffective = GETDATE()
-    SELECT @DateRetourInitiale = DateRetourIn
+    --Checks if the book is reserved :
+    
+    DECLARE @Reservation AS INT
+    SELECT @Reservation = IdReservation
     FROM
         (
             SELECT
-                DateRetour AS DateRetourIn
+                IdReservation
             FROM
-                TEMPRUNTS
+                TRESERVATIONS
             WHERE
                 IdExemplaire = @IdExemplaire
-        ) AS TEMP1
-
-    IF DATEDIFF(day , @DateRetourEffective ,@DateRetourInitiale) < 0
-    BEGIN
-        --Insert penalty procedure here :
-        --Proposed arguments : 
-            -- + Retard DATETIME
-            -- + IdAbonnement INT
-    END
-
-    --String type argument needed to describe the state of the returned book :
-    --However :
-        -- + How much should that string hold ?
-        -- + What are its possible values ?
-
-    -- Once we settle down on these , then this procedure can be finished
+        )AS TEMP2
 
     DELETE FROM TEMPRUNTS
     WHERE IdExemplaire = @IdExemplaire
 
-    --If the "Disponible" attribute is affected by a book being rented then this
-    --block is changing it , however , be it not necessary , I shall remove it.
+    DECLARE @Disponibilite AS VARCHAR(20)
+    SELECT @Disponibilite = 'disponible'
+    
+    IF @Reservation IS NOT NULL
+    BEGIN
+        SELECT @Disponibilite = 'reserve'
+    END
 
     UPDATE
         TEXEMPLAIRES
     SET
-        Disponible = 'disponible'
+        Disponible = @Disponibilite
     WHERE
         IdExemplaire = @IdExemplaire
 END
