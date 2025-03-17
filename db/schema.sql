@@ -14,7 +14,6 @@ CREATE TABLE TNOTIFICATIONS (
   IdNotification INT IDENTITY(1,1) PRIMARY KEY,
   IdClient INT NOT NULL,
   NotificationType VARCHAR(20) NOT NULL
-        CHECK (NotificationType IN ('Type 1', 'Type 2')), -- you need to add notification type
   NotificationText NVARCHAR(MAX),
   NotificationDate DATETIME DEFAULT GETDATE(),
   CONSTRAINT FK_NOTIFICATIONS_CLIENT FOREIGN KEY (IdClient)
@@ -25,7 +24,6 @@ CREATE TABLE TNOTIFICATIONS (
 CREATE TABLE TABONNEMENTS_TYPE (
   IdAbonnementType INT IDENTITY(1,1) PRIMARY KEY,
   AbonnementType VARCHAR(20) NOT NULL -- here you might want to set a default value depending on the abonnement type
-      CHECK (AbonnementType IN ('Type 1', 'Type 2')),
   NbEmpruntMax INT,
   Dure INT,
   Prix DECIMAL(10,2)
