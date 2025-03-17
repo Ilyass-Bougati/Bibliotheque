@@ -89,7 +89,7 @@ BEGIN
     SET
         Disponibilite = 'empruntee'
     WHERE
-        IdExemplaire = IdExemplaire
+        IdExemplaire = @IdExemplaire
 
 END
 
