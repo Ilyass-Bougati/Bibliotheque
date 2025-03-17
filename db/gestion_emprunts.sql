@@ -105,15 +105,8 @@ BEGIN
     
     DECLARE @Reservation AS INT
     SELECT @Reservation = IdReservation
-    FROM
-        (
-            SELECT
-                IdReservation
-            FROM
-                TRESERVATIONS
-            WHERE
-                IdExemplaire = @IdExemplaire
-        )AS TEMP2
+    FROM TRESERVATIONS
+    WHERE IdExemplaire = @IdExemplaire
 
     DELETE FROM TEMPRUNTS
     WHERE IdExemplaire = @IdExemplaire
@@ -129,7 +122,7 @@ BEGIN
     UPDATE
         TEXEMPLAIRES
     SET
-        Disponible = @Disponibilite
+        Disponibilite = @Disponibilite
     WHERE
         IdExemplaire = @IdExemplaire
 END
