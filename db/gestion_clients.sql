@@ -4,7 +4,8 @@ CREATE PROCEDURE AjouterClient
 	@CIN VARCHAR(20),
 	@Email VARCHAR(100),
 	@PhoneNumber VARCHAR(20),
-	@Ville VARCHAR(50)
+	@Ville VARCHAR(50),
+	@AbonnementType VARCHAR(50)
 AS
 BEGIN
 	-- trimming and lowercasing the variables
@@ -63,6 +64,13 @@ BEGIN
 		@PhoneNumber, 
 		@Ville
 	)
+
+	PRINT('Client ' + @Nom + ' a été créé avec succès')
+
+	DECLARE @IdClient  INT
+	SET @IdClient = SCOPE_IDENTITY()
+	EXEC AjouterAbonnement @IdClient, @AbonnementType -- @AbonnementType doesn't need to be stripped
+
 END
 GO
 
