@@ -131,7 +131,7 @@ BEGIN
     UPDATE
         TEXEMPLAIRES
     SET
-        Disponible = 'disponible'
+        Disponible = @Disponibilite
     WHERE
         IdExemplaire = @IdExemplaire
 END
