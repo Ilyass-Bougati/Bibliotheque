@@ -100,46 +100,33 @@ END
 --Retourner livre
 CREATE PROCEDURE RetournerLivre
 @IdExemplaire AS INT
-@IdClient AS INT
 
 AS
 BEGIN
-    --Check if the client is returning the book in the agreed upon return date
-    DECLARE @DateRetourEffective AS DATETIME
-    DECLARE @DateRetourInitiale AS DATETIME
-
-    SELECT @DateRetourEffective = GETDATE()
-    SELECT @DateRetourInitiale = DateRetourIn
+    --Checks if the book is reserved :
+    
+    DECLARE @Reservation AS INT
+    SELECT @Reservation = IdReservation
     FROM
         (
             SELECT
-                DateRetour AS DateRetourIn
+                IdReservation
             FROM
-                TEMPRUNTS
+                TRESERVATIONS
             WHERE
                 IdExemplaire = @IdExemplaire
-        ) AS TEMP1
-
-    IF DATEDIFF(day , @DateRetourEffective ,@DateRetourInitiale) < 0
-    BEGIN
-        --Insert penalty procedure here :
-        --Proposed arguments : 
-            -- + Retard DATETIME
-            -- + IdAbonnement INT
-    END
-
-    --String type argument needed to describe the state of the returned book :
-    --However :
-        -- + How much should that string hold ?
-        -- + What are its possible values ?
-
-    -- Once we settle down on these , then this procedure can be finished
+        )AS TEMP2
 
     DELETE FROM TEMPRUNTS
     WHERE IdExemplaire = @IdExemplaire
 
-    --If the "Disponible" attribute is affected by a book being rented then this
-    --block is changing it , however , be it not necessary , I shall remove it.
+    DECLARE @Disponibilite AS VARCHAR(20)
+    SELECT @Disponibilite = 'disponible'
+    
+    IF @Reservation IS NOT NULL
+    BEGIN
+        SELECT @Disponibilite = 'reserve'
+    END
 
     UPDATE
         TEXEMPLAIRES
