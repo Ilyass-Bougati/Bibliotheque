@@ -12,8 +12,8 @@ BEGIN
         RETURN
     END
 
-    INSERT INTO TABONNEMENTS_TYPE (AbonnementType, EmpruntMax, Duree, Prix)
-    VALUES (LOWER(@AbonnementType), @EmpruntMax, @Duree, @Prix)
+    INSERT INTO TABONNEMENTS_TYPE (AbonnementType, NbEmpruntMax, Dure, Prix)
+    VALUES (LOWER(dbo.Trim(@AbonnementType)), @EmpruntMax, @Duree, @Prix)
 END
 GO
 
@@ -52,6 +52,8 @@ BEGIN
     -- inserting
     INSERT INTO TABONNEMENTS (IdAbonnementType, IdClient)
     VALUES (@IdAbonnementType, @IdClient)
+
+    PRINT('Créer un nouvel abonnement')
 END
 GO
 
@@ -99,8 +101,9 @@ BEGIN
         TABONNEMENTS
     SET
         IdAbonnementType = @IdAbonnementType,
-        Etat = dbo.Trim(LOWER(@Etat))
+        EtatAbonnement = dbo.Trim(LOWER(@Etat))
     WHERE
         IdAbonnement = @IdAbonnement
         
 END
+GO

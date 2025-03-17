@@ -16,6 +16,7 @@ BEGIN
     INSERT INTO TREVIEWS(IdClient , IdLivre , review)
     VALUES (@IdClient , @IdLivre , @Review)
 END
+GO
 
 --PROC 3 
 CREATE PROCEDURE ModifierAvis
@@ -38,6 +39,7 @@ BEGIN
     WHERE 
         IdReview = @IdReview
 END
+GO
 
 --PROC 4
 CREATE PROCEDURE SupprimerAvis
@@ -50,3 +52,4 @@ BEGIN
     WHERE 
         IdReview = @IdReview
 END
+GO

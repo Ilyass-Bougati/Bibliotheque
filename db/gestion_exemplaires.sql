@@ -22,8 +22,7 @@ GO
 
 CREATE PROCEDURE AjouterExemplaire 
 	@Idlivre AS iNT,
-	@Localisation AS VARCHAR(100),
-	@Disponible AS bit
+	@Localisation AS VARCHAR(100)
 AS
 BEGIN
     -- Checking if the localisation is empy or null
@@ -35,8 +34,8 @@ BEGIN
 
 
 	INSERT INTO	
-		TEXEMPLAIRES (IdLivre, localisation, disponible)
-		VALUES (@Idlivre, LOWER(dbo.Trim(@Localisation)), @Disponible)
+		TEXEMPLAIRES (IdLivre, localisation)
+		VALUES (@Idlivre, LOWER(dbo.Trim(@Localisation)))
 END
 GO
 

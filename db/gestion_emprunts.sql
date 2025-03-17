@@ -31,8 +31,6 @@ BEGIN
     FROM
         (
             SELECT
-                Disponible
-            AS 
                 Disponibilite
             FROM 
                 TEXEMPLAIRES
@@ -40,7 +38,7 @@ BEGIN
                 IdExemplaire = @IdExemplaire
         )AS TEMP2
 
-    IF @EtatLivre = 0
+    IF @EtatLivre != 'disponible'
     BEGIN
         PRINT 'l''exemplaire n''est pas disponible.'
         RETURN
@@ -89,9 +87,9 @@ BEGIN
     UPDATE 
         TEXEMPLAIRES
     SET
-        disponible = 0
+        Disponibilite = 'empruntee'
     WHERE
-        IdExemplaire = IdExemplaire
+        IdExemplaire = @IdExemplaire
 
 END
 
@@ -146,7 +144,7 @@ BEGIN
     UPDATE
         TEXEMPLAIRES
     SET
-        Disponible = 1
+        Disponible = 'disponible'
     WHERE
         IdExemplaire = @IdExemplaire
 END
