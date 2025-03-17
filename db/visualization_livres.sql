@@ -158,7 +158,7 @@ BEGIN
          TLIVRES.ISBN,
         TLANGUES.NomLangue AS Langue,
         STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
-        STRING_AGG(DISTINCT TEDITEURS.NomEditeur, ', ') AS Editeurs
+        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs
     FROM TLIVRES
     JOIN TCATEGORIES_LIVRES ON  TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
     JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
@@ -416,14 +416,14 @@ CREATE PROCEDURE AfficherToutesLangues
 AS
 BEGIN
     SELECT 
-         TLIVRES.IdLangue,
-         TLIVRES.NomLangue,
-        COUNT(DISTINCT liv.IdLivre) AS NombreDeLivres
+        TLANGUES.IdLangue,
+        TLANGUES.NomLangue,
+        COUNT(DISTINCT TLIVRES.IdLivre) AS NombreDeLivres
     FROM TLANGUES
-    LEFT JOIN TLIVRES liv ON  TLIVRES.IdLangue = liv.IdLangue
-    GROUP BY  TLIVRES.IdLangue,  TLIVRES.NomLangue
-    ORDER BY  TLIVRES.NomLangue 
-END 
+    LEFT JOIN TLIVRES ON TLANGUES.IdLangue = TLIVRES.IdLangue
+    GROUP BY TLANGUES.IdLangue, TLANGUES.NomLangue
+    ORDER BY TLANGUES.NomLangue
+END
 GO
 
 -- Rechercher les Livres
