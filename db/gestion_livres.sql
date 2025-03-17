@@ -26,7 +26,13 @@ BEGIN
     BEGIN
         PRINT 'Erreur : L ISBN ne peut pas etre vide.' 
         RETURN 
-    END 
+    END
+
+    IF EXISTS (SELECT 1 FROM TLIVRES WHERE ISBN = dbo.Trim(@ISBN))
+    BEGIN
+        PRINT 'Erreur : Un livre avec cet ISBN existe deja.'
+        RETURN
+    END
 
     IF dbo.Validate_empty(@NomAuteur) = 0
     BEGIN
@@ -321,7 +327,9 @@ BEGIN
         RETURN
     END
     INSERT INTO TAUTEURS_LIVRES (IdAuteur, IdLivre)
-    VALUES (@IdAuteur, @IdLivre) 
+    VALUES (@IdAuteur, @IdLivre)
+
+    PRINT 'Association entre l auteur et le livre effectuee avec succes.'
 END 
 GO
 
@@ -456,7 +464,9 @@ BEGIN
     END
 
     INSERT INTO TEDITEURS_LIVRES (IdEditeur, IdLivre)
-    VALUES (@IdEditeur, @IdLivre) 
+    VALUES (@IdEditeur, @IdLivre)
+
+    PRINT 'Association entre l éditeur et le livre effectuée avec succès.'
 END 
 GO
 
@@ -472,9 +482,17 @@ BEGIN
         RETURN 
     END
 
+    IF NOT EXISTS (SELECT 1 FROM TEDITEURS WHERE IdEditeur = @IdEditeur)
+    BEGIN
+        PRINT 'Erreur : L editeur specifie n existe pas.'
+        RETURN
+    END
+
     UPDATE TEDITEURS
     SET NomEditeur = LOWER(dbo.Trim(@NomEditeur))
-    WHERE IdEditeur = @IdEditeur 
+    WHERE IdEditeur = @IdEditeur
+
+    PRINT 'L editeur ' + LOWER(dbo.Trim(@NomEditeur)) + ' a été modifié avec succès.'
 END 
 GO
 
@@ -577,7 +595,9 @@ BEGIN
     END
 
     INSERT INTO TCATEGORIES_LIVRES (IdCategorie, IdLivre)
-    VALUES (@IdCategorie, @IdLivre) 
+    VALUES (@IdCategorie, @IdLivre)
+
+    PRINT 'Association entre la categorie et le livre effectuee avec succes.'
 END 
 GO
 

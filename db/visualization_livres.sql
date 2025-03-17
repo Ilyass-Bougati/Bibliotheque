@@ -20,22 +20,34 @@ BEGIN
         TLIVRES.Titre,
         TLIVRES.ISBN,
         TLANGUES.NomLangue AS Langue,
-        STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories,
-        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs,
+        STUFF((
+            SELECT DISTINCT ', ' + TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur
+            FROM TAUTEURS_LIVRES
+            JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+            WHERE TAUTEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Auteurs,
+        STUFF((
+            SELECT DISTINCT ', ' + TCATEGORIES.NomCategorie
+            FROM TCATEGORIES_LIVRES
+            JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+            WHERE TCATEGORIES_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Categories,
+        STUFF((
+            SELECT DISTINCT ', ' + TEDITEURS.NomEditeur
+            FROM TEDITEURS_LIVRES
+            JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+            WHERE TEDITEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Editeurs,
         AVG(TREVIEWS.Notation) AS NotationMoyenne,
         COUNT(TREVIEWS.IdReview) AS NombreAvis
     FROM TLIVRES
-    LEFT JOIN TLANGUES ON  TLIVRES.IdLangue = TLANGUES.IdLangue
-    LEFT JOIN TAUTEURS_LIVRES ON  TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
-    LEFT JOIN TAUTEURS TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
-    LEFT JOIN TCATEGORIES_LIVRES ON  TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
-    LEFT JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
-    LEFT JOIN TEDITEURS_LIVRES ON  TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
-    LEFT JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+    LEFT JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
     LEFT JOIN TREVIEWS ON TLIVRES.IdLivre = TREVIEWS.IdLivre
-    WHERE  TLIVRES.IdLivre = @IdLivre
-    GROUP BY  TLIVRES.IdLivre,  TLIVRES.Titre,  TLIVRES.ISBN, TLANGUES.NomLangue 
+    WHERE TLIVRES.IdLivre = @IdLivre
+    GROUP BY TLIVRES.IdLivre, TLIVRES.Titre, TLIVRES.ISBN, TLANGUES.NomLangue 
 END
 GO
 
@@ -48,19 +60,31 @@ BEGIN
         TLIVRES.Titre,
         TLIVRES.ISBN,
         TLANGUES.NomLangue AS Langue,
-        STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories,
-        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs,
+        STUFF((
+            SELECT DISTINCT ', ' + TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur
+            FROM TAUTEURS_LIVRES
+            JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+            WHERE TAUTEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Auteurs,
+        STUFF((
+            SELECT DISTINCT ', ' + TCATEGORIES.NomCategorie
+            FROM TCATEGORIES_LIVRES
+            JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+            WHERE TCATEGORIES_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Categories,
+        STUFF((
+            SELECT DISTINCT ', ' + TEDITEURS.NomEditeur
+            FROM TEDITEURS_LIVRES
+            JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+            WHERE TEDITEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Editeurs,
         AVG(TREVIEWS.Notation) AS NotationMoyenne,
         COUNT(TREVIEWS.IdReview) AS NombreAvis
     FROM TLIVRES
     LEFT JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
-    LEFT JOIN TAUTEURS_LIVRES ON TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
-    LEFT JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
-    LEFT JOIN TCATEGORIES_LIVRES ON TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
-    LEFT JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
-    LEFT JOIN TEDITEURS_LIVRES ON TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
-    LEFT JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
     LEFT JOIN TREVIEWS ON TLIVRES.IdLivre = TREVIEWS.IdLivre
     GROUP BY TLIVRES.IdLivre, TLIVRES.Titre, TLIVRES.ISBN, TLANGUES.NomLangue
     ORDER BY TLIVRES.Titre 
@@ -79,7 +103,6 @@ BEGIN
         PRINT 'Erreur : Veuillez fournir soit l identifiant de l auteur, soit son nom et prenom.'
         RETURN
     END
-
 
     IF @IdAuteur IS NULL AND @NomAuteur IS NOT NULL AND @PrenomAuteur IS NOT NULL
     BEGIN
@@ -100,16 +123,24 @@ BEGIN
         TLIVRES.Titre,
         TLIVRES.ISBN,
         TLANGUES.NomLangue AS Langue,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories,
-        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs
+        STUFF((
+            SELECT DISTINCT ', ' + TCATEGORIES.NomCategorie
+            FROM TCATEGORIES_LIVRES
+            JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+            WHERE TCATEGORIES_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Categories,
+        STUFF((
+            SELECT DISTINCT ', ' + TEDITEURS.NomEditeur
+            FROM TEDITEURS_LIVRES
+            JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+            WHERE TEDITEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Editeurs
     FROM TLIVRES
     JOIN TAUTEURS_LIVRES ON TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
     JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
     LEFT JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
-    LEFT JOIN TCATEGORIES_LIVRES ON TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
-    LEFT JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
-    LEFT JOIN TEDITEURS_LIVRES ON TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
-    LEFT JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
     WHERE TAUTEURS.IdAuteur = @IdAuteur
     GROUP BY TLIVRES.IdLivre, TLIVRES.Titre, TLIVRES.ISBN, TLANGUES.NomLangue
     ORDER BY TLIVRES.Titre 
@@ -120,7 +151,7 @@ BEGIN
         TAUTEURS.PrenomAuteur,
         COUNT(DISTINCT TAUTEURS_LIVRES.IdLivre) AS NombreDeLivres
     FROM TAUTEURS
-    LEFT JOIN TAUTEURS_LIVRES TAUTEURS_LIVRES ON TAUTEURS.IdAuteur = TAUTEURS_LIVRES.IdAuteur
+    LEFT JOIN TAUTEURS_LIVRES ON TAUTEURS.IdAuteur = TAUTEURS_LIVRES.IdAuteur
     WHERE TAUTEURS.IdAuteur = @IdAuteur
     GROUP BY TAUTEURS.IdAuteur, TAUTEURS.NomAuteur, TAUTEURS.PrenomAuteur 
 END 
@@ -138,14 +169,13 @@ BEGIN
         RETURN 
     END 
 
-    
-    IF @IdCategorie  IS NULL AND @NomCategorie IS NOT NULL
+    IF @IdCategorie IS NULL AND @NomCategorie IS NOT NULL
     BEGIN
-        SELECT @IdCategorie  = IdCategorie 
+        SELECT @IdCategorie = IdCategorie 
         FROM TCATEGORIES 
         WHERE NomCategorie = LOWER(dbo.Trim(@NomCategorie)) 
         
-        IF @IdCategorie  IS NULL
+        IF @IdCategorie IS NULL
         BEGIN
             PRINT 'Erreur : Categorie non trouvee.' 
             RETURN 
@@ -153,23 +183,31 @@ BEGIN
     END 
 
     SELECT 
-         TLIVRES.IdLivre,
-         TLIVRES.Titre,
-         TLIVRES.ISBN,
+        TLIVRES.IdLivre,
+        TLIVRES.Titre,
+        TLIVRES.ISBN,
         TLANGUES.NomLangue AS Langue,
-        STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
-        STRING_AGG(DISTINCT TEDITEURS.NomEditeur, ', ') AS Editeurs
+        STUFF((
+            SELECT DISTINCT ', ' + TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur
+            FROM TAUTEURS_LIVRES
+            JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+            WHERE TAUTEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Auteurs,
+        STUFF((
+            SELECT DISTINCT ', ' + TEDITEURS.NomEditeur
+            FROM TEDITEURS_LIVRES
+            JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+            WHERE TEDITEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Editeurs
     FROM TLIVRES
-    JOIN TCATEGORIES_LIVRES ON  TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
+    JOIN TCATEGORIES_LIVRES ON TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
     JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
-    LEFT JOIN TLANGUES ON  TLIVRES.IdLangue = TLANGUES.IdLangue
-    LEFT JOIN TAUTEURS_LIVRES ON  TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
-    LEFT JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
-    LEFT JOIN TEDITEURS_LIVRES ON  TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
-    LEFT JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+    LEFT JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
     WHERE TCATEGORIES.IdCategorie = @IdCategorie 
-    GROUP BY  TLIVRES.IdLivre,  TLIVRES.Titre,  TLIVRES.ISBN, TLANGUES.NomLangue
-    ORDER BY  TLIVRES.Titre 
+    GROUP BY TLIVRES.IdLivre, TLIVRES.Titre, TLIVRES.ISBN, TLANGUES.NomLangue
+    ORDER BY TLIVRES.Titre 
     
     SELECT 
         TCATEGORIES.IdCategorie,
@@ -194,7 +232,6 @@ BEGIN
         RETURN 
     END 
 
-    
     IF @IdEditeur IS NULL AND @NomEditeur IS NOT NULL
     BEGIN
         SELECT @IdEditeur = IdEditeur 
@@ -208,26 +245,33 @@ BEGIN
         END 
     END 
 
-    SELECT 
-         TLIVRES.IdLivre,
-         TLIVRES.Titre,
-         TLIVRES.ISBN,
+     SELECT 
+        TLIVRES.IdLivre,
+        TLIVRES.Titre,
+        TLIVRES.ISBN,
         TLANGUES.NomLangue AS Langue,
-        STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories
+        STUFF((
+            SELECT DISTINCT ', ' + TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur
+            FROM TAUTEURS_LIVRES
+            JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+            WHERE TAUTEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Auteurs,
+        STUFF((
+            SELECT DISTINCT ', ' + TCATEGORIES.NomCategorie
+            FROM TCATEGORIES_LIVRES
+            JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+            WHERE TCATEGORIES_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Categories
     FROM TLIVRES
-    JOIN TEDITEURS_LIVRES ON  TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
+    JOIN TEDITEURS_LIVRES ON TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
     JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
-    LEFT JOIN TLANGUES ON  TLIVRES.IdLangue = TLANGUES.IdLangue
-    LEFT JOIN TAUTEURS_LIVRES ON  TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
-    LEFT JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
-    LEFT JOIN TCATEGORIES_LIVRES ON  TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
-    LEFT JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+    LEFT JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
     WHERE TEDITEURS.IdEditeur = @IdEditeur
-    GROUP BY  TLIVRES.IdLivre,  TLIVRES.Titre,  TLIVRES.ISBN, TLANGUES.NomLangue
-    ORDER BY  TLIVRES.Titre 
+    GROUP BY TLIVRES.IdLivre, TLIVRES.Titre, TLIVRES.ISBN, TLANGUES.NomLangue
+    ORDER BY TLIVRES.Titre 
     
-
     SELECT 
         TEDITEURS.IdEditeur,
         TEDITEURS.NomEditeur,
@@ -251,7 +295,6 @@ BEGIN
         RETURN 
     END 
 
-    
     IF @IdLangue IS NULL AND @NomLangue IS NOT NULL
     BEGIN
         SELECT @IdLangue = IdLangue 
@@ -266,31 +309,42 @@ BEGIN
     END 
 
     SELECT 
-         TLIVRES.IdLivre,
-         TLIVRES.Titre,
-         TLIVRES.ISBN,
-        STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories,
-        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs
+        TLIVRES.IdLivre,
+        TLIVRES.Titre,
+        TLIVRES.ISBN,
+        STUFF((
+            SELECT DISTINCT ', ' + TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur
+            FROM TAUTEURS_LIVRES
+            JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+            WHERE TAUTEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Auteurs,
+        STUFF((
+            SELECT DISTINCT ', ' + TCATEGORIES.NomCategorie
+            FROM TCATEGORIES_LIVRES
+            JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+            WHERE TCATEGORIES_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Categories,
+        STUFF((
+            SELECT DISTINCT ', ' + TEDITEURS.NomEditeur
+            FROM TEDITEURS_LIVRES
+            JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+            WHERE TEDITEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            FOR XML PATH('')
+        ), 1, 2, '') AS Editeurs
     FROM TLIVRES
-    JOIN TLANGUES ON  TLIVRES.IdLangue = TLANGUES.IdLangue
-    LEFT JOIN TAUTEURS_LIVRES ON  TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
-    LEFT JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
-    LEFT JOIN TCATEGORIES_LIVRES ON  TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
-    LEFT JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
-    LEFT JOIN TEDITEURS_LIVRES ON  TLIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
-    LEFT JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+    JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
     WHERE TLANGUES.IdLangue = @IdLangue
-    GROUP BY  TLIVRES.IdLivre,  TLIVRES.Titre,  TLIVRES.ISBN
-    ORDER BY  TLIVRES.Titre 
+    GROUP BY TLIVRES.IdLivre, TLIVRES.Titre, TLIVRES.ISBN
+    ORDER BY TLIVRES.Titre 
     
-
     SELECT 
         TLANGUES.IdLangue,
         TLANGUES.NomLangue,
-        COUNT(DISTINCT  TLIVRES.IdLivre) AS NombreDeLivres
+        COUNT(DISTINCT TLIVRES.IdLivre) AS NombreDeLivres
     FROM TLANGUES
-    LEFT JOIN TLIVRES  TLIVRES ON TLANGUES.IdLangue =  TLIVRES.IdLangue
+    LEFT JOIN TLIVRES ON TLANGUES.IdLangue = TLIVRES.IdLangue
     WHERE TLANGUES.IdLangue = @IdLangue
     GROUP BY TLANGUES.IdLangue, TLANGUES.NomLangue 
 END 
@@ -305,12 +359,17 @@ BEGIN
         TAUTEURS.NomAuteur,
         TAUTEURS.PrenomAuteur,
         COUNT(DISTINCT TAUTEURS_LIVRES.IdLivre) AS NombreDeLivres,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories
+        STUFF((
+            SELECT DISTINCT ', ' + TCATEGORIES.NomCategorie
+            FROM TAUTEURS_LIVRES
+            JOIN TLIVRES ON TAUTEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+            JOIN TCATEGORIES_LIVRES ON TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
+            JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+            WHERE TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+            FOR XML PATH('')
+        ), 1, 2, '') AS Categories
     FROM TAUTEURS
     LEFT JOIN TAUTEURS_LIVRES ON TAUTEURS.IdAuteur = TAUTEURS_LIVRES.IdAuteur
-    LEFT JOIN TLIVRES  TLIVRES ON TAUTEURS_LIVRES.IdLivre =  TLIVRES.IdLivre
-    LEFT JOIN TCATEGORIES_LIVRES ON  TLIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
-    LEFT JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
     GROUP BY TAUTEURS.IdAuteur, TAUTEURS.NomAuteur, TAUTEURS.PrenomAuteur
     ORDER BY TAUTEURS.NomAuteur, TAUTEURS.PrenomAuteur 
 END 
@@ -329,7 +388,6 @@ BEGIN
         RETURN 
     END 
 
-    
     IF @IdAuteur IS NULL AND @NomAuteur IS NOT NULL AND @PrenomAuteur IS NOT NULL
     BEGIN
         SELECT @IdAuteur = IdAuteur 
@@ -344,7 +402,6 @@ BEGIN
         END 
     END 
 
-
     SELECT 
         TAUTEURS.IdAuteur,
         TAUTEURS.NomAuteur,
@@ -355,26 +412,24 @@ BEGIN
     WHERE TAUTEURS.IdAuteur = @IdAuteur
     GROUP BY TAUTEURS.IdAuteur, TAUTEURS.NomAuteur, TAUTEURS.PrenomAuteur 
     
-
     SELECT 
         TCATEGORIES.NomCategorie,
         COUNT(DISTINCT TCATEGORIES_LIVRES.IdLivre) AS NombreDeLivres
     FROM TCATEGORIES
     JOIN TCATEGORIES_LIVRES ON TCATEGORIES.IdCategorie = TCATEGORIES_LIVRES.IdCategorie
-    JOIN TLIVRES ON TCATEGORIES_LIVRES.IdLivre =  TLIVRES.IdLivre
-    JOIN TAUTEURS_LIVRES ON  TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
+    JOIN TLIVRES ON TCATEGORIES_LIVRES.IdLivre = TLIVRES.IdLivre
+    JOIN TAUTEURS_LIVRES ON TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
     WHERE TAUTEURS_LIVRES.IdAuteur = @IdAuteur
     GROUP BY TCATEGORIES.NomCategorie
     ORDER BY COUNT(DISTINCT TCATEGORIES_LIVRES.IdLivre) DESC 
     
-
     SELECT 
         TEDITEURS.NomEditeur,
         COUNT(DISTINCT TEDITEURS_LIVRES.IdLivre) AS NombreDeLivres
     FROM TEDITEURS
     JOIN TEDITEURS_LIVRES ON TEDITEURS.IdEditeur = TEDITEURS_LIVRES.IdEditeur
-    JOIN TLIVRES ON TEDITEURS_LIVRES.IdLivre =  TLIVRES.IdLivre
-    JOIN TAUTEURS_LIVRES ON  TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
+    JOIN TLIVRES ON TEDITEURS_LIVRES.IdLivre = TLIVRES.IdLivre
+    JOIN TAUTEURS_LIVRES ON TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
     WHERE TAUTEURS_LIVRES.IdAuteur = @IdAuteur
     GROUP BY TEDITEURS.NomEditeur
     ORDER BY COUNT(DISTINCT TEDITEURS_LIVRES.IdLivre) DESC 
@@ -416,14 +471,14 @@ CREATE PROCEDURE AfficherToutesLangues
 AS
 BEGIN
     SELECT 
-         TLIVRES.IdLangue,
-         TLIVRES.NomLangue,
-        COUNT(DISTINCT liv.IdLivre) AS NombreDeLivres
+        TLANGUES.IdLangue,
+        TLANGUES.NomLangue,
+        COUNT(DISTINCT TLIVRES.IdLivre) AS NombreDeLivres
     FROM TLANGUES
-    LEFT JOIN TLIVRES liv ON  TLIVRES.IdLangue = liv.IdLangue
-    GROUP BY  TLIVRES.IdLangue,  TLIVRES.NomLangue
-    ORDER BY  TLIVRES.NomLangue 
-END 
+    LEFT JOIN TLIVRES ON TLANGUES.IdLangue = TLIVRES.IdLangue
+    GROUP BY TLANGUES.IdLangue, TLANGUES.NomLangue
+    ORDER BY TLANGUES.NomLangue
+END
 GO
 
 -- Rechercher les Livres
@@ -438,41 +493,56 @@ CREATE PROCEDURE RechercherLivres
 AS
 BEGIN
     SELECT 
-         TLIVRES.IdLivre,
-         TLIVRES.Titre,
-         TLIVRES.ISBN,
+        TLIVRES.IdLivre,
+        TLIVRES.Titre,
+        TLIVRES.ISBN,
         TLANGUES.NomLangue AS Langue,
         Authors.Auteurs,
         Categories.Categories,
         Editors.Editeurs
     FROM TLIVRES
-    LEFT JOIN TLANGUES ON  TLIVRES.IdLangue = TLANGUES.IdLangue
+    LEFT JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
     LEFT JOIN (
         SELECT TAUTEURS_LIVRES.IdLivre,
-               STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') 
-                   WITHIN GROUP (ORDER BY TAUTEURS.NomAuteur, TAUTEURS.PrenomAuteur) AS Auteurs
+               STUFF((
+                   SELECT ', ' + TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur
+                   FROM TAUTEURS_LIVRES
+                   JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+                   WHERE TAUTEURS_LIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
+                   ORDER BY TAUTEURS.NomAuteur, TAUTEURS.PrenomAuteur
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Auteurs
         FROM TAUTEURS_LIVRES
-        JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
         GROUP BY TAUTEURS_LIVRES.IdLivre
-    ) Authors ON  TLIVRES.IdLivre = Authors.IdLivre
+    ) Authors ON TLIVRES.IdLivre = Authors.IdLivre
     LEFT JOIN (
         SELECT TCATEGORIES_LIVRES.IdLivre,
-               STRING_AGG(TCATEGORIES.NomCategorie, ', ') 
-                   WITHIN GROUP (ORDER BY TCATEGORIES.NomCategorie) AS Categories
+               STUFF((
+                   SELECT ', ' + TCATEGORIES.NomCategorie
+                   FROM TCATEGORIES_LIVRES
+                   JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+                   WHERE TCATEGORIES_LIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
+                   ORDER BY TCATEGORIES.NomCategorie
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Categories
         FROM TCATEGORIES_LIVRES
-        JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
         GROUP BY TCATEGORIES_LIVRES.IdLivre
-    ) Categories ON  TLIVRES.IdLivre = Categories.IdLivre
+    ) Categories ON TLIVRES.IdLivre = Categories.IdLivre
     LEFT JOIN (
         SELECT TEDITEURS_LIVRES.IdLivre,
-               STRING_AGG(TEDITEURS.NomEditeur, ', ') 
-                   WITHIN GROUP (ORDER BY TEDITEURS.NomEditeur) AS Editeurs
+               STUFF((
+                   SELECT ', ' + TEDITEURS.NomEditeur
+                   FROM TEDITEURS_LIVRES
+                   JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+                   WHERE TEDITEURS_LIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
+                   ORDER BY TEDITEURS.NomEditeur
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Editeurs
         FROM TEDITEURS_LIVRES
-        JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
         GROUP BY TEDITEURS_LIVRES.IdLivre
-    ) Editors ON  TLIVRES.IdLivre = Editors.IdLivre
-    WHERE (@Titre IS NULL OR  TLIVRES.Titre LIKE '%' + @Titre + '%')
-      AND (@ISBN IS NULL OR  TLIVRES.ISBN = @ISBN)
+    ) Editors ON TLIVRES.IdLivre = Editors.IdLivre
+    WHERE (@Titre IS NULL OR TLIVRES.Titre LIKE '%' + @Titre + '%')
+      AND (@ISBN IS NULL OR TLIVRES.ISBN = @ISBN)
       AND (@Langue IS NULL OR TLANGUES.NomLangue LIKE '%' + LOWER(dbo.Trim(@Langue)) + '%')
       AND (@NomAuteur IS NULL OR Authors.Auteurs LIKE '%' + LOWER(dbo.Trim(@NomAuteur)) + '%')
       AND (@PrenomAuteur IS NULL OR Authors.Auteurs LIKE '%' + LOWER(dbo.Trim(@PrenomAuteur)) + '%')
@@ -480,7 +550,8 @@ BEGIN
       AND (@Editeur IS NULL OR Editors.Editeurs LIKE '%' + LOWER(dbo.Trim(@Editeur)) + '%')
     ORDER BY  TLIVRES.Titre 
 END 
-GO
+GO      
+
 
 -- Nombre de livre, auteur et editeurs par Categorie
 CREATE PROCEDURE StatistiquesLivresParCategorie
@@ -508,7 +579,14 @@ BEGIN
     SELECT 
         TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur AS NomComplet,
         COUNT(DISTINCT TAUTEURS_LIVRES.IdLivre) AS NombreDeLivres,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories
+        STUFF((
+                   SELECT ', ' + TCATEGORIES.NomCategorie
+                   FROM TCATEGORIES_LIVRES
+                   JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+                   WHERE TCATEGORIES_LIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
+                   ORDER BY TCATEGORIES.NomCategorie
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Categories
     FROM TAUTEURS
     LEFT JOIN TAUTEURS_LIVRES ON TAUTEURS.IdAuteur = TAUTEURS_LIVRES.IdAuteur
     LEFT JOIN TLIVRES ON TAUTEURS_LIVRES.IdLivre =  TLIVRES.IdLivre
@@ -527,7 +605,14 @@ BEGIN
         TEDITEURS.NomEditeur,
         COUNT(DISTINCT TEDITEURS_LIVRES.IdLivre) AS NombreDeLivres,
         COUNT(DISTINCT TAUTEURS_LIVRES.IdAuteur) AS NombreAuteurs,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories
+        STUFF((
+                   SELECT ', ' + TCATEGORIES.NomCategorie
+                   FROM TCATEGORIES_LIVRES
+                   JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+                   WHERE TCATEGORIES_LIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
+                   ORDER BY TCATEGORIES.NomCategorie
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Categories
     FROM TEDITEURS
     LEFT JOIN TEDITEURS_LIVRES ON TEDITEURS.IdEditeur = TEDITEURS_LIVRES.IdEditeur
     LEFT JOIN TLIVRES ON TEDITEURS_LIVRES.IdLivre =  TLIVRES.IdLivre
@@ -548,7 +633,14 @@ BEGIN
         COUNT(DISTINCT  TLIVRES.IdLivre) AS NombreDeLivres,
         COUNT(DISTINCT TAUTEURS_LIVRES.IdAuteur) AS NombreAuteurs,
         COUNT(DISTINCT TEDITEURS_LIVRES.IdEditeur) AS NombreEditeurs,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories
+        STUFF((
+                   SELECT ', ' + TCATEGORIES.NomCategorie
+                   FROM TCATEGORIES_LIVRES
+                   JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+                   WHERE TCATEGORIES_LIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
+                   ORDER BY TCATEGORIES.NomCategorie
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Categories
     FROM TLANGUES 
     LEFT JOIN TLIVRES ON TLANGUES.IdLangue =  TLIVRES.IdLangue
     LEFT JOIN TAUTEURS_LIVRES ON  TLIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
@@ -577,9 +669,30 @@ BEGIN
         TLIVRES.Titre,
         TLIVRES.ISBN,
         TLANGUES.NomLangue AS Langue,
-        STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories,
-        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs,
+        STUFF((
+                   SELECT ', ' + TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur
+                   FROM TAUTEURS_LIVRES
+                   JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+                   WHERE TAUTEURS_LIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
+                   ORDER BY TAUTEURS.NomAuteur, TAUTEURS.PrenomAuteur
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Auteurs,
+        STUFF((
+                   SELECT ', ' + TCATEGORIES.NomCategorie
+                   FROM TCATEGORIES_LIVRES
+                   JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+                   WHERE TCATEGORIES_LIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
+                   ORDER BY TCATEGORIES.NomCategorie
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Categories,
+        STUFF((
+                   SELECT ', ' + TEDITEURS.NomEditeur
+                   FROM TEDITEURS_LIVRES
+                   JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+                   WHERE TEDITEURS_LIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
+                   ORDER BY TEDITEURS.NomEditeur
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Editeurs,
         AVG(TREVIEWS.Notation) AS NotationMoyenne,
         COUNT(TREVIEWS.IdReview) AS NombreAvis
     FROM TLIVRES
@@ -620,9 +733,30 @@ BEGIN
         TLIVRES.Titre,
         TLIVRES.ISBN,
         TLANGUES.NomLangue AS Langue,
-        STRING_AGG(TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur, ', ') AS Auteurs,
-        STRING_AGG(TCATEGORIES.NomCategorie, ', ') AS Categories,
-        STRING_AGG(TEDITEURS.NomEditeur, ', ') AS Editeurs,
+        STUFF((
+                   SELECT ', ' + TAUTEURS.PrenomAuteur + ' ' + TAUTEURS.NomAuteur
+                   FROM TAUTEURS_LIVRES
+                   JOIN TAUTEURS ON TAUTEURS_LIVRES.IdAuteur = TAUTEURS.IdAuteur
+                   WHERE TAUTEURS_LIVRES.IdLivre = TAUTEURS_LIVRES.IdLivre
+                   ORDER BY TAUTEURS.NomAuteur, TAUTEURS.PrenomAuteur
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Auteurs,
+        STUFF((
+                   SELECT ', ' + TCATEGORIES.NomCategorie
+                   FROM TCATEGORIES_LIVRES
+                   JOIN TCATEGORIES ON TCATEGORIES_LIVRES.IdCategorie = TCATEGORIES.IdCategorie
+                   WHERE TCATEGORIES_LIVRES.IdLivre = TCATEGORIES_LIVRES.IdLivre
+                   ORDER BY TCATEGORIES.NomCategorie
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Categories,
+        STUFF((
+                   SELECT ', ' + TEDITEURS.NomEditeur
+                   FROM TEDITEURS_LIVRES
+                   JOIN TEDITEURS ON TEDITEURS_LIVRES.IdEditeur = TEDITEURS.IdEditeur
+                   WHERE TEDITEURS_LIVRES.IdLivre = TEDITEURS_LIVRES.IdLivre
+                   ORDER BY TEDITEURS.NomEditeur
+                   FOR XML PATH('')
+               ), 1, 2, '') AS Editeurs,
         AVG(TREVIEWS.Notation) AS NotationMoyenne,
         COUNT(TREVIEWS.IdReview) AS NombreAvis
     FROM TLIVRES
