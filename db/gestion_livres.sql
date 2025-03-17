@@ -137,7 +137,7 @@ GO
 
 -- ModifierLivre 
 -- Cette procédure stockée permet de modifier les informations d'un livre existant
--- Les paramètres NULL indiquent que la valeur correspondante sont optionnel
+-- Les paramètres NULL indiquent que les valeurs correspondantes sont optionnelles
 CREATE PROCEDURE ModifierLivre
     @IdLivre INT,
     @Titre VARCHAR(100) = NULL,
@@ -430,9 +430,9 @@ BEGIN
 END 
 GO
 
--- SupprimerAuteur
--- Cette procédure stockée permet de supprimer un auteur de la base de données
--- Elle vérifie d'abord si l'auteur est associé à des livres
+-- SupprimerCategorie
+-- Cette procédure stockée permet de supprimer une catégorie de la base de données
+-- Elle vérifie d'abord si la catégorie est associée à des livres
 CREATE PROCEDURE SupprimerCategorie
     @IdCategorie INT
 AS
@@ -444,7 +444,7 @@ BEGIN
         RETURN 
     END 
 
-    -- Vérification que l'auteur existe
+    -- Vérification que la catégorie existe
     IF NOT EXISTS (SELECT 1 FROM TCATEGORIES WHERE IdCategorie = @IdCategorie)
     BEGIN
         PRINT 'Erreur : La categorie specifiee n existe pas.'
@@ -460,7 +460,7 @@ BEGIN
     FROM TCATEGORIES_LIVRES 
     WHERE IdCategorie = @IdCategorie
     
-    -- Si l'auteur est associé à des livres, on empêche la suppression
+    -- Si la catégorie est associée à des livres, on empêche la suppression
     IF EXISTS (SELECT 1 FROM TCATEGORIES_LIVRES WHERE IdCategorie = @IdCategorie)
     BEGIN
         PRINT 'Erreur : Impossible de supprimer cette categorie car elle est utilisee par des livres.' 
@@ -470,7 +470,7 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION 
         
-        -- Suppression de l'auteur
+        -- Suppression de la catégorie
         DELETE FROM TCATEGORIES WHERE IdCategorie = @IdCategorie 
         
         COMMIT -- Validation de la transaction
@@ -553,18 +553,21 @@ CREATE PROCEDURE ModifierEditeur
     @NomEditeur VARCHAR(50)
 AS
 BEGIN
+    -- Vérifie que le nom de l'éditeur n'est pas vide à l'aide d'une fonction personnalisée
     IF dbo.Validate_empty(@NomEditeur) = 0
     BEGIN
         PRINT 'Erreur : Le titre Editeur du livre ne peut pas etre vide.' 
         RETURN 
     END
 
+    -- Vérifie que l'éditeur existe dans la table TEDITEURS
     IF NOT EXISTS (SELECT 1 FROM TEDITEURS WHERE IdEditeur = @IdEditeur)
     BEGIN
         PRINT 'Erreur : L editeur specifie n existe pas.'
         RETURN
     END
 
+    -- Met à jour le nom de l'éditeur en appliquant la fonction Trim et en convertissant en minuscules
     UPDATE TEDITEURS
     SET NomEditeur = LOWER(dbo.Trim(@NomEditeur))
     WHERE IdEditeur = @IdEditeur
@@ -574,16 +577,19 @@ END
 GO
 
 -- SupprimerEditeur
+-- Cette procédure stockée permet de supprimer un éditeur s'il n'est pas associé à des livres
 CREATE PROCEDURE SupprimerEditeur
     @IdEditeur INT
 AS
 BEGIN
+    -- Vérifie que l'identifiant est valide
     IF @IdEditeur IS NULL OR @IdEditeur <= 0
     BEGIN
         PRINT 'Erreur : L identifiant de la livre doit etre un nombre positif valide.' 
         RETURN 
     END 
-        
+    
+     -- Vérifie que l'éditeur existe dans la base de données
     IF NOT EXISTS (SELECT 1 FROM TEDITEURS WHERE IdEditeur = @IdEditeur)
     BEGIN
         PRINT 'Erreur : L editeur specifie n existe pas.' 
@@ -596,27 +602,31 @@ BEGIN
 
     SELECT @NomEditeur = NomEditeur FROM TEDITEURS WHERE IdEditeur = @IdEditeur
 
+     -- Compte le nombre de livres associés à cet éditeur dans la table de liaison
     SELECT @CountLivres = COUNT(*)
     FROM TEDITEURS_LIVRES 
     WHERE IdEditeur = @IdEditeur
-        
+    
+    -- Si l'éditeur est associé à des livres, refuse la suppression
     IF @CountLivres > 0
     BEGIN
-        PRINT 'Erreur : Impossible de supprimer cet diteur car il est utilise par des livres.' 
+        PRINT 'Erreur : Impossible de supprimer cet editeur car il est utilise par des livres.' 
         PRINT 'Nombre de livres concernes : ' + CAST(@CountLivres AS VARCHAR) 
         RETURN 
     END 
 
+    -- Utilise un bloc TRY-CATCH pour gérer les erreurs potentielles
     BEGIN TRY
+        -- Débute une transaction pour assurer l'intégrité des données
         BEGIN TRANSACTION
-
+        -- Supprime l'éditeur
         DELETE FROM TEDITEURS WHERE IdEditeur = @IdEditeur 
         
-        COMMIT 
+        COMMIT  -- Valide la transaction si tout s'est bien passé
         PRINT 'L editeur "' + @NomEditeur + '" a ete supprime avec succes.' 
     END TRY
     BEGIN CATCH
-        ROLLBACK 
+        ROLLBACK  -- Annule la transaction en cas d'erreur
         PRINT 'Erreur lors de la suppression de l editeur : ' + ERROR_MESSAGE() 
     END CATCH
 END 
@@ -714,10 +724,8 @@ BEGIN
 END 
 GO
 
-
--- SupprimerCategorie
--- Cette procédure stockée permet de supprimer une catégorie de la base de données
--- Elle vérifie d'abord si la catégorie est associée à des livres
+-- SupprimerAuteur
+-- Cette procédure stockée permet de supprimer un auteur s'il n'est pas associé à des livres
 CREATE PROCEDURE SupprimerAuteur
     @IdAuteur INT
 AS
@@ -729,7 +737,7 @@ BEGIN
         RETURN 
     END 
 
-    -- Vérification que la catégorie existe
+    -- Vérification que l'auteur existe
     IF NOT EXISTS (SELECT 1 FROM TAUTEURS WHERE IdAuteur = @IdAuteur)
     BEGIN
         PRINT 'Erreur : L auteur specifie n existe pas.'  
@@ -743,11 +751,12 @@ BEGIN
     SELECT @NomAuteur = NomAuteur, @PrenomAuteur = PrenomAuteur 
     FROM TAUTEURS WHERE IdAuteur = @IdAuteur 
 
+    -- Compte le nombre de livres associés à cet auteur
     SELECT @CountLivres = COUNT(*) 
     FROM TAUTEURS_LIVRES 
     WHERE IdAuteur = @IdAuteur
     
-    -- Si la catégorie est associée à des livres, on empêche la suppression
+    -- Si l'auteur est associé à des livres, refuse la suppression
     IF EXISTS (SELECT 1 FROM TAUTEURS_LIVRES WHERE IdAuteur = @IdAuteur)
     BEGIN
         PRINT 'Erreur : Impossible de supprimer cet auteur car il est associe a des livres.' 
@@ -755,10 +764,12 @@ BEGIN
         RETURN 
     END
 
+    -- Utilise un bloc TRY-CATCH pour gérer les erreurs potentielles
     BEGIN TRY
+        -- Débute une transaction pour assurer l'intégrité des données
         BEGIN TRANSACTION 
         
-        -- Suppression de la catégorie
+        -- Suppression de l'auteur
         DELETE FROM TAUTEURS WHERE IdAuteur = @IdAuteur 
         
         COMMIT -- Validation de la transaction
@@ -772,11 +783,12 @@ END
 GO
 
 -- AjouterLangue
+-- Cette procédure stockée permet d'ajouter une nouvelle langue dans la base de données
 CREATE PROCEDURE AjouterLangue
     @NomLangue VARCHAR(50)
 AS
 BEGIN
-    
+    -- Vérifie que le nom de la langue n'est pas vide
     IF dbo.Validate_empty(@NomLangue) = 0
     BEGIN
         PRINT 'L entree est vide. Veuillez fournir un nom de langue valide.' 
@@ -785,8 +797,10 @@ BEGIN
     
     DECLARE @Langue VARCHAR(50) = LOWER(dbo.Trim(@NomLangue)) 
     
+    -- Vérifie si la langue existe déjà
     IF NOT EXISTS (SELECT 1 FROM TLANGUES WHERE LOWER(NomLangue) = @Langue)
     BEGIN
+        -- Ajoute la langue si elle n'existe pas
         INSERT INTO TLANGUES (NomLangue)
         VALUES (@Langue) 
         PRINT 'La langue ' + @NomLangue + ' a ete ajoutee avec succes.' 
@@ -799,18 +813,20 @@ END
 GO
 
 -- ModifierLangue
+-- Cette procédure stockée permet de modifier le nom d'une langue existante
 CREATE PROCEDURE ModifierLangue
     @IdLangue INT,
     @NomLangue VARCHAR(50)
 AS
 BEGIN
-    
+    -- Vérifie que la langue existe
     IF NOT EXISTS (SELECT 1 FROM TLANGUES WHERE IdLangue = @IdLangue)
     BEGIN
         PRINT 'Erreur : La langue specifiee n existe pas.' 
         RETURN 
     END
     
+    -- Vérifie que le nom de la langue n'est pas vide
     IF dbo.Validate_empty(@NomLangue) = 0
     BEGIN
         PRINT 'L entree est vide. Veuillez fournir un nom de langue valide.' 
@@ -819,12 +835,14 @@ BEGIN
     
     DECLARE @Langue VARCHAR(50) = LOWER(dbo.Trim(@NomLangue)) 
     
+    -- Vérifie qu'il n'existe pas déjà une autre langue avec ce nom
     IF EXISTS (SELECT 1 FROM TLANGUES WHERE LOWER(NomLangue) = @Langue AND IdLangue <> @IdLangue)
     BEGIN
         PRINT 'Erreur : Une langue avec ce nom existe deja.' 
         RETURN 
     END
     
+    -- Met à jour le nom de la langue
     UPDATE TLANGUES
     SET NomLangue = @Langue
     WHERE IdLangue = @IdLangue 
@@ -834,11 +852,12 @@ END
 GO
 
 -- SupprimerLangue
+-- Cette procédure stockée permet de supprimer une langue si elle n'est pas utilisée par des livres
 CREATE PROCEDURE SupprimerLangue
     @IdLangue INT
 AS
 BEGIN
-    
+    -- Vérifie que la langue existe
     IF NOT EXISTS (SELECT 1 FROM TLANGUES WHERE IdLangue = @IdLangue)
     BEGIN
         PRINT 'Erreur : La langue specifiee n existe pas.' 
@@ -848,7 +867,8 @@ BEGIN
     DECLARE @CountLivres INT
 
     SELECT @CountLivres = COUNT(*) FROM TLIVRES WHERE IdLangue = @IdLangue
-        
+    
+    -- Si la langue est utilisée par des livres, refuse la suppression
     IF EXISTS (SELECT 1 FROM TLIVRES WHERE IdLangue = @IdLangue)
     BEGIN
         PRINT 'Erreur : Impossible de supprimer cette langue car elle est utilisee par des livres.' 
@@ -856,16 +876,18 @@ BEGIN
         RETURN 
     END
 
+    -- Utilise un bloc TRY-CATCH pour gérer les erreurs potentielles
     BEGIN TRY
+        -- Débute une transaction pour assurer l'intégrité des données
         BEGIN TRANSACTION 
-
+        -- Supprime la langue
         DELETE FROM TLANGUES WHERE IdLangue = @IdLangue 
         
-        COMMIT 
+        COMMIT -- Valide la transaction si tout s'est bien passé
         PRINT 'La langue a ete supprimee avec succes.' 
     END TRY
     BEGIN CATCH
-        ROLLBACK 
+        ROLLBACK -- Annule la transaction en cas d'erreur
         PRINT 'Erreur lors de la suppression de la langue : ' + ERROR_MESSAGE() 
     END CATCH
 END 
