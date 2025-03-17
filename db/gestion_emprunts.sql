@@ -2,17 +2,17 @@
 CREATE PROCEDURE EmprunterLivre
 @IdAbonnement AS INT,
 @IdExemplaire AS INT,
-@DateEmprunt AS DATETIME,
+@DateEmprunt AS DATETIME
 
 AS
 BEGIN
 
     -- Verify that the client is not under a penalty
     DECLARE @EtatClient AS VARCHAR(20)
-    SELECT @EtatClient = LOWER(Etat) -- etat should be lowercase by default
+    SELECT @EtatClient = LOWER(EtatAbonnement) -- etat should be lowercase by default
     FROM(
         SELECT
-            Etat
+            EtatAbonnement
         FROM
             TABONNEMENTS
         WHERE
@@ -81,8 +81,8 @@ BEGIN
     DECLARE @DateRetour AS DATETIME
     SELECT @DateRetour = DATEADD(day , 15 , @DateEmprunt)
 
-    INSERT INTO TEMPRUNTS(IdClient , IdExemplaire , DateEmprunt , DateRetour)
-    VALUES(@IdClient , @IdExemplaire , @DateEmprunt , @DateRetour)
+    INSERT INTO TEMPRUNTS(IdAbonnement , IdExemplaire , DateEmprunt , DateRetour)
+    VALUES(@IdAbonnement , @IdExemplaire , @DateEmprunt , @DateRetour)
 
     UPDATE 
         TEXEMPLAIRES
@@ -92,9 +92,7 @@ BEGIN
         IdExemplaire = @IdExemplaire
 
 END
-
-
-
+GO
 
 
 --Retourner livre

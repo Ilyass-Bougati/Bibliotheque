@@ -2,7 +2,8 @@
 CREATE PROCEDURE AjouterAvis
 @IdClient AS INT,
 @IdLivre AS INT,
-@Review AS NVARCHAR(MAX)
+@Review AS NVARCHAR(MAX),
+@Note AS INT
 
 AS
 BEGIN
@@ -13,15 +14,16 @@ BEGIN
         RETURN
     END
 
-    INSERT INTO TREVIEWS(IdClient , IdLivre , review)
-    VALUES (@IdClient , @IdLivre , @Review)
+    INSERT INTO TREVIEWS(IdClient , IdLivre , review , Notation)
+    VALUES (@IdClient , @IdLivre , @Review , @Note)
 END
 GO
 
 --PROC 3 
 CREATE PROCEDURE ModifierAvis
 @IdReview AS INT,
-@Review AS NVARCHAR(MAX)
+@Review AS NVARCHAR(MAX),
+@Note AS INT
 
 AS
 BEGIN
@@ -35,7 +37,8 @@ BEGIN
     UPDATE 
         TREVIEWS 
     SET
-        review = @Review
+        review = @Review ,
+        Notation = @Note
     WHERE 
         IdReview = @IdReview
 END
