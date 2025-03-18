@@ -68,7 +68,7 @@ BEGIN
     UPDATE 
         TEXEMPLAIRES
     SET
-        Disponibilite = 'empruntee'
+        EtatExemplaire = 'empruntee'
     WHERE
         IdExemplaire = @IdExemplaire
 
@@ -102,8 +102,8 @@ BEGIN
     DELETE FROM TEMPRUNTS
     WHERE IdExemplaire = @IdExemplaire
 
-    DECLARE @Disponibilite AS VARCHAR(20)
-    SELECT @Disponibilite = 'disponible'
+    DECLARE @EtatExemplaire AS VARCHAR(20)
+    SELECT @EtatExemplaire = 'disponible'
     
     IF @IdAbonnement IS NOT NULL
     BEGIN
@@ -123,7 +123,7 @@ BEGIN
     UPDATE
         TEXEMPLAIRES
     SET
-        Disponible = @Disponibilite
+        EtatExemplaire = @EtatExemplaire
     WHERE
         IdExemplaire = @IdExemplaire
 END
