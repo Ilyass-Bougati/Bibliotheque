@@ -25,7 +25,7 @@ CREATE TABLE TABONNEMENTS_TYPE (
   IdAbonnementType INT IDENTITY(1,1) PRIMARY KEY,
   AbonnementType VARCHAR(20) NOT NULL, -- here you might want to set a default value depending on the abonnement type
   NbEmpruntMax INT,
-  Dure INT,
+  Duree INT,
   Prix DECIMAL(10,2)
 ) 
 
