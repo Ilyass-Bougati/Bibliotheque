@@ -107,3 +107,40 @@ BEGIN
         
 END
 GO
+
+CREATE PROCEDURE VerifierDateAbonnement
+@IdAbonnement AS INT
+AS
+BEGIN
+    DECLARE @DateDebut AS DATETIME
+    SELECT @DateDebut = DateDebut
+    FROM
+        TABONNEMENTS
+    WHERE
+        IdAbonnement = @IdAbonnement
+
+    DECLARE @Duree AS INT
+    SELECT @Duree = Duree
+    FROM
+        TABONNEMENTS_TYPE JOIN TABONNEMENTS 
+        ON TABONNEMENTS_TYPE.IdAbonnementType = TABONNEMENTS.IdAbonnementType
+    WHERE
+        IdAbonnement = @IdAbonnement
+
+    DECLARE @DateFin AS DATETIME
+    DECLARE @DateCourante AS DATETIME
+
+    SELECT @DateFin = DATEADD(DAY , @Duree , @DateDebut)
+    SELECT @DateCourante = GETDATE()
+
+    IF DATEDIFF(DAY , @DateFin , @DateCourante) > 0
+    BEGIN
+        UPDATE 
+            TABONNEMENTS
+        SET
+            EtatAbonnement = 'expire'
+        WHERE
+            IdAbonnement = @IdAbonnement
+    END
+    
+END
