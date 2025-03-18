@@ -27,11 +27,11 @@ BEGIN
 
     --Verify that the book is not reserved
     DECLARE @EtatLivre AS BIT
-    SELECT @EtatLivre = Disponibilite
+    SELECT @EtatLivre = EtatExemplaire
     FROM
         (
             SELECT
-                Disponibilite
+                EtatExemplaire
             FROM 
                 TEXEMPLAIRES
             WHERE
@@ -87,7 +87,7 @@ BEGIN
     UPDATE 
         TEXEMPLAIRES
     SET
-        Disponibilite = 'empruntee'
+        EtatExemplaire = 'empruntee'
     WHERE
         IdExemplaire = @IdExemplaire
 
@@ -111,18 +111,18 @@ BEGIN
     DELETE FROM TEMPRUNTS
     WHERE IdExemplaire = @IdExemplaire
 
-    DECLARE @Disponibilite AS VARCHAR(20)
-    SELECT @Disponibilite = 'disponible'
+    DECLARE @EtatExemplaire AS VARCHAR(20)
+    SELECT @EtatExemplaire = 'disponible'
     
     IF @Reservation IS NOT NULL
     BEGIN
-        SELECT @Disponibilite = 'reserve'
+        SELECT @EtatExemplaire = 'reserve'
     END
 
     UPDATE
         TEXEMPLAIRES
     SET
-        Disponibilite = @Disponibilite
+        EtatExemplaire = @EtatExemplaire
     WHERE
         IdExemplaire = @IdExemplaire
 END
