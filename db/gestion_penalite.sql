@@ -51,7 +51,7 @@ BEGIN
         IF @NbJoursRetard >= 90
         BEGIN
             UPDATE TEXEMPLAIRES
-            SET EtatExemplaire = 'perdu'
+            SET Disponibilite = 'perdu'
             WHERE IdExemplaire = (SELECT IdExemplaire FROM TEMPRUNTS WHERE IdEmprunt = @IdEmprunt)
 
             PRINT 'L exemplaire a été marqué comme perdu en raison d un retard de 3 mois ou plus.'
