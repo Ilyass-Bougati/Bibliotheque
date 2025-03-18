@@ -168,20 +168,42 @@ VALUES
 -- Populate TPENALITE
 INSERT INTO TPENALITE (IdAbonnement, IdEmprunt, Motif, Montant, EtatPenalite, DatePenalite)
 VALUES 
-  (1, 6, 'Retard', 50.00, 'payee', DATEADD(day, -30, GETDATE())),
-  (5, 5, 'Livre abîmé', 150.00, 'en cours', DATEADD(day, -10, GETDATE()));
+  (1, 6, 'retard', 50.00, 'payee', DATEADD(day, -30, GETDATE())),
+  (5, 5, 'abime', 150.00, 'en cours', DATEADD(day, -10, GETDATE()));
 
--- Populate TRESERVATIONS (modified to use IdExemplaire instead of IdLivre)
-INSERT INTO TRESERVATIONS (IdClient, IdExemplaire, DateReservation)
+-- Populate TRESERVATIONS (modified to use IdLivre instead of IdExemplaire)
+INSERT INTO TRESERVATIONS (IdClient, IdLivre, DateReservation)
 VALUES 
-  (1, 6, DATEADD(day, -2, GETDATE())),  -- Client 1 reserves exemplaire 6 (1984)
-  (3, 12, DATEADD(day, -5, GETDATE())), -- Client 3 reserves exemplaire 12 (Harry Potter second copy)
-  (5, 7, DATEADD(day, -1, GETDATE()));  -- Client 5 reserves exemplaire 7 (Cent Ans de Solitude)
+  (1, 6, DATEADD(day, -2, GETDATE())),  -- Client 1 reserves livre 6 (1984)
+  (3, 4, DATEADD(day, -5, GETDATE())),  -- Client 3 reserves livre 4 (Harry Potter)
+  (5, 7, DATEADD(day, -1, GETDATE()));  -- Client 5 reserves livre 7 (Cent Ans de Solitude)
 
 -- Update exemplaires availability status for reservations
+-- We need to select one exemplaire for each reserved book
 UPDATE TEXEMPLAIRES 
 SET EtatExemplaire = 'reserve' 
-WHERE IdExemplaire IN (6, 7, 12);
+WHERE IdExemplaire IN (
+  -- Select one exemplaire for each reserved book
+  SELECT TOP 1 e.IdExemplaire 
+  FROM TEXEMPLAIRES e 
+  WHERE e.IdLivre = 6 AND e.EtatExemplaire = 'disponible'
+);
+
+UPDATE TEXEMPLAIRES 
+SET EtatExemplaire = 'reserve' 
+WHERE IdExemplaire IN (
+  SELECT TOP 1 e.IdExemplaire 
+  FROM TEXEMPLAIRES e 
+  WHERE e.IdLivre = 4 AND e.EtatExemplaire = 'disponible'
+);
+
+UPDATE TEXEMPLAIRES 
+SET EtatExemplaire = 'reserve' 
+WHERE IdExemplaire IN (
+  SELECT TOP 1 e.IdExemplaire 
+  FROM TEXEMPLAIRES e 
+  WHERE e.IdLivre = 7 AND e.EtatExemplaire = 'disponible'
+);
 
 -- Populate TNOTIFICATIONS
 INSERT INTO TNOTIFICATIONS (IdClient, NotificationType, NotificationText, NotificationDate)
