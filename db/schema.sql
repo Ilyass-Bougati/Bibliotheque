@@ -118,7 +118,7 @@ CREATE TABLE TREVIEWS (
   IdClient INT NOT NULL ,
   IdLivre INT NOT NULL,
   Notation INT CHECK (Notation BETWEEN 1 AND 10),
-  Review NVARCHAR(MAX) NOT NULL,
+  Commentaire NVARCHAR(MAX) NULL,
   CONSTRAINT FK_REVIEWS_CLIENT FOREIGN KEY (IdClient)
       REFERENCES TCLIENTS(IdClient), -- it's ok to have a reviews even if the client is gone
   CONSTRAINT FK_REVIEWS_LIVRE FOREIGN KEY (IdLivre)
