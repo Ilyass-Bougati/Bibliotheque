@@ -12,7 +12,7 @@ BEGIN
         RETURN
     END
 
-    INSERT INTO TABONNEMENTS_TYPE (AbonnementType, NbEmpruntMax, Dure, Prix)
+    INSERT INTO TABONNEMENTS_TYPE (AbonnementType, NbEmpruntMax, Duree, Prix)
     VALUES (LOWER(dbo.Trim(@AbonnementType)), @EmpruntMax, @Duree, @Prix)
 END
 GO
