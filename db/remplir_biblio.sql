@@ -73,7 +73,7 @@ VALUES
   ('Le Petit Prince', '9782070612758', 1);
 
 -- Populate TEXEMPLAIRES
-INSERT INTO TEXEMPLAIRES (IdLivre, Disponibilite, Localisation)
+INSERT INTO TEXEMPLAIRES (IdLivre, EtatExemplaire, Localisation)
 VALUES 
   (1, 'disponible', 'Étagère A1'),
   (1, 'disponible', 'Étagère A2'),
@@ -153,7 +153,7 @@ VALUES
 
 -- Update exemplaires availability status
 UPDATE TEXEMPLAIRES 
-SET Disponibilite = 'emprunte' 
+SET EtatExemplaire = 'emprunte' 
 WHERE IdExemplaire IN (1, 5, 8, 10);
 
 -- Populate TREVIEWS
@@ -180,7 +180,7 @@ VALUES
 
 -- Update exemplaires availability status for reservations
 UPDATE TEXEMPLAIRES 
-SET Disponibilite = 'reserve' 
+SET EtatExemplaire = 'reserve' 
 WHERE IdExemplaire IN (6, 7, 12);
 
 -- Populate TNOTIFICATIONS

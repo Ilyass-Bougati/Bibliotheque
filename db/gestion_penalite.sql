@@ -50,7 +50,7 @@ BEGIN
         IF @NbJoursRetard >= 90
         BEGIN
             UPDATE TEXEMPLAIRES
-            SET Disponibilite = 'perdu'
+            SET EtatExemplaire = 'perdu'
             WHERE IdExemplaire = (SELECT IdExemplaire FROM TEMPRUNTS WHERE IdEmprunt = @IdEmprunt)
 
             PRINT 'L exemplaire a été marqué comme perdu en raison d un retard de 3 mois ou plus.'
@@ -66,7 +66,7 @@ BEGIN
         -- Envoi de notification pour perte
         EXEC EnvoyerNotification @IdClient, 'Un livre a été déclaré perdu. Une pénalité de ' +CAST(@Montant AS NVARCHAR)+ ' Dhs a été appliquée.','perte'
     END     
-    ELSE IF @Motif = 'abîmé'     
+    ELSE IF @Motif = 'abime'     
     BEGIN         
         SET @Montant = 300.00  
 
@@ -75,12 +75,12 @@ BEGIN
     END      
 
     -- Vérification du nombre de pénalités pour perte ou abîmé
-    IF @Motif IN ('perte', 'abîmé')
+    IF @Motif IN ('perte', 'abime')
     BEGIN
         SET @NbPerteAbime = 0
         SELECT @NbPerteAbime = COUNT(*)         
         FROM TPENALITE         
-        WHERE IdAbonnement = @IdAbonnement AND Motif IN ('perte', 'abîmé') 
+        WHERE IdAbonnement = @IdAbonnement AND Motif IN ('perte', 'abime') 
 
         IF @NbPerteAbime = 4
         BEGIN

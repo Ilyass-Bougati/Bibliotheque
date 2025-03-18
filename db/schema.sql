@@ -64,8 +64,8 @@ CREATE TABLE TLIVRES (
 CREATE TABLE TEXEMPLAIRES (
   IdExemplaire INT IDENTITY(1,1) PRIMARY KEY,
   IdLivre INT NOT NULL,
-  Disponibilite VARCHAR(30) DEFAULT 'disponible'
-    CHECK (Disponibilite IN ('disponible', 'perdu', 'emprunte' , 'reserve')),
+  EtatExemplaire VARCHAR(30) DEFAULT 'disponible'
+    CHECK (EtatExemplaire IN ('disponible', 'perdu', 'emprunte' , 'reserve')),
   Localisation VARCHAR(100),
   CONSTRAINT FK_EXEMPLAIRES_LIVRES FOREIGN KEY (IdLivre)
       REFERENCES TLIVRES(IdLivre) ON DELETE CASCADE
