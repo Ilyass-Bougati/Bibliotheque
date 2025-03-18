@@ -157,7 +157,7 @@ SET EtatExemplaire = 'emprunte'
 WHERE IdExemplaire IN (1, 5, 8, 10);
 
 -- Populate TREVIEWS
-INSERT INTO TREVIEWS (IdClient, IdLivre, Notation, Review)
+INSERT INTO TREVIEWS (IdClient, IdLivre, Notation, Commentaire)
 VALUES 
   (1, 1, 9, 'Un chef-d''œuvre de la littérature française. Victor Hugo nous offre une fresque sociale impressionnante.'),
   (2, 4, 8, 'Une immersion magique dans l''univers des sorciers. Parfait pour les jeunes et les moins jeunes.'),
