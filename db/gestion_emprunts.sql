@@ -7,7 +7,7 @@ CREATE PROCEDURE EmprunterLivre
 AS
 BEGIN
 
-    -- Verify that the client is not under a penalty
+    -- Verifier que le client n'est pas penalise
     DECLARE @EtatClient AS VARCHAR(20)
     SELECT @EtatClient = LOWER(EtatAbonnement) -- etat should be lowercase by default
     FROM(
@@ -22,25 +22,6 @@ BEGIN
     IF @EtatClient != 'actif'
     BEGIN
         PRINT 'L''abonnement n''est pas eligible a un emprunt'
-        RETURN
-    END
-
-    --Verify that the book is not reserved
-    DECLARE @EtatLivre AS BIT
-    SELECT @EtatLivre = EtatExemplaire
-    FROM
-        (
-            SELECT
-                EtatExemplaire
-            FROM 
-                TEXEMPLAIRES
-            WHERE
-                IdExemplaire = @IdExemplaire
-        )AS TEMP2
-
-    IF @EtatLivre != 'disponible'
-    BEGIN
-        PRINT 'l''exemplaire n''est pas disponible.'
         RETURN
     END
 
@@ -101,12 +82,22 @@ CREATE PROCEDURE RetournerLivre
 
 AS
 BEGIN
+    --Gets the exemplary's book id
+    DECLARE @IdLivre AS INT
+    SELECT @IdLivre = IdLivre
+    FROM
+        TEXEMPLAIRES
+    WHERE
+        IdExemplaire = @IdExemplaire
+
     --Checks if the book is reserved :
-    
-    DECLARE @Reservation AS INT
-    SELECT @Reservation = IdReservation
-    FROM TRESERVATIONS
-    WHERE IdExemplaire = @IdExemplaire
+    DECLARE @IdAbonnement AS INT
+    SELECT @IdAbonnement = IdAbonnement
+    FROM
+        TRESERVATIONS JOIN TABONNEMENTS
+        ON TRESERVATIONS.IdAbonnement = TABONNEMENTS.IdAbonnement
+    WHERE
+        IdLivre = @IdLivre
 
     DELETE FROM TEMPRUNTS
     WHERE IdExemplaire = @IdExemplaire
@@ -114,10 +105,20 @@ BEGIN
     DECLARE @EtatExemplaire AS VARCHAR(20)
     SELECT @EtatExemplaire = 'disponible'
     
-    IF @Reservation IS NOT NULL
+    IF @IdAbonnement IS NOT NULL
     BEGIN
-        SELECT @EtatExemplaire = 'reserve'
+        SELECT @Disponibilite = 'reserve'
+
+        DECLARE @IdClient AS INT
+        SELECT @IdClient = IdClient
+        FROM
+            TABONNEMENTS
+        WHERE
+            IdAbonnement = @IdAbonnement
+
+        EnvoyerNotification(@IdClient ,'Le livre que vous avez reserve est maintenant disponible .', 'Reservation')
     END
+
 
     UPDATE
         TEXEMPLAIRES
