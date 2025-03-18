@@ -1,14 +1,14 @@
 CREATE PROCEDURE ReserverLivre
-	@IdClient INT,
+	@IdAbonnement INT,
 	@IdLivre INT
 AS
 BEGIN
-	INSERT INTO TRESERVATIONS (IdClient, IdLivre)
-	VALUES (@IdClient, @IdLivre)
+	INSERT INTO TRESERVATIONS (IdAbonnement, IdLivre)
+	VALUES (@IdAbonnement, @IdLivre)
 END
 GO
 
-CREATE PROCEDURE SuprimerReservation
+CREATE PROCEDURE SupprimerReservation
 	@IdReservation INT
 AS
 BEGIN
