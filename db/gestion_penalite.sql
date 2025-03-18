@@ -10,13 +10,14 @@ BEGIN
     DECLARE @NbJoursRetard INT     
     DECLARE @Montant DECIMAL(10,2)      
     DECLARE @IdClient INT
+    DECLARE @NotificationText NVARCHAR(MAX)
 
     -- Récupérer l'IdClient à partir de l'IdAbonnement
     SELECT @IdClient = IdClient FROM TABONNEMENTS WHERE IdAbonnement = @IdAbonnement
 
     -- Traitement pour le retard
-    IF @Motif = 'retard'     
-    BEGIN   
+    IF @Motif = 'retard'
+    BEGIN
         -- Vérifier si @IdEmprunt est NULL
         IF @IdEmprunt IS NULL
         BEGIN
@@ -56,22 +57,25 @@ BEGIN
             PRINT 'L exemplaire a été marqué comme perdu en raison d un retard de 3 mois ou plus.'
         END
 
+        SELECT @NotificationText =  'Vous avez une pénalité pour retard de '+ CAST(@NbJoursRetard AS NVARCHAR(20))+ ' jours. Montant: ' + CAST(@Montant AS NVARCHAR(20))+ ' Dhs.'
         -- Envoi de notification pour retard
-        EXEC EnvoyerNotification @IdClient, 'Vous avez une pénalité pour retard de '+ CAST(@NbJoursRetard AS NVARCHAR)+ ' jours. Montant: ' + CAST(@Montant AS NVARCHAR)+ ' Dhs.','retard'
+        EXEC EnvoyerNotification @IdClient,@NotificationText ,'retard'
     END     
     ELSE IF @Motif = 'perte'     
     BEGIN         
         SET @Montant = 500.00  
 
+        SELECT @NotificationText = 'Un livre a été déclaré perdu. Une pénalité de ' +CAST(@Montant AS NVARCHAR(20))+ ' Dhs a été appliquée.'
         -- Envoi de notification pour perte
-        EXEC EnvoyerNotification @IdClient, 'Un livre a été déclaré perdu. Une pénalité de ' +CAST(@Montant AS NVARCHAR)+ ' Dhs a été appliquée.','perte'
+        EXEC EnvoyerNotification @IdClient, @NotificationText,'perte'
     END     
     ELSE IF @Motif = 'abime'     
     BEGIN         
         SET @Montant = 300.00  
 
+        SELECT @NotificationText = 'Un livre a été déclaré abîmé. Une pénalité de ' +CAST(@Montant AS NVARCHAR(20))+ ' Dhs a été appliquée.'
         -- Envoi de notification pour abîmé
-        EXEC EnvoyerNotification @IdClient, 'Un livre a été déclaré abîmé. Une pénalité de ' +CAST(@Montant AS NVARCHAR)+ ' Dhs a été appliquée.', 'abime'
+        EXEC EnvoyerNotification @IdClient, @NotificationText, 'abime'
     END      
 
     -- Vérification du nombre de pénalités pour perte ou abîmé
