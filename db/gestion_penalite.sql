@@ -1,22 +1,33 @@
+--Procedure pour Ajouter une Penalite
 CREATE PROCEDURE AjouterPenalite     
     @IdAbonnement INT,     
     @IdEmprunt INT = NULL,     
     @Motif VARCHAR(20) 
 AS 
 BEGIN     
-    DECLARE @NbPerteAbime INT     
+    DECLARE @NbPerteAbime INT = 0    
     DECLARE @DateRetour DATETIME     
     DECLARE @NbJoursRetard INT     
     DECLARE @Montant DECIMAL(10,2)      
+    DECLARE @IdClient INT
+
+    -- Récupérer l'IdClient à partir de l'IdAbonnement
+    SELECT @IdClient = IdClient FROM TABONNEMENTS WHERE IdAbonnement = @IdAbonnement
 
     -- Traitement pour le retard
     IF @Motif = 'retard'     
-    BEGIN         
+    BEGIN   
+        -- Vérifier si @IdEmprunt est NULL
+        IF @IdEmprunt IS NULL
+        BEGIN
+            PRINT 'Erreur : L''ID d''emprunt est requis pour calculer la pénalité de retard.'
+            RETURN
+        END      
         SELECT @DateRetour = DateRetour         
         FROM TEMPRUNTS         
         WHERE IdEmprunt = @IdEmprunt          
 
-        IF @DateRetour IS NULL
+        IF @DateRetour IS NULL         
         BEGIN             
             PRINT 'Erreur : La date de retour est introuvable.'             
             RETURN         
@@ -27,26 +38,46 @@ BEGIN
 
         -- Calcul du montant basé sur les jours de retard         
         IF @NbJoursRetard <= 7             
-            SET @Montant = 50.00  -- Montant pour un retard de 7 jours ou moins         
+            SET @Montant = 50.00  -- Montant pour un retard de 7 jours ou moins          
         ELSE IF @NbJoursRetard <= 14             
-            SET @Montant = 100.00  -- Montant pour un retard de 8 à 14 jours         
+            SET @Montant = 100.00     -- Montant pour un retard de 8 à 14 jours      
         ELSE IF @NbJoursRetard <= 21             
-            SET @Montant = 200.00  -- Montant pour un retard de 15 à 21 jours         
+            SET @Montant = 200.00     -- Montant pour un retard de 15 à 21 jours     
         ELSE             
-            SET @Montant = 300.00  -- Montant maximal pour un retard supérieur à 21 jours     
+            SET @Montant = 300.00  -- Montant maximal pour un retard supérieur à 21 jours 
+
+        -- Si le retard est de 3 mois (90 jours) ou plus on marque l'exemplaire comme perdu
+        IF @NbJoursRetard >= 90
+        BEGIN
+            UPDATE TEXEMPLAIRES
+            SET Disponibilite = 'perdu'
+            WHERE IdExemplaire = (SELECT IdExemplaire FROM TEMPRUNTS WHERE IdEmprunt = @IdEmprunt)
+
+            PRINT 'L exemplaire a été marqué comme perdu en raison d un retard de 3 mois ou plus.'
+        END
+
+        -- Envoi de notification pour retard
+        EXEC EnvoyerNotification @IdClient, 'Vous avez une pénalité pour retard de '+ CAST(@NbJoursRetard AS NVARCHAR)+ ' jours. Montant: ' + CAST(@Montant AS NVARCHAR)+ ' Dhs.','retard'
     END     
     ELSE IF @Motif = 'perte'     
     BEGIN         
-        SET @Montant = 500.00  -- Montant fixe en dirhams pour une perte     
+        SET @Montant = 500.00  
+
+        -- Envoi de notification pour perte
+        EXEC EnvoyerNotification @IdClient, 'Un livre a été déclaré perdu. Une pénalité de ' +CAST(@Montant AS NVARCHAR)+ ' Dhs a été appliquée.','perte'
     END     
     ELSE IF @Motif = 'abîmé'     
     BEGIN         
-        SET @Montant = 300.00  -- Montant fixe en dirhams pour une détérioration     
+        SET @Montant = 300.00  
+
+        -- Envoi de notification pour abîmé
+        EXEC EnvoyerNotification @IdClient, 'Un livre a été déclaré abîmé. Une pénalité de ' +CAST(@Montant AS NVARCHAR)+ ' Dhs a été appliquée.', 'abime'
     END      
 
     -- Vérification du nombre de pénalités pour perte ou abîmé
     IF @Motif IN ('perte', 'abîmé')
     BEGIN
+        SET @NbPerteAbime = 0
         SELECT @NbPerteAbime = COUNT(*)         
         FROM TPENALITE         
         WHERE IdAbonnement = @IdAbonnement AND Motif IN ('perte', 'abîmé') 
@@ -56,7 +87,12 @@ BEGIN
             UPDATE TABONNEMENTS             
             SET EtatAbonnement = 'annule'             
             WHERE IdAbonnement = @IdAbonnement
+
             PRINT 'L abonnement a été annulé en raison de 5 pénalités pour perte ou abîmé.'
+
+            -- Envoi de notification pour annulation
+            EXEC EnvoyerNotification @IdClient, 'Votre abonnement a été annulé en raison de 5 pénalités pour perte ou détérioration.','annulation'
+
             RETURN
         END
     END
@@ -65,35 +101,46 @@ BEGIN
     INSERT INTO TPENALITE (IdAbonnement, IdEmprunt, Motif, Montant, EtatPenalite, DatePenalite)     
     VALUES (@IdAbonnement, @IdEmprunt, @Motif, @Montant, 'en cours', GETDATE())
 
-    -- suspendu l'abonnement s'il n'est pas annulé
+    -- Suspendre l'abonnement s'il n'est pas annulé
     UPDATE TABONNEMENTS        
     SET EtatAbonnement = 'suspendu'
     WHERE IdAbonnement = @IdAbonnement 
+
+    -- Envoi de notification pour suspension
+    EXEC EnvoyerNotification @IdClient,'Votre abonnement a été suspendu en raison d''une pénalité.', 'suspension'
 END
 GO
+
 
 -- Procédure pour réactiver un abonnement
 CREATE PROCEDURE ReactiverAbonnement
     @IdAbonnement INT
 AS
 BEGIN
+     DECLARE @IdClient INT 
+      -- Récupérer l'IdClient à partir de l'IdAbonnement
+    SELECT @IdClient = IdClient FROM TABONNEMENTS WHERE IdAbonnement = @IdAbonnement
     -- Vérifier s'il reste des pénalités non payées
-    DECLARE @PenalitesEnCours INT;
+    DECLARE @PenalitesEnCours INT 
     SELECT @PenalitesEnCours = COUNT(*) 
     FROM TPENALITE 
-    WHERE IdAbonnement = @IdAbonnement AND EtatPenalite = 'en cours';
+    WHERE IdAbonnement = @IdAbonnement AND EtatPenalite = 'en cours' 
 
     -- Si aucune pénalité en cours, on réactive l'abonnement
     IF @PenalitesEnCours = 0
     BEGIN
         UPDATE TABONNEMENTS
         SET EtatAbonnement = 'actif'
-        WHERE IdAbonnement = @IdAbonnement AND EtatAbonnement = 'suspendu';
+        WHERE IdAbonnement = @IdAbonnement AND EtatAbonnement = 'suspendu'
+         -- Ajouter une notification dans la table de notifications
+        EXEC EnvoyerNotification @IdClient,  'Votre abonnement a été réactivé avec succès.','Confirmation'
+
     END
 END
 GO
 
--- Procédure pour payer une pénalité
+
+--Procedure pour payer une Penalite
 CREATE PROCEDURE PayerPenalite
     @IdPenalite INT
 AS
@@ -101,29 +148,42 @@ BEGIN
     -- Mettre à jour la pénalité comme "payée"
     UPDATE TPENALITE
     SET EtatPenalite = 'payee'
-    WHERE IdPenalite = @IdPenalite;
+    WHERE IdPenalite = @IdPenalite
 
-    -- Récupérer l'ID de l'abonnement associé à la pénalité
-    DECLARE @IdAbonnement INT;
-    SELECT @IdAbonnement = IdAbonnement FROM TPENALITE WHERE IdPenalite = @IdPenalite;
+    -- Récupérer l'ID de l'abonnement et l'ID du client en une seule requête avec jointure
+    DECLARE @IdAbonnement INT, @IdClient INT 
+    
+    SELECT @IdAbonnement = P.IdAbonnement, 
+           @IdClient = A.IdClient
+    FROM TPENALITE P
+    JOIN TABONNEMENTS A ON P.IdAbonnement = A.IdAbonnement
+    WHERE P.IdPenalite = @IdPenalite 
 
+    -- Ajouter une notification dans la table de notifications
+    EXEC EnvoyerNotification @IdClient, 'Votre pénalité a été payée avec succès.', 'information' 
+   
     -- Vérifier s'il reste des pénalités non payées et réactiver si nécessaire
-    EXEC ReactiverAbonnement @IdAbonnement;
+    EXEC ReactiverAbonnement @IdAbonnement 
 END
 GO
 
+--Procédure pour suspendre l'abonnement d'un client ayant des pénalités de retard impayées
 CREATE PROCEDURE SuspendreAbonnementSiPenalitesRetards
     @IdAbonnement INT,
     @Seuil INT = 3  
 AS
 BEGIN
-    DECLARE @NbPenalites INT
+    DECLARE @NbPenalites INT , @IdClient INT
 
-    SELECT @NbPenalites = COUNT(*)
-    FROM TPENALITE
-    WHERE IdAbonnement = @IdAbonnement 
-          AND EtatPenalite = 'en cours' 
-          AND Motif = 'retard'
+    -- Récupérer l'IdClient et le nombre de pénalités en une seule requête avec une jointure
+    SELECT @IdClient = A.IdClient, 
+           @NbPenalites = COUNT(P.IdPenalite)
+    FROM TABONNEMENTS A
+    LEFT JOIN TPENALITE P ON A.IdAbonnement = P.IdAbonnement 
+                          AND P.EtatPenalite = 'en cours' 
+                          AND P.Motif = 'retard'
+    WHERE A.IdAbonnement = @IdAbonnement
+    GROUP BY A.IdClient 
 
     IF @NbPenalites >= @Seuil
     BEGIN
@@ -134,18 +194,17 @@ BEGIN
         BEGIN
             UPDATE TABONNEMENTS
             SET EtatAbonnement = 'suspendu'
-            WHERE IdAbonnement = @IdAbonnement
+            WHERE IdAbonnement = @IdAbonnement 
 
             PRINT 'L abonnement a été suspendu en raison de pénalités de retard impayées.'
             
-            -- Insérer une notification pour le client
-            --INSERT INTO TNOTIFICATIONS (IdClient, NotificationType, NotificationText)
-            -- SELECT IdClient, 'Penalite', 'Votre abonnement a été suspendu en raison de plusieurs retards.'
-            -- FROM TABONNEMENTS WHERE IdAbonnement = @IdAbonnement
+            -- Ajouter une notification dans la table de notifications
+            EXEC EnvoyerNotification @IdClient,  
+                'Votre abonnement a été suspendu en raison de pénalités de retard impayées.',
+                'suspension' 
         END
     END
 END
-
 GO
 
 -- Procédure pour lister les pénalités
@@ -156,4 +215,3 @@ BEGIN
     SELECT * FROM TPENALITE
     WHERE IdAbonnement = @IdAbonnement AND EtatPenalite = 'en cours'
 END
-GO
