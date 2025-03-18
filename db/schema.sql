@@ -7,15 +7,15 @@ CREATE TABLE TCLIENTS (
   Email VARCHAR(100),
   PhoneNumber VARCHAR(20),
   Ville VARCHAR(50)
-)
-
+) 
+ 
 -- Table TNOTIFICATIONS
 CREATE TABLE TNOTIFICATIONS (
   IdNotification INT IDENTITY(1,1) PRIMARY KEY,
   IdClient INT NOT NULL,
   NotificationType VARCHAR(20) NOT NULL,
   NotificationText NVARCHAR(MAX),
-  NotificationDate DATETIME DEFAULT GETDATE(),
+  NotificationDate DATETIME DEFAULT GETDATE(), 
   CONSTRAINT FK_NOTIFICATIONS_CLIENT FOREIGN KEY (IdClient)
       REFERENCES TCLIENTS(IdClient) ON DELETE CASCADE
 ) 
@@ -38,7 +38,7 @@ CREATE TABLE TABONNEMENTS (
   EtatAbonnement VARCHAR(20) NOT NULL DEFAULT 'actif' 
         CHECK (EtatAbonnement IN ('actif', 'expire', 'suspendu', 'annule', 'banni')),
   CONSTRAINT FK_ABONNEMENTS_CLIENT FOREIGN KEY (IdClient)
-      REFERENCES TCLIENTS(IdClient) ON DELETE CASCADE,
+      REFERENCES TCLIENTS(IdClient) ON DELETE CASCADE, 
   CONSTRAINT FK_ABONNEMENTS_TYPE FOREIGN KEY (IdAbonnementType)
       REFERENCES TABONNEMENTS_TYPE(IdAbonnementType) -- here we can't just Cascading Deletes we need to be sure there is no active sub with this type 
 ) 
@@ -64,8 +64,8 @@ CREATE TABLE TLIVRES (
 CREATE TABLE TEXEMPLAIRES (
   IdExemplaire INT IDENTITY(1,1) PRIMARY KEY,
   IdLivre INT NOT NULL,
-  EtatExemplaire VARCHAR(30) DEFAULT 'disponible'
-    CHECK (EtatExemplaire IN ('disponible', 'perdu', 'emprunte' , 'reserve')),
+  Disponibilite VARCHAR(30) DEFAULT 'disponible'
+    CHECK (Disponibilite IN ('disponible', 'perdu', 'emprunte' , 'reserve')),
   Localisation VARCHAR(100),
   CONSTRAINT FK_EXEMPLAIRES_LIVRES FOREIGN KEY (IdLivre)
       REFERENCES TLIVRES(IdLivre) ON DELETE CASCADE
@@ -104,12 +104,12 @@ CREATE TABLE TPENALITE (
 CREATE TABLE TRESERVATIONS (
   IdReservation INT IDENTITY(1,1) PRIMARY KEY,
   IdClient INT NOT NULL,
-  IdLivre INT NOT NULL,
+  IdExemplaire INT NOT NULL,
   DateReservation DATETIME DEFAULT GETDATE(),
   CONSTRAINT FK_RESERVATIONS_CLIENT FOREIGN KEY (IdClient)
       REFERENCES TCLIENTS(IdClient) ON DELETE CASCADE,
-  CONSTRAINT FK_RESERVATIONS_LIVRE FOREIGN KEY (IdLivre)
-      REFERENCES TLIVRES(IdLivre) ON DELETE CASCADE
+  CONSTRAINT FK_RESERVATIONS_Exemplaire FOREIGN KEY (IdExemplaire)
+      REFERENCES TEXEMPLAIRES(IdExemplaire) ON DELETE CASCADE
 ) 
 
 -- Table TREVIEWS
@@ -117,8 +117,7 @@ CREATE TABLE TREVIEWS (
   IdReview INT IDENTITY(1,1) PRIMARY KEY,
   IdClient INT NOT NULL ,
   IdLivre INT NOT NULL,
-  Notation INT CHECK (Notation BETWEEN 1 AND 10),
-  Commentaire NVARCHAR(MAX) NULL,
+  Review INT CHECK (Notation BETWEEN 1 AND 10),
   CONSTRAINT FK_REVIEWS_CLIENT FOREIGN KEY (IdClient)
       REFERENCES TCLIENTS(IdClient), -- it's ok to have a reviews even if the client is gone
   CONSTRAINT FK_REVIEWS_LIVRE FOREIGN KEY (IdLivre)
