@@ -12,7 +12,7 @@ BEGIN
   FETCH NEXT FROM Abonnement_curseur INTO @IdAbonnement
   WHILE @@FETCH_STATUS = 0
   BEGIN
-    VerifierDateAbonnement(@IdAbonnement)
+    EXEC VerifierDateAbonnement @IdAbonnement
     FETCH NEXT FROM Abonnement_curseur INTO @IdAbonnement
   END
 END
