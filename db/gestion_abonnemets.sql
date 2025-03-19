@@ -142,7 +142,8 @@ BEGIN
         WHERE
             IdAbonnement = @IdAbonnement
         
-        DECLARE @IdClient = IdClient
+        DECLARE @IdClient INT
+        SELECT @IdClient = IdClient
         FROM 
             TABONNEMENTS
         WHERE

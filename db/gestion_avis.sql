@@ -48,13 +48,13 @@ GO
 --PROC 4
 CREATE PROCEDURE SupprimerAvis
 @IdClient AS INT,
-@IdLivre AS INT,
+@IdLivre AS INT
 AS
 BEGIN
     DELETE 
     FROM 
         TREVIEWS
-     WHERE 
+    WHERE 
         IdClient = @IdClient
     AND
         IdLivre = @IdLivre
