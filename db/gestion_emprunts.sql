@@ -1,12 +1,24 @@
---Emprunter livre
 CREATE PROCEDURE EmprunterLivre
 @IdAbonnement AS INT,
-@IdExemplaire AS INT,
-@DateEmprunt AS DATETIME
+@IdExemplaire AS INT
 
 AS
 BEGIN
+    DECLARE @DateEmprunt AS DATETIME
+    SELECT @DateEmprunt = GETDATE()
+    --verifier que le livre n'est pas deja emprunte
+    DECLARE @Disponibilite AS VARCHAR(30)
+    SELECT @Disponibilite = Disponibilite
+    FROM
+        TEXEMPLAIRES
+    WHERE
+        IdExemplaire = @IdExemplaire
 
+    IF @Disponibilite != 'disponible'
+    BEGIN
+        PRINT 'L''exemplaire desire n''est pas disponible'
+        RETURN
+    END
     -- Verifier que le client n'est pas penalise
     DECLARE @EtatClient AS VARCHAR(20)
     SELECT @EtatClient = LOWER(EtatAbonnement) -- etat should be lowercase by default
@@ -68,11 +80,12 @@ BEGIN
     UPDATE 
         TEXEMPLAIRES
     SET
-        EtatExemplaire = 'empruntee'
+        Disponibilite = 'emprunte'
     WHERE
         IdExemplaire = @IdExemplaire
 
 END
+
 GO
 
 
@@ -92,7 +105,7 @@ BEGIN
 
     --Checks if the book is reserved :
     DECLARE @IdAbonnement AS INT
-    SELECT @IdAbonnement = IdAbonnement
+    SELECT @IdAbonnement = TABONNEMENTS.IdAbonnement
     FROM
         TRESERVATIONS JOIN TABONNEMENTS
         ON TRESERVATIONS.IdAbonnement = TABONNEMENTS.IdAbonnement
@@ -102,8 +115,8 @@ BEGIN
     DELETE FROM TEMPRUNTS
     WHERE IdExemplaire = @IdExemplaire
 
-    DECLARE @EtatExemplaire AS VARCHAR(20)
-    SELECT @EtatExemplaire = 'disponible'
+    DECLARE @Disponibilite AS VARCHAR(20)
+    SELECT @Disponibilite = 'disponible'
     
     IF @IdAbonnement IS NOT NULL
     BEGIN
@@ -116,14 +129,14 @@ BEGIN
         WHERE
             IdAbonnement = @IdAbonnement
 
-        EnvoyerNotification(@IdClient ,'Le livre que vous avez reserve est maintenant disponible .', 'Reservation')
+        EXEC EnvoyerNotification @IdClient ,'Le livre que vous avez reserve est maintenant disponible .', 'Reservation'
     END
 
 
     UPDATE
         TEXEMPLAIRES
     SET
-        EtatExemplaire = @EtatExemplaire
+        Disponibilite = @Disponibilite
     WHERE
         IdExemplaire = @IdExemplaire
 END
