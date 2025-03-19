@@ -67,6 +67,13 @@ BEGIN
         RETURN 
     END 
 
+    -- Vérification que le nom de la langue n'est pas vide
+    IF dbo.Validate_empty(@NomLangue) = 0
+    BEGIN
+        PRINT 'Erreur : Le nom de la langue ne peut pas etre vide.' 
+        RETURN 
+    END 
+
     -- Vérification du format de l'ISBN
     IF dbo.Validate_ISBN(dbo.Trim(@ISBN)) = 0
     BEGIN
@@ -76,23 +83,20 @@ BEGIN
 
     BEGIN TRY
         BEGIN TRANSACTION
-            IF dbo.Validate_empty(@NomLangue) = 1 -- Si le nom de la langue n'est pas vide
+            -- Recherche de l'ID de la langue
+            SELECT @IdLangue = IdLangue
+            FROM TLANGUES
+            WHERE NomLangue = LOWER(dbo.Trim(@NomLangue)) 
+            
+            -- Si la langue n'existe pas, on l'ajoute
+            IF @IdLangue IS NULL
             BEGIN
-                -- Recherche de l'ID de la langue
+                EXEC AjouterLangue @NomLangue 
+                
+                -- Récupération de l'ID de la langue nouvellement créée
                 SELECT @IdLangue = IdLangue
                 FROM TLANGUES
                 WHERE NomLangue = LOWER(dbo.Trim(@NomLangue)) 
-                
-                -- Si la langue n'existe pas, on l'ajoute
-                IF @IdLangue IS NULL
-                BEGIN
-                    EXEC AjouterLangue @NomLangue 
-                    
-                    -- Récupération de l'ID de la langue nouvellement créée
-                    SELECT @IdLangue = IdLangue
-                    FROM TLANGUES
-                    WHERE NomLangue = LOWER(dbo.Trim(@NomLangue)) 
-                END 
             END 
 
             -- Ajout de l'auteur s'il n'existe pas et récupération de son ID
@@ -152,7 +156,7 @@ BEGIN
 
     -- Vérification que l'ISBN, s'il est fourni, n'existe pas déjà pour un autre livre
     IF @ISBN IS NOT NULL AND EXISTS (
-        SELECT 1 FROM TLIVRES WHERE ISBN = @ISBN AND IdLivre <> @IdLivre
+        SELECT 1 FROM TLIVRES WHERE ISBN = @ISBN AND IdLivre != @IdLivre
     )
     BEGIN
         PRINT 'Erreur : L ISBN existe deja pour un autre livre.' 
@@ -836,7 +840,7 @@ BEGIN
     DECLARE @Langue VARCHAR(50) = LOWER(dbo.Trim(@NomLangue)) 
     
     -- Vérifie qu'il n'existe pas déjà une autre langue avec ce nom
-    IF EXISTS (SELECT 1 FROM TLANGUES WHERE LOWER(NomLangue) = @Langue AND IdLangue <> @IdLangue)
+    IF EXISTS (SELECT 1 FROM TLANGUES WHERE LOWER(NomLangue) = @Langue AND IdLangue != @IdLangue)
     BEGIN
         PRINT 'Erreur : Une langue avec ce nom existe deja.' 
         RETURN 

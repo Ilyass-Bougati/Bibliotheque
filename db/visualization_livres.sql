@@ -53,7 +53,7 @@ BEGIN
             FOR XML PATH('')
         ), 1, 2, '') AS Editeurs,
         -- Calcul de la notation moyenne et du nombre d'avis
-        AVG(TREVIEWS.Notation) AS NotationMoyenne,
+        AVG(TREVIEWS.Review) AS Reviews,
         COUNT(TREVIEWS.IdReview) AS NombreAvis
     FROM TLIVRES
     LEFT JOIN TLANGUES ON TLIVRES.IdLangue = TLANGUES.IdLangue
