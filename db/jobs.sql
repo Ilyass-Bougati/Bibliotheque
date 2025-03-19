@@ -1,3 +1,22 @@
+CREATE PROCEDURE VerifierValiditeAbonnement
+AS
+BEGIN
+  DECLARE Abonnement_curseur CURSOR FOR
+  SELECT 
+    IdAbonnement
+  FROM
+    TABONNEMENTS
+  
+  DECLARE @IdAbonnement AS INT
+  OPEN Abonnement_curseur
+  FETCH NEXT FROM Abonnement_curseur INTO @IdAbonnement
+  WHILE @@FETCH_STATUS = 0
+  BEGIN
+    VerifierDateAbonnement(@IdAbonnement)
+    FETCH NEXT FROM Abonnement_curseur INTO @IdAbonnement
+  END
+END
+
 CREATE PROCEDURE VerifierReservationsDepassees
 AS
 BEGIN
