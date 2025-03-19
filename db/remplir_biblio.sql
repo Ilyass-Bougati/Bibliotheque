@@ -50,7 +50,7 @@ VALUES
   ('Albin Michel');
 
 -- Populate TABONNEMENTS_TYPE
-INSERT INTO TABONNEMENTS_TYPE (AbonnementType, NbEmpruntMax, Dure, Prix)
+INSERT INTO TABONNEMENTS_TYPE (AbonnementType, NbEmpruntMax, Duree, Prix)
 VALUES 
   ('Standard', 3, 30, 150.00),
   ('Premium', 5, 60, 250.00),
@@ -73,7 +73,7 @@ VALUES
   ('Le Petit Prince', '9782070612758', 1);
 
 -- Populate TEXEMPLAIRES
-INSERT INTO TEXEMPLAIRES (IdLivre, EtatExemplaire, Localisation)
+INSERT INTO TEXEMPLAIRES (IdLivre, Disponibilite, Localisation)
 VALUES 
   (1, 'disponible', 'Étagère A1'),
   (1, 'disponible', 'Étagère A2'),
@@ -153,17 +153,17 @@ VALUES
 
 -- Update exemplaires availability status
 UPDATE TEXEMPLAIRES 
-SET EtatExemplaire = 'emprunte' 
+SET Disponibilite = 'emprunte' 
 WHERE IdExemplaire IN (1, 5, 8, 10);
 
 -- Populate TREVIEWS
-INSERT INTO TREVIEWS (IdClient, IdLivre, Notation, Commentaire)
+INSERT INTO TREVIEWS (IdClient, IdLivre, Review)
 VALUES 
-  (1, 1, 9, 'Un chef-d''œuvre de la littérature française. Victor Hugo nous offre une fresque sociale impressionnante.'),
-  (2, 4, 8, 'Une immersion magique dans l''univers des sorciers. Parfait pour les jeunes et les moins jeunes.'),
-  (3, 6, 10, 'Une vision prophétique de notre société. Orwell était un visionnaire.'),
-  (4, 8, 7, 'Une aventure épique dans un monde fantastique richement détaillé.'),
-  (5, 3, 9, 'L''absurdité de l''existence humaine brillamment illustrée par Camus.');
+  (1, 1, 9),
+  (2, 4, 8),
+  (3, 6, 10),
+  (4, 8, 7),
+  (5, 3, 9);
 
 -- Populate TPENALITE
 INSERT INTO TPENALITE (IdAbonnement, IdEmprunt, Motif, Montant, EtatPenalite, DatePenalite)
@@ -172,7 +172,7 @@ VALUES
   (5, 5, 'abime', 150.00, 'en cours', DATEADD(day, -10, GETDATE()));
 
 -- Populate TRESERVATIONS (modified to use IdLivre instead of IdExemplaire)
-INSERT INTO TRESERVATIONS (IdClient, IdLivre, DateReservation)
+INSERT INTO TRESERVATIONS (IdAbonnement, IdLivre, DateReservation)
 VALUES 
   (1, 6, DATEADD(day, -2, GETDATE())),  -- Client 1 reserves livre 6 (1984)
   (3, 4, DATEADD(day, -5, GETDATE())),  -- Client 3 reserves livre 4 (Harry Potter)
@@ -181,28 +181,28 @@ VALUES
 -- Update exemplaires availability status for reservations
 -- We need to select one exemplaire for each reserved book
 UPDATE TEXEMPLAIRES 
-SET EtatExemplaire = 'reserve' 
+SET Disponibilite = 'reserve' 
 WHERE IdExemplaire IN (
   -- Select one exemplaire for each reserved book
   SELECT TOP 1 e.IdExemplaire 
   FROM TEXEMPLAIRES e 
-  WHERE e.IdLivre = 6 AND e.EtatExemplaire = 'disponible'
+  WHERE e.IdLivre = 6 AND e.Disponibilite = 'disponible'
 );
 
 UPDATE TEXEMPLAIRES 
-SET EtatExemplaire = 'reserve' 
+SET Disponibilite = 'reserve' 
 WHERE IdExemplaire IN (
   SELECT TOP 1 e.IdExemplaire 
   FROM TEXEMPLAIRES e 
-  WHERE e.IdLivre = 4 AND e.EtatExemplaire = 'disponible'
+  WHERE e.IdLivre = 4 AND e.Disponibilite = 'disponible'
 );
 
 UPDATE TEXEMPLAIRES 
-SET EtatExemplaire = 'reserve' 
+SET Disponibilite = 'reserve' 
 WHERE IdExemplaire IN (
   SELECT TOP 1 e.IdExemplaire 
   FROM TEXEMPLAIRES e 
-  WHERE e.IdLivre = 7 AND e.EtatExemplaire = 'disponible'
+  WHERE e.IdLivre = 7 AND e.Disponibilite = 'disponible'
 );
 
 -- Populate TNOTIFICATIONS

@@ -3,24 +3,20 @@ CREATE PROCEDURE ReserverLivre
 	@IdLivre INT
 AS
 BEGIN
-	-- checking if the books is available
-	DECLARE @IdExemplaire INT
-	SET @IdExemplaire = IdExemplaire FROM (
-		SELECT 
-			IdExemplaire
-		FROM 
-			TEXEMPLAIRES
-		WHERE 
-			IdLivre = @IdLivre
-			AND Disponibilite = 'disponible'
-	) 
-
-	IF @IdLivre IS NULL
+	DECLARE @NbExemplairesDisponibles AS INT
+	SELECT @NbExemplairesDisponibles = COUNT(IdExemplaire)
+	FROM
+		TEXEMPLAIRES
+	WHERE
+		IdLivre = @IdLivre
+	AND	
+		Disponibilite = 'disponible'
+	
+	IF @NbExemplairesDisponibles > 0
 	BEGIN
-		PRINT('vous ne pouvez pas réserver un livre qui est disponible')
+		PRINT 'Reservation refusee : des exemplaires sont disponibles deja .'
 		RETURN
 	END
-
 
 	INSERT INTO TRESERVATIONS (IdAbonnement, IdLivre)
 	VALUES (@IdAbonnement, @IdLivre)

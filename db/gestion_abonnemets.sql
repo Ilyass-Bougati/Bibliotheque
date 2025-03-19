@@ -141,6 +141,14 @@ BEGIN
             EtatAbonnement = 'expire'
         WHERE
             IdAbonnement = @IdAbonnement
+        
+        DECLARE @IdClient = IdClient
+        FROM 
+            TABONNEMENTS
+        WHERE
+            IdAbonnement = @IdAbonnement
+
+        EXEC EnvoyerNotification @IdClient , 'Votre abonnement est arrive a echeance , veuillez le renouveler le plus tot possible.' , 'Fin Abonnement'
     END
     
 END
