@@ -68,7 +68,7 @@ BEGIN
     UPDATE 
         TEXEMPLAIRES
     SET
-        EtatExemplaire = 'empruntee'
+        Disponibilite = 'empruntee'
     WHERE
         IdExemplaire = @IdExemplaire
 
@@ -92,7 +92,7 @@ BEGIN
 
     --Checks if the book is reserved :
     DECLARE @IdAbonnement AS INT
-    SELECT @IdAbonnement = IdAbonnement
+    SELECT @IdAbonnement = TRESERVATIONS.IdAbonnement
     FROM
         TRESERVATIONS JOIN TABONNEMENTS
         ON TRESERVATIONS.IdAbonnement = TABONNEMENTS.IdAbonnement
@@ -102,8 +102,8 @@ BEGIN
     DELETE FROM TEMPRUNTS
     WHERE IdExemplaire = @IdExemplaire
 
-    DECLARE @EtatExemplaire AS VARCHAR(20)
-    SELECT @EtatExemplaire = 'disponible'
+    DECLARE @Disponibilite AS VARCHAR(20)
+    SET @Disponibilite = 'disponible'
     
     IF @IdAbonnement IS NOT NULL
     BEGIN
@@ -116,14 +116,15 @@ BEGIN
         WHERE
             IdAbonnement = @IdAbonnement
 
-        EnvoyerNotification(@IdClient ,'Le livre que vous avez reserve est maintenant disponible .', 'Reservation')
+        EXEC EnvoyerNotification @IdClient ,'Le livre que vous avez reserve est maintenant disponible .', 'Reservation'
     END
 
 
     UPDATE
         TEXEMPLAIRES
     SET
-        EtatExemplaire = @EtatExemplaire
+        Disponibilite = @Disponibilite
     WHERE
         IdExemplaire = @IdExemplaire
 END
+GO
