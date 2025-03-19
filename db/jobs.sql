@@ -16,6 +16,7 @@ BEGIN
     FETCH NEXT FROM Abonnement_curseur INTO @IdAbonnement
   END
 END
+GO 
 
 CREATE PROCEDURE VerifierReservationsDepassees
 AS
