@@ -2,5 +2,6 @@
 
 int main()
 {
-	printf("Biblio under construction\n");
+	// nothing yet
+	return 0;
 }
