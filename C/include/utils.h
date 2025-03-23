@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 
 /**
  * cette fonction coupe une chaîne de caractères à partir d'espaces à gauche et à droite
@@ -11,3 +12,9 @@ char *trim(char *str);
  * @param str la chaîne de caractères à vérifier
  */
 bool check_empty(char *str);
+
+/**
+ * cette fonction vérifie si un isbn est valide
+ * @param str la chaîne de caractères à vérifier
+ */
+bool check_isbn(char *str);
