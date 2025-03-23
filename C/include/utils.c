@@ -5,9 +5,17 @@
 
 bool check_empty(char *str)
 {
-    // TODO : trim the string before checking
-    return str[0] == '\0';
+    str = trim(str);
+    if (str == NULL)
+    {
+        return false;
+    } 
+    else 
+    {
+        return str[0] == '\0';
+    }
 }
+
 
 char *trim(char *str)
 {
@@ -72,7 +80,7 @@ bool check_isbn(char *str)
 
     if (check_empty(isbn) || isbn == NULL)
     {
-        return 0;
+        return false;
     }
 
     removeChar(isbn, '-');
@@ -92,7 +100,7 @@ bool check_isbn(char *str)
             }
             else
             {
-                return 0;
+                return false;
             }
         }
         return (sum % 11 == 0);
@@ -104,7 +112,7 @@ bool check_isbn(char *str)
         {
             if (!isdigit(isbn[i]))
             {
-                return 0;
+                return false;
             }
 
             int digit = isbn[i] - '0';
@@ -112,5 +120,5 @@ bool check_isbn(char *str)
         }
         return (sum % 10 == 0);
     }
-    else return 0;
+    else return false;
 }
