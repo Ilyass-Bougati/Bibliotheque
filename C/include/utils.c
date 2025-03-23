@@ -16,7 +16,7 @@ char *trim(char *str)
         return NULL;
     }
 
-    if (check_empty(str))
+    if (str[0] == '\0')
     {
         return str;
     }
