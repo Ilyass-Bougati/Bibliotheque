@@ -2,6 +2,7 @@
 #include "abonnement.h"
 #include "notification.h"
 
+// la table des clients
 typedef struct {
     int id;
     char *nom;
