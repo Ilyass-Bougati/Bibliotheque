@@ -7,9 +7,17 @@
 
 bool check_empty(char *str)
 {
-    // TODO : trim the string before checking
-    return str[0] == '\0';
+    str = trim(str);
+    if (str == NULL)
+    {
+        return false;
+    } 
+    else 
+    {
+        return str[0] == '\0';
+    }
 }
+
 
 char *trim(char *str)
 {
@@ -18,7 +26,7 @@ char *trim(char *str)
         return NULL;
     }
 
-    if (check_empty(str))
+    if (str[0] == '\0')
     {
         return str;
     }
