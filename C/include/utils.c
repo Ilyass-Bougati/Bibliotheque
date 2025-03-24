@@ -1,5 +1,7 @@
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "utils.h"
 #include "stdbool.h"
 
@@ -60,7 +62,7 @@ char *trim(char *str)
 }
 
 
-void removeChar(char *str, char ch) // i need this function in the check_isbn function to clean the isbn for hyphens
+void removeChar(char *str, char ch)
 {
     int i, j = 0;
     for (i = 0; str[i] != '\0'; i++) 
@@ -76,49 +78,71 @@ void removeChar(char *str, char ch) // i need this function in the check_isbn fu
 
 bool check_isbn(char *str)
 {
-    char *isbn = trim(str);
 
-    if (check_empty(isbn) || isbn == NULL)
+    if (check_empty(str))
     {
         return false;
     }
 
-    removeChar(isbn, '-');
+    char *isbn_copy = malloc(strlen(str) + 1);
+    if (isbn_copy == NULL)
+    {
+        printf("allocation failed !!");
+        return false;
+    }
+    strcpy(isbn_copy, str);
 
-    if (strlen(isbn) == 10)
+    char *trimmed_isbn = trim(isbn_copy);
+
+    if (check_empty(trimmed_isbn)) {
+        free(isbn_copy);
+        return false;
+    }
+
+    removeChar(trimmed_isbn, '-');
+
+    if (strlen(trimmed_isbn) == 10)
     {
         int sum = 0;
         for (int i = 0; i < 10; i++)
         {
-            if (isbn[i] == 'X' && i == 9)
+            if (trimmed_isbn[i] == 'X' && i == 9)
             {
-                sum += 10 * (i + 1);
+                sum += 10 * (10 - i);
             }
-            else if (isdigit(isbn[i]))
+            else if (isdigit(trimmed_isbn[i]))
             {
-                sum += (isbn[i] - '0') * (i + 1);
+                sum += (trimmed_isbn[i] - '0') * (10 - i);
             }
             else
-            {
+            {   
+                free(isbn_copy);
                 return false;
             }
         }
+        free(isbn_copy);
         return (sum % 11 == 0);
     }
-    else if (strlen(isbn) == 13)
+    else if (strlen(trimmed_isbn) == 13)
     {
         int sum = 0;
         for (int i = 0; i < 13; i++)
         {
-            if (!isdigit(isbn[i]))
+            if (!isdigit(trimmed_isbn[i]))
             {
+                free(isbn_copy);
                 return false;
             }
 
-            int digit = isbn[i] - '0';
+            int digit = trimmed_isbn[i] - '0';
             sum += (i % 2 == 0) ? digit : digit * 3;
         }
+        free(isbn_copy);
         return (sum % 10 == 0);
     }
-    else return false;
+    else
+    {
+        free(isbn_copy);
+        return false;
+    } 
 }
