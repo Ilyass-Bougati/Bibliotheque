@@ -25,7 +25,7 @@ int last_notification_id = 0;
  * @param str la chaîne à convertir
  * @return renvoie NULL si le format n'est pas valide
  */
-Client *string_to_notification(char *str);
+Notification *string_to_notification(char *str);
 
 /**
  * Cette fonction transformera une structure client en une chaîne de caractères à écrire dans un fichier
