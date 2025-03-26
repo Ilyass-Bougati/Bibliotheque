@@ -11,6 +11,7 @@ typedef enum
 typedef struct Notification
 {
     int id;
+    int id_client;
     Type_notification notification_type;
     char *notification_text;
     Date date_notification;

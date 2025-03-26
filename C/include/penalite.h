@@ -10,6 +10,7 @@ typedef enum
 typedef struct Penalite
 {
     int id;
+    int id_abonnement;
     float montant;
     Etat_penalite etat_penalite;
     char *motif;

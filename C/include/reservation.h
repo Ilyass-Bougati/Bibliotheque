@@ -4,6 +4,8 @@
 
 typedef struct Reservation
 {
+    int id;
+    int id_client;
     Livre *livre;
     Date date_reservation;
 } Reservation;

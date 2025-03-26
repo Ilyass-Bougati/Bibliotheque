@@ -15,6 +15,7 @@ typedef enum
 typedef struct Abonnement
 {
     int id;
+    int id_client;
     Type_abonnement type_abonnement;
     Date date_debut;
     bool etat_abonnement;
