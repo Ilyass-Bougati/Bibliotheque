@@ -17,9 +17,6 @@ typedef struct Notification
     Date date_notification;
 } Notification;
 
-// cette variable contient le dernier identifiant notification généré
-int last_notification_id = 0;
-
 /**
  * cette fonction transformera une chaîne en une structure client
  * @param str la chaîne à convertir
