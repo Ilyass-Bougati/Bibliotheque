@@ -3,7 +3,8 @@
 #include "notification.h"
 
 // la table des clients
-typedef struct {
+typedef struct Client
+{
     int id;
     char *nom;
     char *prenom;
@@ -13,11 +14,11 @@ typedef struct {
     char *ville;
 
     // les abonnements
-    abonnement *abonnements;
+    Abonnement *abonnements;
     int nabonnements;
 
     // les notifications
-    notification *notifications;
+    Notification *notifications;
     int nnotifications;
-} client;
+} Client;
 

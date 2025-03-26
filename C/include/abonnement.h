@@ -3,19 +3,19 @@
 #include "date.h"
 
 // le type d'un abonnement
-enum type_abonnement {
+enum Type_abonnement {
     etudiant,
     familly
 };
 
 // le tableau de l'abonnement
-typedef struct
+typedef struct Abonnement
 {
     int id;
-    type_abonnement type_abonnement;
-    date date_debut;
+    Type_abonnement type_abonnement;
+    Date date_debut;
     bool etat_abonnement;
 
     // l'utilisateur qui possède l'abonnement
-    client *client;
-} abonnement;
+    Client *client;
+} Abonnement;

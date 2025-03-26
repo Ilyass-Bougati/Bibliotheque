@@ -3,18 +3,18 @@
 #include "date.h"
 
 // le type de notification
-enum notification_type {
+enum Type_notification {
     alert
 };
 
 // le tableau de la notification
-typedef struct
+typedef struct Notification
 {
     int id;
-    notification_type notification_type;
+    Type_notification notification_type;
     char *notification_text;
-    date notification_type;
+    Date notification_type;
 
     // le client auquel la notification est envoyée
-    client *client;
-} notification;
+    Client *client;
+} Notification;
