@@ -9,3 +9,5 @@ biblio.exe: biblio.c
 
 run: biblio.exe
 	./biblio.exe
+
+all: clean run
