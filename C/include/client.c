@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include "utils.h"
 #include "string.h"
+#include "reader.h"
 
 // cette variable contient le dernier identifiant client généré
 int last_client_id = 0;
@@ -56,4 +57,37 @@ char *client_to_string(Client *client)
     strcat(buffer, "#");
     strcat(buffer, client->ville);
     return buffer;
+}
+
+
+Client **load_clients(int *length)
+{
+    // the list of clients
+    Client **clients = (Client **) malloc(sizeof(Client *));
+    *length = 0;
+
+    char *file = read_file("data/clients");
+    if (file == NULL)
+    {
+        printf("Erreur de lecture du fichier client\n");
+        return NULL;
+    }
+
+    int len;
+    char **client_strings = split(file, '\n', &len);
+
+    for (int i = 0; i < len; i++)
+    {
+        Client *client = string_to_client(client_strings[i]);
+        if (client == NULL)
+        {
+            printf("Erreur format de fichier\n");
+            return NULL;
+        }
+
+        clients[(*length)++] = client;
+        clients = (Client**) realloc(clients, (*length + 1) * sizeof(Client*));
+    }
+
+    return clients;
 }
