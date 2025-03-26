@@ -1,5 +1,6 @@
 #include "stdio.h"
 #include "stdlib.h"
+#include "utils.h"
 
 char *saisir_chaine()
 {
@@ -16,20 +17,14 @@ char *saisir_chaine()
 
 char *read_file(char *file_name)
 {
-    if(check_empty(trim(file_name)))
-    {
-        fprintf(stderr , "Nom du fichier invalide .\n");
-        return NULL;
-    }
-
     FILE* file_pointer = fopen(file_name , "r");
     if(file_pointer == NULL)
     {
-        fprintf(stderr , "Fichier introuvable .\n");
+        printf("Error opening the file");
         return NULL;
     }
 
-    char c ;
+    int c;
     int i = 0;
     char* file_content = malloc(sizeof(char));
 
