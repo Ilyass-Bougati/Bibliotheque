@@ -22,3 +22,11 @@ bool check_empty(char *str);
  * @param str la chaîne de caractères à vérifier
  */
 bool check_isbn(char *str);
+
+/**
+ * Cette fonction divise une chaîne de caractères par un délimiteur
+ * @param str la chaîne à diviser
+ * @param d Le délimiteur
+ * @param length l'adresse où stocker la taille de la table résultante
+ */
+char **split(char *str, char d, int *length);
