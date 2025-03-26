@@ -1,12 +1,13 @@
 #pragma once
-#include "client.h"
 #include "date.h"
+#include "stdbool.h"
 
 // le type d'un abonnement
-enum Type_abonnement {
+typedef enum 
+{
     etudiant,
     familly
-};
+} Type_abonnement;
 
 // le tableau de l'abonnement
 typedef struct Abonnement
@@ -15,7 +16,4 @@ typedef struct Abonnement
     Type_abonnement type_abonnement;
     Date date_debut;
     bool etat_abonnement;
-
-    // l'utilisateur qui possède l'abonnement
-    Client *client;
 } Abonnement;

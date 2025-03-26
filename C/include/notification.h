@@ -1,11 +1,11 @@
 #pragma once
-#include "client.h"
 #include "date.h"
 
 // le type de notification
-enum Type_notification {
+typedef enum 
+{
     alert
-};
+} Type_notification;
 
 // le tableau de la notification
 typedef struct Notification
@@ -13,8 +13,5 @@ typedef struct Notification
     int id;
     Type_notification notification_type;
     char *notification_text;
-    Date notification_type;
-
-    // le client auquel la notification est envoyée
-    Client *client;
+    Date date_notification;
 } Notification;
