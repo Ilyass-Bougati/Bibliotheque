@@ -29,4 +29,4 @@ Notification *string_to_notification(char *str);
  * @param notification la structure client à convertir
  * @return renvoie NULL en cas d'erreur
  */
-char *notification_to_string(Notification notification);
+char *notification_to_string(Notification *notification);
