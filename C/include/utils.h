@@ -12,6 +12,13 @@
 char *trim(char *str);
 
 /**
+ * cette fonction coupe une chaîne de caractères selon un delimiteur predefini
+ * @param str la chaîne de caractères à couper
+ * @param del le delimiteur
+ */
+char **split_2nd(char *str , char *del);
+
+/**
  * cette fonction vérifie si une chaîne de caractères est vide ou remplie d'espaces
  * @param str la chaîne de caractères à vérifier
  */
@@ -22,6 +29,18 @@ bool check_empty(char *str);
  * @param str la chaîne de caractères à vérifier
  */
 bool check_isbn(char *str);
+
+/**
+ * cette fonction renverse une chaine de caracteres
+ * @param str la chaîne de caractères à renverser
+ */
+char* new_strrev(char* str);
+
+/**
+ * cette fonction transforme un entier en une chaine de caracteres
+ * @param x l'entier a changer
+ */
+char* new_itoa(int x);
 
 /**
  * Cette fonction divise une chaîne de caractères par un délimiteur
