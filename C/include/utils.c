@@ -74,7 +74,11 @@ char **split_2nd(char *str , char *del)
      */
     for(i = 0 ; i < l ; i++)
     {
-        splitted_str[j] = realloc(splitted_str[j] , (k+1) * sizeof(char));
+        if(i == 0)
+            splitted_str[j] = malloc(sizeof(char));
+        else
+            splitted_str[j] = realloc(splitted_str[j] , (k+1) * sizeof(char));
+        
         if(str[i] == del[0])
         {
             m = 0 ;
