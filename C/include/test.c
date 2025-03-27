@@ -1,9 +1,43 @@
 #include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
 #include <stdio.h>
-#include "utils.h"
-#include "stdbool.h"
+#include <stdbool.h>
+#include "stdlib.h"
+#include <ctype.h>
+
+typedef struct Date
+{
+    int jour;
+    int mois;
+    int annee;
+} Date;
+
+#define delimiter '#'
+
+
+/**
+ * cette fonction coupe une chaîne de caractères à partir d'espaces à gauche et à droite
+ * @param str la chaîne de caractères à couper
+ */
+char *trim(char *str);
+
+/**
+ * cette fonction coupe une chaîne de caractères selon un delimiteur predefini
+ * @param str la chaîne de caractères à couper
+ * @param del le delimiteur
+ */
+char **split_2nd(char *str , char *del);
+
+/**
+ * cette fonction vérifie si une chaîne de caractères est vide ou remplie d'espaces
+ * @param str la chaîne de caractères à vérifier
+ */
+bool check_empty(char *str);
+
+/**
+ * cette fonction vérifie si un isbn est valide
+ * @param str la chaîne de caractères à vérifier
+ */
+bool check_isbn(char *str);
 
 bool check_empty(char *str)
 {
@@ -191,7 +225,74 @@ bool check_isbn(char *str)
     } 
 }
 
-char* new_strrev(char* str)
+
+Date string_to_date(char *str)
+{
+    if(str == NULL)
+    {
+        goto inv_date;
+    }
+
+    char **splitted_str = split_2nd(str , "/") ;
+    int i , j , m , a ;
+
+    for(i = 0 ; splitted_str[i] != NULL ; i++)
+    {
+        printf("test %d\n" , i);
+        int j;
+        for(j = 0 ; splitted_str[i][j] != '\0' ; j++)
+        {
+            if(splitted_str[i][j] < '0' || splitted_str[i][j] > '9')
+            {
+                goto inv_date;
+            }
+        }
+    }
+
+    if(i != 3)
+    {
+        goto inv_date;
+    }
+
+    j = atoi(splitted_str[0]);
+    m = atoi(splitted_str[1]);
+    a = atoi(splitted_str[2]);
+
+    if(j < 1 || m < 1 || a < 1)
+    {
+        goto inv_date;
+    }
+
+
+    if(m > 12 || m < 1)
+    {
+        goto inv_date;
+    }
+
+    int Mois[13] = {0 , 31 , 28 , 31 , 30 , 31 , 30 , 31 , 31 , 30 , 31 , 30 , 31} ;
+    if(a % 100 == 0 || a % 4 == 0)
+    {
+        Mois[2]++;
+    }
+
+    if(j > Mois[m])
+    {
+        goto inv_date;
+    }
+
+    Date date;
+    date.jour = j;
+    date.mois = m;
+    date.annee = a;
+
+    return date;
+
+    inv_date :
+        fprintf(stderr , "La date n'est pas valide !");
+        exit(1);
+}
+
+char* strrev(char* str)
 {
     int l = strlen(str);
     char* strreved = malloc((l+1) * sizeof(char));
@@ -205,7 +306,7 @@ char* new_strrev(char* str)
     return strreved;
 }
 
-char* new_itoa(int x)
+char* itoa(int x)
 {
     bool isNegative = x < 0 ? true : false ;
     int i = 0 ;
@@ -225,8 +326,41 @@ char* new_itoa(int x)
 
     out[i] = '\0';
 
-    out = new_strrev(out);
+    out = strrev(out);
 
     return out;
 
+}
+
+char *date_to_string(Date date)
+{
+    char *j = itoa(date.jour) , *m = itoa(date.mois) , *a = itoa(date.annee);
+    int l1 = strlen(j) , l2 = strlen(m) , l3 = strlen(a);
+
+    char* out = malloc((l1 + l2 + l3 + 2) * sizeof(char));
+
+    out[0] = '\0';
+
+    strcat(out , j);
+    strcat(out , "/");
+
+    strcat(out , m);
+    strcat(out , "/");
+
+    strcat(out , a);
+
+    return out;
+}
+
+
+int main()
+{
+    Date d ;
+    d.jour = 24 ;
+    d.mois = 2 ;
+    d.annee = 2005 ;
+
+    char* date = date_to_string(d);
+
+    printf("%s\n%s/%s/%s" ,date,itoa(d.jour),itoa(d.mois),itoa(d.annee));
 }
