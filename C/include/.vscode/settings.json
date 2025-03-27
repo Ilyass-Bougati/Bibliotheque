@@ -3,6 +3,9 @@
         "stdlib.h": "c",
         "stdbool.h": "c",
         "ctype.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "emprunt.h": "c",
+        "utils.h": "c",
+        "date.h": "c"
     }
 }

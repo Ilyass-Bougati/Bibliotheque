@@ -11,10 +11,11 @@ Date string_to_date(char *str)
         goto inv_date;
     }
 
-    char **splitted_str = split_2nd(str , "/") ;
+    int len ;
+    char **splitted_str = split(str , '/' , &len) ;
     int i , j , m , a ;
 
-    for(i = 0 ; splitted_str[i] != NULL ; i++)
+    for(i = 0 ; i < len ; i++)
     {
         int j;
         for(j = 0 ; splitted_str[i][j] != '\0' ; j++)
