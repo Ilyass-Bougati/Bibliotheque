@@ -3,6 +3,7 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
+#include "reader.h"
 
 // cette variable contient le dernier identifiant abonnement généré
 int last_abonnement_id = 0;
@@ -66,7 +67,7 @@ Abonnement **load_abonnements(int *length)
     Abonnement **abonnements = (Abonnement **) malloc(sizeof(Abonnement *));
     *length = 0;
 
-    char *file = read_file("data/abonnements");
+    char *file = read_file(ficher_abonnements);
     if (file == NULL)
     {
         printf("Erreur de lecture du fichier notification\n");
@@ -78,7 +79,7 @@ Abonnement **load_abonnements(int *length)
 
     for (int i = 0; i < len; i++)
     {
-        Abonnement *abonnement = string_to_client(abonnements_strings[i]);
+        Abonnement *abonnement = string_to_abonnement(abonnements_strings[i]);
         if (abonnement == NULL)
         {
             printf("Erreur format de fichier\n");
@@ -90,4 +91,20 @@ Abonnement **load_abonnements(int *length)
     }
 
     return abonnements;
+}
+
+void save_abonnements(Abonnement **abonnements, int number)
+{
+    FILE *fptr = fopen(ficher_abonnements, "w");
+    if (fptr == NULL)
+    {
+        printf("Erreur de lecture du fichier abonnement\n");
+        return;
+    }
+
+    for (int i = 0; i < number; i++)
+    {
+        fprintf(fptr, "%s\n", abonnement_to_string(abonnements[i]));
+    }
+    fclose(fptr);
 }

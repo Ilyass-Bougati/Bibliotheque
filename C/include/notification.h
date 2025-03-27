@@ -1,6 +1,10 @@
 #pragma once
 #include "date.h"
 
+#ifndef ficher_notifications
+    #define ficher_notifications "data/notifications"
+#endif
+
 // le type de notification
 typedef enum 
 {
@@ -31,9 +35,15 @@ Notification *string_to_notification(char *str);
  */
 char *notification_to_string(Notification *notification);
 
-
 /**
  * Cette fonction charge tous les notifications sur le fichier notification
  * @param length cette variable contient la taille de la table renvoyée
  */
 Notification **load_notifications(int *length);
+
+/**
+ * Cette fonction enregistre tous les notifications dans le fichier
+ * @param notifications Les notifications à sauvegarder
+ * @param number la taille du tableau abonnements
+ */
+void save_notifications(Notification **notifications, int number);

@@ -4,6 +4,10 @@
 #include "penalite.h"
 #include "emprunt.h"
 
+#ifndef ficher_abonnements
+    #define ficher_abonnements "data/abonnements"
+#endif
+
 // le type d'un abonnement
 typedef enum 
 {
@@ -51,3 +55,10 @@ char *abonnement_to_string(Abonnement *abonnement);
  * @param length cette variable contient la taille de la table renvoyée
  */
 Abonnement **load_abonnements(int *length);
+
+/**
+ * Cette fonction enregistre tous les abonnements dans le fichier
+ * @param abonnements Les abonnements à sauvegarder
+ * @param number la taille du tableau abonnements
+ */
+void save_abonnements(Abonnement **abonnements, int number);

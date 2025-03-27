@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "string.h"
 #include "date.h"
+#include "reader.h"
 
 
 // cette variable contient le dernier identifiant notification généré
@@ -66,7 +67,7 @@ Notification **load_notifications(int *length)
     Notification **notifications = (Notification **) malloc(sizeof(Notification *));
     *length = 0;
 
-    char *file = read_file("data/notifications");
+    char *file = read_file(ficher_notifications);
     if (file == NULL)
     {
         printf("Erreur de lecture du fichier notification\n");
@@ -78,7 +79,7 @@ Notification **load_notifications(int *length)
 
     for (int i = 0; i < len; i++)
     {
-        Notification *notification = string_to_client(notification_strings[i]);
+        Notification *notification = string_to_notification(notification_strings[i]);
         if (notification == NULL)
         {
             printf("Erreur format de fichier\n");
@@ -90,4 +91,20 @@ Notification **load_notifications(int *length)
     }
 
     return notifications;
+}
+
+void save_notifications(Notification **notifications, int number)
+{
+    FILE *fptr = fopen(ficher_notifications, "w");
+    if (fptr == NULL)
+    {
+        printf("Erreur de lecture du fichier abonnement\n");
+        return;
+    }
+
+    for (int i = 0; i < number; i++)
+    {
+        fprintf(fptr, "%s\n", notification_to_string(notifications[i]));
+    }
+    fclose(fptr);
 }

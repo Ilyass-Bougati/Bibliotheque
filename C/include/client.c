@@ -59,14 +59,13 @@ char *client_to_string(Client *client)
     return buffer;
 }
 
-
 Client **load_clients(int *length)
 {
     // the list of clients
     Client **clients = (Client **) malloc(sizeof(Client *));
     *length = 0;
 
-    char *file = read_file("data/clients");
+    char *file = read_file(ficher_clients);
     if (file == NULL)
     {
         printf("Erreur de lecture du fichier client\n");
@@ -90,4 +89,22 @@ Client **load_clients(int *length)
     }
 
     return clients;
+}
+
+
+
+void save_clients(Client **clients, int number)
+{
+    FILE *fptr = fopen(ficher_clients, "w");
+    if (fptr == NULL)
+    {
+        printf("Erreur de lecture du fichier client\n");
+        return;
+    }
+
+    for (int i = 0; i < number; i++)
+    {
+        fprintf(fptr, "%s\n", client_to_string(clients[i]));
+    }
+    fclose(fptr);
 }

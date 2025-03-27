@@ -2,6 +2,10 @@
 #include "abonnement.h"
 #include "notification.h"
 
+#ifndef ficher_clients
+    #define ficher_clients "data/clients"
+#endif
+
 // la table des clients
 typedef struct Client
 {
@@ -41,3 +45,10 @@ char *client_to_string(Client *client);
  * @param length cette variable contient la taille de la table renvoyée
  */
 Client **load_clients(int *length);
+
+/**
+ * Cette fonction enregistre tous les clients dans le fichier
+ * @param clients Les clients à sauvegarder
+ * @param number la taille du tableau clients
+ */
+void save_clients(Client **clients, int number);
