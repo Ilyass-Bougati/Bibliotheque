@@ -240,3 +240,92 @@ int supprimer_livre(Livre** livres, int nombre_livres, int id_supprimer);
  * @param nouvelleLangue La nouvelle langue (peut être NULL)
  */
 void modifier_livre(Livre* livre, const char* nouveauTitre, const char* nouveauIsbn, Langue* nouvelleLangue);
+
+/**
+ * Charge les langues depuis un fichier.
+ * @param filename Le nom du fichier contenant les langues
+ * @param nombre_langues Pointeur pour stocker le nombre de langues chargées
+ * @return Un tableau de pointeurs vers les langues chargées, ou NULL en cas d'erreur
+ */
+Langue** load_langues(const char* filename, int* nombre_langues);
+
+/**
+ * Charge les auteurs depuis un fichier.
+ * @param filename Le nom du fichier contenant les auteurs
+ * @param nombre_auteurs Pointeur pour stocker le nombre d'auteurs chargés
+ * @return Un tableau de pointeurs vers les auteurs chargés, ou NULL en cas d'erreur
+ */
+Auteur** load_auteurs(const char* filename, int* nombre_auteurs);
+
+/**
+ * Charge les catégories depuis un fichier.
+ * @param filename Le nom du fichier contenant les catégories
+ * @param nombre_categories Pointeur pour stocker le nombre de catégories chargées
+ * @return Un tableau de pointeurs vers les catégories chargées, ou NULL en cas d'erreur
+ */
+Categorie** load_categories(const char* filename, int* nombre_categories);
+
+/**
+ * Charge les éditeurs depuis un fichier.
+ * @param filename Le nom du fichier contenant les éditeurs
+ * @param nombre_editeurs Pointeur pour stocker le nombre d'éditeurs chargés
+ * @return Un tableau de pointeurs vers les éditeurs chargés, ou NULL en cas d'erreur
+ */
+Editeur** load_editeurs(const char* filename, int* nombre_editeurs);
+
+/**
+ * Charge les livres depuis un fichier.
+ * @param filename Le nom du fichier contenant les livres
+ * @param langues Tableau de langues disponibles
+ * @param auteurs Tableau d'auteurs disponibles
+ * @param categories Tableau de catégories disponibles
+ * @param editeurs Tableau d'éditeurs disponibles
+ * @param nombre_livres Pointeur pour stocker le nombre de livres chargés
+ * @return Un tableau de pointeurs vers les livres chargés, ou NULL en cas d'erreur
+ */
+Livre** load_livres(const char* filename, Langue** langues, Auteur** auteurs, Categorie** categories, Editeur** editeurs, int* nombre_livres);
+
+/**
+ * Sauvegarde les langues dans un fichier.
+ * @param filename Le nom du fichier de sauvegarde
+ * @param langues Tableau de pointeurs vers les langues à sauvegarder
+ * @param nombre_langues Nombre de langues à sauvegarder
+ * @return 1 si la sauvegarde réussit, 0 sinon
+ */
+int save_langues(const char* filename, Langue** langues, int nombre_langues);
+
+/**
+ * Sauvegarde les auteurs dans un fichier.
+ * @param filename Le nom du fichier de sauvegarde
+ * @param auteurs Tableau de pointeurs vers les auteurs à sauvegarder
+ * @param nombre_auteurs Nombre d'auteurs à sauvegarder
+ * @return 1 si la sauvegarde réussit, 0 sinon
+ */
+int save_auteurs(const char* filename, Auteur** auteurs, int nombre_auteurs);
+
+/**
+ * Sauvegarde les catégories dans un fichier.
+ * @param filename Le nom du fichier de sauvegarde
+ * @param categories Tableau de pointeurs vers les catégories à sauvegarder
+ * @param nombre_categories Nombre de catégories à sauvegarder
+ * @return 1 si la sauvegarde réussit, 0 sinon
+ */
+int save_categories(const char* filename, Categorie** categories, int nombre_categories);
+
+/**
+ * Sauvegarde les éditeurs dans un fichier.
+ * @param filename Le nom du fichier de sauvegarde
+ * @param editeurs Tableau de pointeurs vers les éditeurs à sauvegarder
+ * @param nombre_editeurs Nombre d'éditeurs à sauvegarder
+ * @return 1 si la sauvegarde réussit, 0 sinon
+ */
+int save_editeurs(const char* filename, Editeur** editeurs, int nombre_editeurs);
+
+/**
+ * Sauvegarde les livres dans un fichier.
+ * @param filename Le nom du fichier de sauvegarde
+ * @param livres Tableau de pointeurs vers les livres à sauvegarder
+ * @param nombre_livres Nombre de livres à sauvegarder
+ * @return 1 si la sauvegarde réussit, 0 sinon
+ */
+int save_livres(const char* filename, Livre** livres, int nombre_livres);
