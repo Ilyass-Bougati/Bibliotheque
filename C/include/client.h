@@ -22,11 +22,8 @@ typedef struct Client
     int nnotifications;
 } Client;
 
-// cette variable contient le dernier identifiant client généré
-int last_client_id = 0;
-
 /**
- * cette fonction transformera une chaîne en une structure client
+ * Cette fonction transformera une chaîne en une structure client
  * @param str la chaîne à convertir
  * @return renvoie NULL si le format n'est pas valide
  */
@@ -37,4 +34,10 @@ Client *string_to_client(char *str);
  * @param client la structure client à convertir
  * @return renvoie NULL en cas d'erreur
  */
-char *client_to_string(Client client);
+char *client_to_string(Client *client);
+
+/**
+ * Cette fonction charge tous les clients sur le fichier client
+ * @param length cette variable contient la taille de la table renvoyée
+ */
+Client **load_clients(int *length);
