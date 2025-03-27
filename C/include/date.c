@@ -16,7 +16,6 @@ Date string_to_date(char *str)
 
     for(i = 0 ; splitted_str[i] != NULL ; i++)
     {
-        printf("test %d\n" , i);
         int j;
         for(j = 0 ; splitted_str[i][j] != '\0' ; j++)
         {
@@ -58,24 +57,21 @@ Date string_to_date(char *str)
         goto inv_date;
     }
 
-    Date date;
-    date.jour = j;
-    date.mois = m;
-    date.annee = a;
+    Date date = (Date){j , m , a};
 
     return date;
 
     inv_date :
-        fprintf(stderr , "La date n'est pas valide !");
-        exit(1);
+        return BAD_DATE;
 }
+
 
 char *date_to_string(Date date)
 {
     char *j = new_itoa(date.jour) , *m = new_itoa(date.mois) , *a = new_itoa(date.annee);
     int l1 = strlen(j) , l2 = strlen(m) , l3 = strlen(a);
 
-    char* out = malloc((l1 + l2 + l3 + 2) * sizeof(char));
+    char* out = malloc((l1 + l2 + l3 + 3) * sizeof(char));
 
     out[0] = '\0';
 
@@ -88,4 +84,29 @@ char *date_to_string(Date date)
     strcat(out , a);
 
     return out;
+}
+
+
+int datecmp(Date date1 , Date date2)
+{
+    int annee_diff , mois_diff , jour_diff;
+    if(annee_diff = (date1.annee - date2.annee))
+    {
+        return annee_diff > 0 ? 1 : -1 ;
+    }
+    else
+    {
+        if(mois_diff = (date1.mois - date2.mois))
+        {
+            return mois_diff > 0 ? 1 : -1 ;
+        }
+        else
+        {
+            if(jour_diff = (date1.jour - date2.jour))
+            {
+                return jour_diff > 0 ? 1 : -1 ;
+            }
+            return 0;
+        }
+    }
 }
