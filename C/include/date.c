@@ -91,19 +91,19 @@ char *date_to_string(Date date)
 int datecmp(Date date1 , Date date2)
 {
     int annee_diff , mois_diff , jour_diff;
-    if(annee_diff = (date1.annee - date2.annee))
+    if((annee_diff = (date1.annee - date2.annee)))
     {
         return annee_diff > 0 ? 1 : -1 ;
     }
     else
     {
-        if(mois_diff = (date1.mois - date2.mois))
+        if((mois_diff = (date1.mois - date2.mois)))
         {
             return mois_diff > 0 ? 1 : -1 ;
         }
         else
         {
-            if(jour_diff = (date1.jour - date2.jour))
+            if((jour_diff = (date1.jour - date2.jour)))
             {
                 return jour_diff > 0 ? 1 : -1 ;
             }
