@@ -20,7 +20,7 @@ char *read_file(char *file_name)
     FILE* file_pointer = fopen(file_name , "r");
     if(file_pointer == NULL)
     {
-        printf("Error opening the file");
+        printf("Error opening the file %s\n", file_name);
         return NULL;
     }
 

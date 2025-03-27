@@ -18,7 +18,7 @@ Abonnement *string_to_abonnement(char *str)
     // checking if all the fields are present
     if (length != 5)
     {
-        printf("Erreur de lecture du fichier abonnement");
+        printf("Erreur de format d'abonnement");
         return NULL;
     }
 

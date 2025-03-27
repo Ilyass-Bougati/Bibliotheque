@@ -98,7 +98,7 @@ void save_notifications(Notification **notifications, int number)
     FILE *fptr = fopen(ficher_notifications, "w");
     if (fptr == NULL)
     {
-        printf("Erreur de lecture du fichier abonnement\n");
+        printf("Erreur de lecture du fichier notifications\n");
         return;
     }
 
