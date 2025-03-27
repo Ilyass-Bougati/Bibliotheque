@@ -103,10 +103,10 @@ Reservation **load_reservations(int *length)
     *length = 0;
 
     // Lecture du fichier qui contient les réservations
-    char *file = read_file("reservations.txt"); 
+    char *file = read_file(fichier_reservations); 
     if (file == NULL)
     {
-        printf("Erreur de lecture du fichier de réservations\n");
+        printf("Erreur de lecture du fichier de reservations\n");
         return NULL;
     }
 
@@ -131,4 +131,21 @@ Reservation **load_reservations(int *length)
     }
 
     return reservations;
+}
+
+
+void save_reservations(Reservation **reservations, int number)
+{
+    FILE *fptr = fopen(fichier_reservations, "w");
+    if (fptr == NULL)
+    {
+        printf("Erreur de lecture du fichier client\n");
+        return;
+    }
+
+    for (int i = 0; i < number; i++)
+    {
+        fprintf(fptr, "%s\n", reservation_to_string(reservations[i]));
+    }
+    fclose(fptr);
 }

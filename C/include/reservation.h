@@ -2,6 +2,10 @@
 #include "livre.h"
 #include "date.h"
 
+#ifndef fichier_reservations
+    #define fichier_reservations "data/reservations"
+#endif
+
 typedef struct Reservation
 {
     int id;
@@ -30,3 +34,10 @@ char *reservation_to_string(Reservation *reservation);
  * @param length cette variable contient la taille de la table renvoyée
  */
 Reservation **load_reservations(int *length);
+
+/**
+ * Cette fonction enregistre tous les reservations dans le fichier
+ * @param reservations Les reservations à sauvegarder
+ * @param number la taille du tableau reservations
+ */
+void save_reservations(Reservation **reservations, int number);
