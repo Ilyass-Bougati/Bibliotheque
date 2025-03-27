@@ -108,3 +108,16 @@ void save_clients(Client **clients, int number)
     }
     fclose(fptr);
 }
+
+
+Client *get_client_by_id(Client** clients, int len, int id)
+{
+    for (int i = 0; i < len; i++)
+    {
+        if (clients[i]->id == id)
+        {
+            return clients[i];
+        }
+    }
+    return NULL;
+}

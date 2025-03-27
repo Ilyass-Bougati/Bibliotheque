@@ -18,11 +18,11 @@ typedef struct Client
     char *ville;
 
     // les abonnements
-    Abonnement *abonnements;
+    Abonnement **abonnements;
     int nabonnements;
 
     // les notifications
-    Notification *notifications;
+    Notification **notifications;
     int nnotifications;
 } Client;
 
@@ -52,3 +52,12 @@ Client **load_clients(int *length);
  * @param number la taille du tableau clients
  */
 void save_clients(Client **clients, int number);
+
+/**
+ * Cette fonction trouve un client par son identifiant
+ * @param clients le tableau des clients
+ * @param len la taille du tableau
+ * @param id l'identifiant du client que nous recherchons
+ * @return renvoie NULL si aucun client n'a été trouvé
+ */
+Client *get_client_by_id(Client** clients, int len, int id);
