@@ -2,8 +2,8 @@
 #include <stdbool.h>
 
 // c'est le délimiteur qui sépare les champs lors de la conversion de chaînes en structures
-#define delimiter '#'
-
+#define delimiter      '#'
+#define date_delimiter '/'
 
 /**
  * cette fonction coupe une chaîne de caractères à partir d'espaces à gauche et à droite
