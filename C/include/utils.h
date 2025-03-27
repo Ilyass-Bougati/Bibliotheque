@@ -32,12 +32,20 @@ bool check_isbn(char *str);
 
 /**
  * cette fonction renverse une chaine de caracteres
- * @param str la chaîne de caractères à vérifier
+ * @param str la chaîne de caractères à renverser
  */
 char* new_strrev(char* str);
 
 /**
  * cette fonction transforme un entier en une chaine de caracteres
- * @param str la chaîne de caractères à vérifier
+ * @param x l'entier a changer
  */
 char* new_itoa(int x);
+
+/**
+ * Cette fonction divise une chaîne de caractères par un délimiteur
+ * @param str la chaîne à diviser
+ * @param d Le délimiteur
+ * @param length l'adresse où stocker la taille de la table résultante
+ */
+char **split(char *str, char d, int *length);

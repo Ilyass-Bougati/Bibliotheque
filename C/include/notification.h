@@ -17,19 +17,23 @@ typedef struct Notification
     Date date_notification;
 } Notification;
 
-// cette variable contient le dernier identifiant notification généré
-int last_notification_id = 0;
-
 /**
  * cette fonction transformera une chaîne en une structure client
  * @param str la chaîne à convertir
  * @return renvoie NULL si le format n'est pas valide
  */
-Client *string_to_notification(char *str);
+Notification *string_to_notification(char *str);
 
 /**
  * Cette fonction transformera une structure client en une chaîne de caractères à écrire dans un fichier
  * @param notification la structure client à convertir
  * @return renvoie NULL en cas d'erreur
  */
-char *notification_to_string(Notification notification);
+char *notification_to_string(Notification *notification);
+
+
+/**
+ * Cette fonction charge tous les notifications sur le fichier notification
+ * @param length cette variable contient la taille de la table renvoyée
+ */
+Notification **load_notifications(int *length);

@@ -228,5 +228,36 @@ char* new_itoa(int x)
     out = new_strrev(out);
 
     return out;
+}
 
+char **split(char *str, char d, int *length)
+{
+    *length = 0;
+    int j = 0;
+    char **table = (char **) malloc(sizeof(char*));
+    char *word = (char *) malloc(sizeof(char));
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (str[i] == d)
+        {
+            // adding the word to the list of words
+            word[j] = '\0';
+            table[(*length)++] = word;
+            table = (char **) realloc(table, (*length + 1) * sizeof(char *));
+
+            // starting the construction of a new word
+            word = (char *) malloc(sizeof(char));
+            j = 0;
+
+        } else {
+            // adding the character to the word buffer
+            word[j++] = str[i];
+            word = (char *) realloc(word, (j + 1) * sizeof(char));
+        }
+    }
+    // adding the last word to the list of words
+    word[j] = '\0';
+    table[(*length)++] = word;
+
+    return table;
 }
