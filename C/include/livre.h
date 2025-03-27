@@ -1,7 +1,6 @@
 #pragma once
 
 #define DEFAULT_ALLOCATION_SIZE 100
-#define delimiter "#"
 
 typedef struct {
     int id;
