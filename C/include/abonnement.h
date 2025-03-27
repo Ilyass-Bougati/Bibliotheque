@@ -11,14 +11,21 @@ typedef enum
     familly
 } Type_abonnement;
 
+// le type d'un abonnement
+typedef enum 
+{
+    suspendue,
+    actif
+} Etat_abonnement;
+
 // le tableau de l'abonnement
 typedef struct Abonnement
 {
     int id;
     int id_client;
     Type_abonnement type_abonnement;
+    Etat_abonnement etat_abonnement;
     Date date_debut;
-    bool etat_abonnement;
 
     // les emprunts
     Emprunt *emprunts;
@@ -37,4 +44,4 @@ Abonnement *string_to_abonnement(char *str);
  * @param abonnement la structure client à convertir
  * @return renvoie NULL en cas d'erreur
  */
-char *abonnement_to_string(Abonnement abonnement);
+char *abonnement_to_string(Abonnement *abonnement);
