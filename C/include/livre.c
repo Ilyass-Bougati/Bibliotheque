@@ -28,11 +28,11 @@ GestionnaireId* initialiser_GestionnaireId()
     GestionnaireId* gestionnaire = malloc(sizeof(GestionnaireId));
     if (!gestionnaire) return NULL;
     
-    gestionnaire->last_livre_id = recuperer_last_id("livres.txt");
-    gestionnaire->last_editeur_id = recuperer_last_id("editeurs.txt");
-    gestionnaire->last_categorie_id = recuperer_last_id("categories.txt");
-    gestionnaire->last_auteur_id = recuperer_last_id("auteurs.txt");
-    gestionnaire->last_langue_id = recuperer_last_id("langues.txt");
+    gestionnaire->last_livre_id = recuperer_last_id("data/livres.txt");
+    gestionnaire->last_editeur_id = recuperer_last_id("data/editeurs.txt");
+    gestionnaire->last_categorie_id = recuperer_last_id("data/categories.txt");
+    gestionnaire->last_auteur_id = recuperer_last_id("data/auteurs.txt");
+    gestionnaire->last_langue_id = recuperer_last_id("data/langues.txt");
     
     return gestionnaire;
 }
@@ -600,4 +600,299 @@ char* livre_to_string(Livre livre)
         }
     }
     return str;
+}
+
+Langue** load_langues(const char* filename, int* nombre_langues)
+{
+    FILE* file = fopen(filename, "r");
+    if (!file) 
+    {
+        *nombre_langues = 0;
+        return NULL;
+    }
+
+    Langue** langues = NULL;
+    *nombre_langues = 0;
+
+    char line[1024];
+    while (fgets(line, sizeof(line), file)) {
+
+        line[strcspn(line, "\n")] = 0;
+
+        Langue** temp = realloc(langues, (*nombre_langues + 2) * sizeof(Langue*));
+        if (!temp) 
+        {
+            fprintf(stderr, "Erreur d'allocation mémoire\n");
+            fclose(file);
+            free(langues);
+            return NULL;
+        }
+        langues = temp;
+
+        Langue* langue = string_to_langue(line);
+        if (langue) 
+        {
+            langues[(*nombre_langues)++] = langue;
+            langues[*nombre_langues] = NULL;
+        }
+    }
+
+    fclose(file);
+    return langues;
+}
+
+Auteur** load_auteurs(const char* filename, int* nombre_auteurs)
+{
+    FILE* file = fopen(filename, "r");
+    if (!file) 
+    {
+        *nombre_auteurs = 0;
+        return NULL;
+    }
+
+    Auteur** auteurs = NULL;
+    *nombre_auteurs = 0;
+
+    char line[1024];
+    while (fgets(line, sizeof(line), file)) 
+    {
+
+        line[strcspn(line, "\n")] = 0;
+
+        Auteur** temp = realloc(auteurs, (*nombre_auteurs + 2) * sizeof(Auteur*));
+        if (!temp) 
+        {
+            fprintf(stderr, "Erreur d'allocation mémoire\n");
+            fclose(file);
+            free(auteurs);
+            return NULL;
+        }
+        auteurs = temp;
+
+        Auteur* auteur = string_to_auteur(line);
+        if (auteur) 
+        {
+            auteurs[(*nombre_auteurs)++] = auteur;
+            auteurs[*nombre_auteurs] = NULL;
+        }
+    }
+
+    fclose(file);
+    return auteurs;
+}
+
+Categorie** load_categories(const char* filename, int* nombre_categories)
+{
+    FILE* file = fopen(filename, "r");
+    if (!file) 
+    {
+        *nombre_categories = 0;
+        return NULL;
+    }
+
+    Categorie** categories = NULL;
+    *nombre_categories = 0;
+
+    char line[1024];
+    while (fgets(line, sizeof(line), file)) 
+    {
+
+        line[strcspn(line, "\n")] = 0;
+
+        Categorie** temp = realloc(categories, (*nombre_categories + 2) * sizeof(Categorie*));
+        if (!temp) 
+        {
+            fprintf(stderr, "Erreur d'allocation mémoire\n");
+            fclose(file);
+            free(categories);
+            return NULL;
+        }
+        categories = temp;
+
+        Categorie* categorie = string_to_categorie(line);
+        if (categorie) 
+        {
+            categories[(*nombre_categories)++] = categorie;
+            categories[*nombre_categories] = NULL;
+        }
+    }
+
+    fclose(file);
+    return categories;
+}
+
+Editeur** load_editeurs(const char* filename, int* nombre_editeurs)
+{
+    FILE* file = fopen(filename, "r");
+    if (!file) 
+    {
+        *nombre_editeurs = 0;
+        return NULL;
+    }
+
+    Editeur** editeurs = NULL;
+    *nombre_editeurs = 0;
+
+    char line[1024];
+    while (fgets(line, sizeof(line), file)) 
+    {
+
+        line[strcspn(line, "\n")] = 0;
+
+        Editeur** temp = realloc(editeurs, (*nombre_editeurs + 2) * sizeof(Editeur*));
+        if (!temp) 
+        {
+            fprintf(stderr, "Erreur d'allocation mémoire\n");
+            fclose(file);
+            free(editeurs);
+            return NULL;
+        }
+        editeurs = temp;
+
+        Editeur* editeur = string_to_editeur(line);
+        if (editeur) 
+        {
+            editeurs[(*nombre_editeurs)++] = editeur;
+            editeurs[*nombre_editeurs] = NULL;
+        }
+    }
+
+    fclose(file);
+    return editeurs;
+}
+
+Livre** load_livres(const char* filename, Langue** langues, Auteur** auteurs, 
+                       Categorie** categories, Editeur** editeurs, int* nombre_livres) 
+{
+    FILE* file = fopen(filename, "r");
+    if (!file) 
+    {
+        *nombre_livres = 0;
+        return NULL;
+    }
+
+    Livre** livres = NULL;
+    *nombre_livres = 0;
+
+    char line[2048];
+    while (fgets(line, sizeof(line), file)) 
+    {
+
+        line[strcspn(line, "\n")] = 0;
+
+        Livre** temp = realloc(livres, (*nombre_livres + 2) * sizeof(Livre*));
+        if (!temp) 
+        {
+            fprintf(stderr, "Erreur d'allocation mémoire\n");
+            fclose(file);
+            free(livres);
+            return NULL;
+        }
+        livres = temp;
+
+        Livre* livre = string_to_livre(line, langues, auteurs, categories, editeurs);
+        if (livre) 
+        {
+            livres[(*nombre_livres)++] = livre;
+            livres[*nombre_livres] = NULL;
+        }
+    }
+
+    fclose(file);
+    return livres;
+}
+
+int save_langues(const char* filename, Langue** langues, int nombre_langues) 
+{
+    FILE* file = fopen(filename, "w");
+    if (!file) return 0;
+
+    for (int i = 0; i < nombre_langues; i++) 
+    {
+        char* str = langue_to_string(langues[i]);
+        if (str) 
+        {
+            fprintf(file, "%s\n", str);
+            free(str);
+        }
+    }
+
+    fclose(file);
+    return 1;
+}
+
+int save_auteurs(const char* filename, Auteur** auteurs, int nombre_auteurs)
+{
+    FILE* file = fopen(filename, "w");
+    if (!file) return 0;
+
+    for (int i = 0; i < nombre_auteurs; i++) 
+    {
+        char* str = auteur_to_string(auteurs[i]);
+        if (str) 
+        {
+            fprintf(file, "%s\n", str);
+            free(str);
+        }
+    }
+
+    fclose(file);
+    return 1;
+}
+
+int save_categories(const char* filename, Categorie** categories, int nombre_categories)
+{
+    FILE* file = fopen(filename, "w");
+    if (!file) return 0;
+
+    for (int i = 0; i < nombre_categories; i++) 
+    {
+        char* str = categorie_to_string(categories[i]);
+        if (str) 
+        {
+            fprintf(file, "%s\n", str);
+            free(str);
+        }
+    }
+
+    fclose(file);
+    return 1;
+}
+
+int save_editeurs(const char* filename, Editeur** editeurs, int nombre_editeurs)
+{
+    FILE* file = fopen(filename, "w");
+    if (!file) return 0;
+
+    for (int i = 0; i < nombre_editeurs; i++) 
+    {
+        char* str = editeur_to_string(editeurs[i]);
+        if (str) 
+        {
+            fprintf(file, "%s\n", str);
+            free(str);
+        }
+    }
+
+    fclose(file);
+    return 1;
+}
+
+int save_livres(const char* filename, Livre** livres, int nombre_livres)
+{
+    FILE* file = fopen(filename, "w");
+    if (!file) return 0;
+
+    for (int i = 0; i < nombre_livres; i++) 
+    {
+        char* str = livre_to_string(*livres[i]);
+        if (str) 
+        {
+            fprintf(file, "%s\n", str);
+            free(str);
+        }
+    }
+
+    fclose(file);
+    return 1;
 }
