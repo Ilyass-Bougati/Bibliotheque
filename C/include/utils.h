@@ -2,7 +2,7 @@
 #include <stdbool.h>
 
 // c'est le délimiteur qui sépare les champs lors de la conversion de chaînes en structures
-#define delimiter '#'
+#define delimiter "#"
 
 
 /**
