@@ -57,3 +57,37 @@ char *abonnement_to_string(Abonnement *abonnement)
     strcat(buffer, date_to_string(abonnement->date_debut));
     return buffer;
 }
+
+
+
+Abonnement **load_abonnements(int *length)
+{
+    // the list of clients
+    Abonnement **abonnements = (Abonnement **) malloc(sizeof(Abonnement *));
+    *length = 0;
+
+    char *file = read_file("data/abonnements");
+    if (file == NULL)
+    {
+        printf("Erreur de lecture du fichier notification\n");
+        return NULL;
+    }
+
+    int len;
+    char **abonnements_strings = split(file, '\n', &len);
+
+    for (int i = 0; i < len; i++)
+    {
+        Abonnement *abonnement = string_to_client(abonnements_strings[i]);
+        if (abonnement == NULL)
+        {
+            printf("Erreur format de fichier\n");
+            return NULL;
+        }
+
+        abonnements[(*length)++] = abonnement;
+        abonnements = (Abonnement**) realloc(abonnements, (*length + 1) * sizeof(Abonnement*));
+    }
+
+    return abonnements;
+}

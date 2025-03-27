@@ -45,3 +45,9 @@ Abonnement *string_to_abonnement(char *str);
  * @return renvoie NULL en cas d'erreur
  */
 char *abonnement_to_string(Abonnement *abonnement);
+
+/**
+ * Cette fonction charge tous les abonnements sur le fichier abonnement
+ * @param length cette variable contient la taille de la table renvoyée
+ */
+Abonnement **load_abonnements(int *length);

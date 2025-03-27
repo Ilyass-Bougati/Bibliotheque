@@ -30,3 +30,10 @@ Notification *string_to_notification(char *str);
  * @return renvoie NULL en cas d'erreur
  */
 char *notification_to_string(Notification *notification);
+
+
+/**
+ * Cette fonction charge tous les notifications sur le fichier notification
+ * @param length cette variable contient la taille de la table renvoyée
+ */
+Notification **load_notifications(int *length);

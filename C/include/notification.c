@@ -58,3 +58,36 @@ char *notification_to_string(Notification *notification)
 
     return buffer;
 }
+
+
+Notification **load_notifications(int *length)
+{
+    // the list of clients
+    Notification **notifications = (Notification **) malloc(sizeof(Notification *));
+    *length = 0;
+
+    char *file = read_file("data/notifications");
+    if (file == NULL)
+    {
+        printf("Erreur de lecture du fichier notification\n");
+        return NULL;
+    }
+
+    int len;
+    char **notification_strings = split(file, '\n', &len);
+
+    for (int i = 0; i < len; i++)
+    {
+        Notification *notification = string_to_client(notification_strings[i]);
+        if (notification == NULL)
+        {
+            printf("Erreur format de fichier\n");
+            return NULL;
+        }
+
+        notifications[(*length)++] = notification;
+        notifications = (Notification**) realloc(notifications, (*length + 1) * sizeof(Notification*));
+    }
+
+    return notifications;
+}
