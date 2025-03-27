@@ -8,6 +8,6 @@ biblio.exe: biblio.c
 	$(CC) $(FLAGS) -o biblio biblio.c include/*.c
 
 run: biblio.exe
-	./biblio
+	./biblio.exe
 
 all: clean run
