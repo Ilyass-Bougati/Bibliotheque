@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "livre.h"
-#include "utils.h"
 
 
 int recuperer_last_id(const char* filename) 
