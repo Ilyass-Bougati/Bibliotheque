@@ -3,6 +3,8 @@
 #include <string.h>
 #include "livre.h"
 
+#define delimiter "#"
+
 
 int recuperer_last_id(const char* filename) 
 {
