@@ -16,7 +16,7 @@ typedef struct Emprunt
     Exemplaire *exemplaire;
 } Emprunt;
 
-int last_emprunt_id;
+static int last_emprunt_id = -1;
 
 /**
  * Cette fonction transformera une chaîne en une structure emprunt

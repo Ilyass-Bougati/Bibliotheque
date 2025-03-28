@@ -6,13 +6,6 @@
 #include "penalite.h"
 #include "reader.h"
 
-    // int id;
-    // int id_abonnement;
-    // float montant;
-    // Etat_penalite etat_penalite;
-    // char *motif;
-    // Date date_penalite;
-
 Penalite *string_to_penalite(char* str)
 {
     if(str == NULL)

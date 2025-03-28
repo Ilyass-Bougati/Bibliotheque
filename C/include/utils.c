@@ -61,55 +61,6 @@ char *trim(char *str)
     return str;
 }
 
-
-char **split_2nd(char *str , char *del)
-{
-    char** splitted_str = malloc(sizeof(char*));
-    int i , j = 0 , k = 0, l = strlen(str) , m;
-    /**
-     * i : index for str
-     * j : 1st index for splitted_str
-     * k : 2nd index for splitted_str
-     * m : index for del
-     */
-    for(i = 0 ; i < l ; i++)
-    {
-        if(i == 0)
-            splitted_str[j] = malloc(sizeof(char));
-        else
-            splitted_str[j] = realloc(splitted_str[j] , (k+1) * sizeof(char));
-        
-        if(str[i] == del[0])
-        {
-            m = 0 ;
-            while(str[i+m] == del[m])
-            {
-                m++;
-            }
-            if(del[m] == '\0')
-            {
-                splitted_str[j++][k] = '\0';
-                splitted_str = realloc(splitted_str , (j+1) * sizeof(char*));
-                i += m-1 ;
-                k = 0;
-            }
-            else{
-                splitted_str[j][k++] = str[i];
-            }
-        }
-        else{
-            splitted_str[j][k++] = str[i];
-        }
-    }
-    splitted_str[j] = realloc(splitted_str[j] , (k+1) * sizeof(char));
-    splitted_str[j++][k] = '\0';
-
-    splitted_str = realloc(splitted_str , (j+1) * sizeof(char*));
-    splitted_str[j] = NULL;
-
-    return splitted_str ;
-}
-
 void removeChar(char *str, char ch)
 {
     int i, j = 0;

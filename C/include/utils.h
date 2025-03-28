@@ -11,12 +11,6 @@
  */
 char *trim(char *str);
 
-/**
- * cette fonction coupe une chaîne de caractères selon un delimiteur predefini
- * @param str la chaîne de caractères à couper
- * @param del le delimiteur
- */
-char **split_2nd(char *str , char *del);
 
 /**
  * cette fonction vérifie si une chaîne de caractères est vide ou remplie d'espaces
