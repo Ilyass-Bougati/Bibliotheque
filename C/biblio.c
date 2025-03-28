@@ -1,11 +1,8 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include "include/emprunt.h"
-#include "include/utils.h"
-
+#include "include/database.h"
+#include "stdlib.h"
 
 int main()
 {
-	//In use for testing..
-	return 0;
+    // for tests (nothing here)
 }
