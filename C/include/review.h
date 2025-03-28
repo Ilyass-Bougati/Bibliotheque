@@ -32,3 +32,10 @@ char *review_to_string(Review *review);
  * @param length cette variable contient la taille de la table renvoyée
  */
 Review **load_reviews(int *length);
+
+/**
+ * Cette fonction enregistre tous les reviews dans le fichier
+ * @param reviews Les reviews à sauvegarder
+ * @param number la taille du tableau reviews
+ */
+void save_reviews(Review **reviews, int number);

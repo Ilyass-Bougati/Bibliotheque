@@ -89,3 +89,20 @@ Review **load_reviews(int *length)
 
     return Reviews;
 }
+
+
+void save_reviews(Review **reviews, int number)
+{
+    FILE *fptr = fopen(fichier_reviews, "w");
+    if (fptr == NULL)
+    {
+        printf("Erreur de lecture du fichier reviews\n");
+        return;
+    }
+
+    for (int i = 0; i < number; i++)
+    {
+        fprintf(fptr, "%s\n", review_to_string(reviews[i]));
+    }
+    fclose(fptr);
+}
