@@ -1,6 +1,10 @@
 #pragma once
 #include "livre.h"
 
+#ifndef fichier_reviews
+    #define fichier_reviews "data/reviews"
+#endif
+
 typedef struct Review
 {
     int id_client;

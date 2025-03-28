@@ -69,7 +69,7 @@ Review **load_reviews(int *length)
 {
 	Review **Reviews = (Review **)malloc(sizeof(Review));
 	*length = 0;
-	char *file = read_file("reviews.txt");
+	char *file = read_file(fichier_reviews);
 	if (file == NULL)
     {
         printf("Erreur de lecture du fichier reviews\n");
