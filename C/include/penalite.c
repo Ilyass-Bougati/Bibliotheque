@@ -28,7 +28,7 @@ Penalite *string_to_penalite(char* str)
         return NULL;
     }
 
-    Penalite *penalite = (Penalite*)malloc(sizeof(Penalite));
+    Penalite *penalite = (Penalite*) calloc(1, sizeof(Penalite));
 
     penalite->id            = atoi(splitted_str[0]);
     penalite->id_abonnement = atoi(splitted_str[1]);
@@ -49,6 +49,7 @@ Penalite *string_to_penalite(char* str)
     {
         return NULL;
     }
+
     return penalite;
 }
 

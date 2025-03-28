@@ -25,7 +25,7 @@ Review *string_to_review(char *str)
     }
 
     // Allocation de la structure Review
-    Review *review = (Review *) malloc(sizeof(Review));
+    Review *review = (Review *) calloc(1, sizeof(Review));
     if(!review)
     {
     	printf("Erreur d'allocation de mémoire\n");

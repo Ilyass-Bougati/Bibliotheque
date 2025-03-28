@@ -34,6 +34,10 @@ typedef struct Abonnement
     // les emprunts
     Emprunt **emprunts;
     int nemprunts;
+
+    // les penalites
+    Penalite **penalites;
+    int npenalites;
 } Abonnement;
 
 /**

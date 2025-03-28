@@ -44,7 +44,7 @@ char *exemplaire_to_string(Exemplaire *exemplaire)
 Exemplaire **load_exemplaires(int *length)
 {
     // the list of Exemplaires
-    Exemplaire **exemplaires = (Exemplaire**) malloc(sizeof(Exemplaire *));
+    Exemplaire **exemplaires = (Exemplaire**) calloc(1, sizeof(Exemplaire *));
     *length = 0;
 
     char *file = read_file(ficher_exemplaires);

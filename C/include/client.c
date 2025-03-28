@@ -61,7 +61,7 @@ char *client_to_string(Client *client)
 Client **load_clients(int *length)
 {
     // the list of clients
-    Client **clients = (Client **) malloc(sizeof(Client *));
+    Client **clients = (Client **) calloc(1, sizeof(Client *));
     *length = 0;
 
     char *file = read_file(ficher_clients);

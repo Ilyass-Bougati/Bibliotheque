@@ -23,7 +23,7 @@ Abonnement *string_to_abonnement(char *str)
     }
 
     // parsign the string
-    Abonnement *abonnement = (Abonnement *) malloc(sizeof(Abonnement));
+    Abonnement *abonnement = (Abonnement *) calloc(1, sizeof(Abonnement));
     abonnement->id = atoi(split_string[0]);
     abonnement->id_client = atoi(split_string[1]);
     abonnement->type_abonnement = atoi(split_string[2]);

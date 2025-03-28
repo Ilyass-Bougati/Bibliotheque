@@ -63,7 +63,7 @@ char *notification_to_string(Notification *notification)
 Notification **load_notifications(int *length)
 {
     // the list of clients
-    Notification **notifications = (Notification **) malloc(sizeof(Notification *));
+    Notification **notifications = (Notification **) calloc(1, sizeof(Notification *));
     *length = 0;
 
     char *file = read_file(ficher_notifications);

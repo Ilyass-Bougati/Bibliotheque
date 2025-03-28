@@ -22,7 +22,7 @@ Emprunt *string_to_emprunt(char* str)
         goto inv_emprunt;
     }
 
-    Emprunt* emprunt = (Emprunt*)malloc(sizeof(Emprunt));
+    Emprunt* emprunt = (Emprunt*) calloc(1, sizeof(Emprunt));
 
     emprunt->id             = atoi(splitted_str[0]);
     emprunt->id_abonnement  = atoi(splitted_str[1]);

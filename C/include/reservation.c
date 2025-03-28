@@ -98,7 +98,7 @@ char *reservation_to_string(Reservation *reservation)
 
 Reservation **load_reservations(int *length)
 {
-    Reservation **reservations = (Reservation **) malloc(sizeof(Reservation *));
+    Reservation **reservations = (Reservation **) calloc(1, sizeof(Reservation *));
     *length = 0;
 
     // Lecture du fichier qui contient les réservations
