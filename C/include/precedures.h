@@ -177,3 +177,117 @@ void supprime_exemplaire(Database *db, int id);
  * @param new_exemplaire le nouveau exemplaire
  */
 void modifie_exemplaire(Database *db, int id, Exemplaire *new_exemplaire);
+
+/**
+ * Cette fonction insère un categorie dans la base de données
+ * @param db la base de données
+ * @param categorie le categorie à insérer
+ */
+void insere_categorie(Database *db, Categorie *categorie);
+
+/**
+ * Cette fonction supprime un categorie de la base de données
+ * @param db la base de données
+ * @param id l'identifiant du categorie
+ */
+void supprime_categorie(Database *db, int id);
+
+/**
+ * Cette fonction modifie un categorie
+ * @param db la base de données
+ * @param id l'identifiant du categorie
+ * @param new_categorie le nouveau categorie
+ */
+void modifie_categorie(Database *db, int id, Categorie *new_categorie);
+
+
+/**
+ * Cette fonction insère un langue dans la base de données
+ * @param db la base de données
+ * @param langue le langue à insérer
+ */
+void insere_langue(Database *db, Langue *langue);
+
+/**
+ * Cette fonction supprime un langue de la base de données
+ * @param db la base de données
+ * @param id l'identifiant du langue
+ */
+void supprime_langue(Database *db, int id);
+
+/**
+ * Cette fonction modifie un langue
+ * @param db la base de données
+ * @param id l'identifiant du langue
+ * @param new_langue le nouveau langue
+ */
+void modifie_langue(Database *db, int id, Langue *new_langue);
+
+
+/**
+ * Cette fonction insère un editeur dans la base de données
+ * @param db la base de données
+ * @param editeur le editeur à insérer
+ */
+void insere_editeur(Database *db, Editeur *editeur);
+
+/**
+ * Cette fonction supprime un editeur de la base de données
+ * @param db la base de données
+ * @param id l'identifiant du editeur
+ */
+void supprime_editeur(Database *db, int id);
+
+/**
+ * Cette fonction modifie un editeur
+ * @param db la base de données
+ * @param id l'identifiant du editeur
+ * @param new_editeur le nouveau editeur
+ */
+void modifie_editeur(Database *db, int id, Editeur *new_editeur);
+
+
+/**
+ * Cette fonction insère un auteur dans la base de données
+ * @param db la base de données
+ * @param auteur le auteur à insérer
+ */
+void insere_auteur(Database *db, Auteur *auteur);
+
+/**
+ * Cette fonction supprime un auteur de la base de données
+ * @param db la base de données
+ * @param id l'identifiant du auteur
+ */
+void supprime_auteur(Database *db, int id);
+
+/**
+ * Cette fonction modifie un auteur
+ * @param db la base de données
+ * @param id l'identifiant du auteur
+ * @param new_auteur le nouveau auteur
+ */
+void modifie_auteur(Database *db, int id, Auteur *new_auteur);
+
+
+/**
+ * Cette fonction insère un livre dans la base de données
+ * @param db la base de données
+ * @param livre le livre à insérer
+ */
+void insere_livre(Database *db, Livre *livre);
+
+/**
+ * Cette fonction supprime un livre de la base de données
+ * @param db la base de données
+ * @param id l'identifiant du livre
+ */
+void supprime_livre(Database *db, int id);
+
+/**
+ * Cette fonction modifie un livre
+ * @param db la base de données
+ * @param id l'identifiant du livre
+ * @param new_livre le nouveau livre
+ */
+void modifie_livre(Database *db, int id, Livre *new_livre);
