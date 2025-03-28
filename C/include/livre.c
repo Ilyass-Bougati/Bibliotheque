@@ -30,11 +30,11 @@ GestionnaireId* initialiser_GestionnaireId()
     GestionnaireId* gestionnaire = malloc(sizeof(GestionnaireId));
     if (!gestionnaire) return NULL;
     
-    gestionnaire->last_livre_id = recuperer_last_id("data/livres.txt");
-    gestionnaire->last_editeur_id = recuperer_last_id("data/editeurs.txt");
-    gestionnaire->last_categorie_id = recuperer_last_id("data/categories.txt");
-    gestionnaire->last_auteur_id = recuperer_last_id("data/auteurs.txt");
-    gestionnaire->last_langue_id = recuperer_last_id("data/langues.txt");
+    gestionnaire->last_livre_id = recuperer_last_id(fichier_livres);
+    gestionnaire->last_editeur_id = recuperer_last_id(fichier_editeurs);
+    gestionnaire->last_categorie_id = recuperer_last_id(fichier_categories);
+    gestionnaire->last_auteur_id = recuperer_last_id(fichier_categories);
+    gestionnaire->last_langue_id = recuperer_last_id(fichier_langues);
     
     return gestionnaire;
 }
