@@ -197,15 +197,13 @@ Database *load_db()
     }
 
     // setting the last ids
+    // this shouldn't be here, but it's too late to change each function on its own
     last_client_id = db->clients[db->nclients - 1]->id;
     last_notification_id = db->notifications[db->nnotifications - 1]->id;
     last_abonnement_id = db->abonnements[db->nabonnements - 1]->id;
     last_penalite_id = db->penalites[db->npenalites - 1]->id;
     last_emprunt_id = db->emprunts[db->nemprunts - 1]->id;
     last_reservation_id = db->reservations[db->nreservations - 1]->id;
-
-    
-
 
     return db;
 }
