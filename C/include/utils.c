@@ -209,6 +209,27 @@ char* new_strrev(char* str)
     return strreved;
 }
 
+char* ftoa(float x)
+{
+    int integer_part = (int)x;
+    x -= integer_part;
+    
+    while(x - (int)x != 0)
+    {
+        x *= 10;
+    }
+
+    char *int_str   = new_itoa(integer_part),
+         *float_str = new_itoa((int)x)      ,
+         *out       = malloc((strlen(int_str) + strlen(float_str) + 2)*sizeof(char));
+        
+    strcat(out , int_str);
+    strcat(out , ".");
+    strcat(out , float_str);
+
+    return out;
+}
+
 char* new_itoa(int x)
 {
     bool isNegative = x < 0 ? true : false ;

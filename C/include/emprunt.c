@@ -92,3 +92,31 @@ Emprunt **load_emprunts(int *length)
 
     return emprunts;
 }
+
+Emprunt *get_emprunt_by_id(Emprunt** emprunts, int len, int id)
+{
+    for (int i = 0; i < len; i++)
+    {
+        if (emprunts[i]->id == id)
+        {
+            return emprunts[i];
+        }
+    }
+    return NULL;
+}
+
+void save_emprunts(Emprunt **emprunts, int number)
+{
+    FILE *fptr = fopen("data/emprunt", "w");
+    if (fptr == NULL)
+    {
+        printf("Erreur de lecture du fichier emprunts\n");
+        return;
+    }
+
+    for (int i = 0; i < number; i++)
+    {
+        fprintf(fptr, "%s\n", emprunt_to_string(emprunts[i]));
+    }
+    fclose(fptr);
+}
