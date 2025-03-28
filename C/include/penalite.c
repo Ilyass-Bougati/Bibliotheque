@@ -4,6 +4,8 @@
 #include "date.h"
 #include "utils.h"
 #include "penalite.h"
+#include "emprunt.h"
+#include "reader.h"
 
     // int id;
     // int id_abonnement;
@@ -60,7 +62,7 @@ char *penalite_to_string(Penalite *pen)
     *str_date_penalite = date_to_string(pen->date_penalite),
     *str_montant       = ftoa(pen->montant),
     *str_motif         = malloc((2048 + 1)*sizeof(char)),
-    *str_etat          = atoi(pen->etat_penalite);
+    *str_etat          = new_itoa(pen->etat_penalite);
 
     strncpy(str_motif , pen->motif , 2048);
 
@@ -133,7 +135,7 @@ void save_penalites(Penalite **penalites, int number)
 
     for (int i = 0; i < number; i++)
     {
-        fprintf(fptr, "%s\n", emprunt_to_string(penalites[i]));
+        fprintf(fptr, "%s\n", penalite_to_string(penalites[i]));
     }
     fclose(fptr);
 }
