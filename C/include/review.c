@@ -21,7 +21,6 @@ Review *string_to_review(char *str)
 	// Vérification du nombre attendu de parties après split
     if (length != 2)
     {
-        printf("Erreur de lecture du fichier Review");
         return NULL;
     }
 
@@ -72,7 +71,6 @@ Review **load_reviews(int *length)
 	char *file = read_file(fichier_reviews);
 	if (file == NULL)
     {
-        printf("Erreur de lecture du fichier reviews\n");
         return NULL;
     }
 	int len;
@@ -82,7 +80,6 @@ Review **load_reviews(int *length)
         Review *review = string_to_review(review_strings[i]);
         if (review == NULL)
         {
-            printf("Erreur format de fichier\n");
             return NULL;
         }
 

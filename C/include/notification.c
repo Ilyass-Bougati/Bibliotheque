@@ -20,7 +20,6 @@ Notification *string_to_notification(char *str)
     // checking if all the fields are present
     if (length != 5)
     {
-        printf("Erreur de lecture du fichier notification");
         return NULL;
     }
 
@@ -70,7 +69,6 @@ Notification **load_notifications(int *length)
     char *file = read_file(ficher_notifications);
     if (file == NULL)
     {
-        printf("Erreur de lecture du fichier notification\n");
         return NULL;
     }
 
@@ -82,7 +80,6 @@ Notification **load_notifications(int *length)
         Notification *notification = string_to_notification(notification_strings[i]);
         if (notification == NULL)
         {
-            printf("Erreur format de fichier\n");
             return NULL;
         }
 

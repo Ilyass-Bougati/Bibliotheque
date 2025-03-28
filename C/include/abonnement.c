@@ -70,7 +70,6 @@ Abonnement **load_abonnements(int *length)
     char *file = read_file(ficher_abonnements);
     if (file == NULL)
     {
-        printf("Erreur de lecture du fichier notification\n");
         return NULL;
     }
 
@@ -82,7 +81,6 @@ Abonnement **load_abonnements(int *length)
         Abonnement *abonnement = string_to_abonnement(abonnements_strings[i]);
         if (abonnement == NULL)
         {
-            printf("Erreur format de fichier\n");
             return NULL;
         }
 
@@ -98,7 +96,6 @@ void save_abonnements(Abonnement **abonnements, int number)
     FILE *fptr = fopen(ficher_abonnements, "w");
     if (fptr == NULL)
     {
-        printf("Erreur de lecture du fichier abonnement\n");
         return;
     }
 

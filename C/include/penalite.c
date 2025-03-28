@@ -95,7 +95,7 @@ char *penalite_to_string(Penalite *pen)
 
 Penalite **load_penalite(int *length)
 {
-    char *file = read_file("data/penalite") , **splitted_file = split_2nd(file , "\n");
+    char *file = read_file(ficher_penalites) , **splitted_file = split_2nd(file , "\n");
     int size , i ;
     for(size = 0 ; splitted_file[size] != NULL ; size++);
 
@@ -125,7 +125,7 @@ Penalite *get_penalite_by_id(Penalite** penalites, int len, int id)
 
 void save_penalites(Penalite **penalites, int number)
 {
-    FILE *fptr = fopen("data/penalite", "w");
+    FILE *fptr = fopen(ficher_penalites, "w");
     if (fptr == NULL)
     {
         printf("Erreur de lecture du fichier penalites\n");

@@ -34,6 +34,8 @@ Database *load_db()
             temp->notifications = (Notification**) realloc(temp->notifications, (temp->nnotifications + 1) * sizeof(Notification));
             temp->notifications[(temp->nnotifications)++] = db->notifications[i];
         }
+    } else {
+        printf("Pas des notifications\n");
     }
 
     // reading the table abonnements
@@ -53,6 +55,8 @@ Database *load_db()
             temp->abonnements = (Abonnement**) realloc(temp->abonnements, (temp->nabonnements + 1) * sizeof(Abonnement));
             temp->abonnements[(temp->nabonnements)++] = db->abonnements[i];
         }
+    } else {
+        printf("Pas de abonnements\n");
     }
 
     // reading the table reservations
@@ -72,6 +76,8 @@ Database *load_db()
             temp->reservations = (Reservation**) realloc(temp->reservations, (temp->nreservations + 1) * sizeof(Reservation));
             temp->reservations[(temp->nreservations)++] = db->reservations[i];
         }
+    } else {
+        printf("Pas de reservations\n");
     }
 
     // reading the table reviews
@@ -91,6 +97,28 @@ Database *load_db()
             temp->reviews = (Review**) realloc(temp->reviews, (temp->nreviews + 1) * sizeof(Review));
             temp->reviews[(temp->nreviews)++] = db->reviews[i];
         }
+    } else {
+        printf("Pas de reviews\n");
+    }
+
+    // loading the penalties
+    db->penalites = load_penalite(&(db->npenalites));
+    if (db->penalites != NULL)
+    {
+        for (int i = 0; i < db->npenalites; i++)
+        {
+            Abonnement *temp = get_abonnement_by_id(db->abonnements, db->nabonnements, db->penalites[i]->id_abonnement);
+            if (temp == NULL)
+            {
+                printf("erreur d'integrite de la cle etrangere, l'ID abonnement dans la penalite n'existe pas dans la table abonnements");
+                return NULL;
+            }
+
+            temp->emprunts = (Emprunt**) realloc(temp->emprunts, (temp->nemprunts + 1) * sizeof(Emprunt));
+            temp->emprunts[(temp->nemprunts)++] = db->emprunts[i];
+        }
+    } else {
+        printf("Pas de penalites\n");
     }
 
     return db;

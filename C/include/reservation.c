@@ -22,7 +22,6 @@ Reservation *string_to_reservation(char *str)
     // Vérification du nombre attendu de parties après split
     if (length != 3)
     {
-        printf("Erreur de lecture du fichier Reservation\n");
         for (int i = 0; i < length; i++) free(split_string[i]); // Libération des chaînes
         free(split_string);
         return NULL;
@@ -106,7 +105,6 @@ Reservation **load_reservations(int *length)
     char *file = read_file(fichier_reservations); 
     if (file == NULL)
     {
-        printf("Erreur de lecture du fichier de reservations\n");
         return NULL;
     }
 
@@ -120,7 +118,6 @@ Reservation **load_reservations(int *length)
         Reservation *reservation = string_to_reservation(reservation_strings[i]);
         if (reservation == NULL)
         {
-            printf("Erreur format de fichier pour la réservation à la ligne %d\n", i);
             return NULL;
         }
 

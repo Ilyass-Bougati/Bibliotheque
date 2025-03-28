@@ -14,7 +14,6 @@ Exemplaire *string_to_exemplaire(char *str)
     // checking if all the fields are present
     if (length != 3)
     {
-        printf("Erreur de lecture du fichier exemplaire");
         return NULL;
     }
 
@@ -51,7 +50,6 @@ Exemplaire **load_exemplaires(int *length)
     char *file = read_file(ficher_exemplaires);
     if (file == NULL)
     {
-        printf("Erreur de lecture du fichier exemplaire\n");
         return NULL;
     }
 
@@ -63,7 +61,6 @@ Exemplaire **load_exemplaires(int *length)
         Exemplaire *exemplaire = string_to_exemplaire(exemplaire_strings[i]);
         if (exemplaire == NULL)
         {
-            printf("Erreur format de fichier\n");
             return NULL;
         }
 

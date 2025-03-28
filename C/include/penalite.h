@@ -1,6 +1,10 @@
 #pragma once
 #include "date.h"
 
+#ifndef ficher_penalites
+    #define ficher_penalites "data/penalites"
+#endif
+
 typedef enum 
 {
     bad  = 0,

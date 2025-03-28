@@ -17,7 +17,6 @@ Client *string_to_client(char *str)
     // checking if all the fields are present
     if (length != 7)
     {
-        printf("Erreur de lecture du fichier client");
         return NULL;
     }
 
@@ -68,7 +67,6 @@ Client **load_clients(int *length)
     char *file = read_file(ficher_clients);
     if (file == NULL)
     {
-        printf("Erreur de lecture du fichier client\n");
         return NULL;
     }
 
@@ -80,7 +78,6 @@ Client **load_clients(int *length)
         Client *client = string_to_client(client_strings[i]);
         if (client == NULL)
         {
-            printf("Erreur format de fichier\n");
             return NULL;
         }
 

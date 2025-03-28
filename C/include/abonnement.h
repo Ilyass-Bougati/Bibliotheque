@@ -32,7 +32,7 @@ typedef struct Abonnement
     Date date_debut;
 
     // les emprunts
-    Emprunt *emprunts;
+    Emprunt **emprunts;
     int nemprunts;
 } Abonnement;
 
