@@ -45,3 +45,8 @@ typedef struct Database
  * Cette fonction charge la base de données entière
  */
 Database *load_db();
+
+/**
+ * cette fonction enregistre toute la base de données
+ */
+void commit(Database *db);

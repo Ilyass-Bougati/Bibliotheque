@@ -199,3 +199,21 @@ Database *load_db()
 
     return db;
 }
+
+
+void commit(Database *db)
+{
+    save_clients(db->clients, db->nclients);
+    save_abonnements(db->abonnements, db->nabonnements);
+    save_notifications(db->notifications, db->nnotifications);
+    save_emprunts(db->emprunts, db->nemprunts);
+    save_penalites(db->penalites, db->npenalites);
+    save_exemplaires(db->exemplaires, db->nexemplaires);
+    save_reservations(db->reservations, db->nreservations);
+    save_reviews(db->reviews, db->nreviews);
+    save_livres(fichier_livres, db->livres, db->nlivres);
+    save_livres(fichier_categories, db->categories, db->ncategories);
+    save_livres(fichier_langues, db->langues, db->nlangues);
+    save_livres(fichier_editeurs, db->editeurs, db->nediteurs);
+    save_livres(fichier_auteurs, db->auteurs, db->nauteurs);
+}
