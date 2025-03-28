@@ -10,6 +10,13 @@
 #include "stdlib.h"
 #include "stdio.h"
 
+int last_client_id = 0;
+int last_notification_id = 0;
+int last_abonnement_id = 0;
+int last_penalite_id = 0;
+int last_emprunt_id = 0;
+int last_reservation_id = 0;
+
 
 Database *load_db()
 {
@@ -220,8 +227,8 @@ void commit(Database *db)
     save_reservations(db->reservations, db->nreservations);
     save_reviews(db->reviews, db->nreviews);
     save_livres(fichier_livres, db->livres, db->nlivres);
-    save_livres(fichier_categories, db->categories, db->ncategories);
-    save_livres(fichier_langues, db->langues, db->nlangues);
-    save_livres(fichier_editeurs, db->editeurs, db->nediteurs);
-    save_livres(fichier_auteurs, db->auteurs, db->nauteurs);
+    save_categories(fichier_categories, db->categories, db->ncategories);
+    save_langues(fichier_langues, db->langues, db->nlangues);
+    save_editeurs(fichier_editeurs, db->editeurs, db->nediteurs);
+    save_auteurs(fichier_auteurs, db->auteurs, db->nauteurs);
 }

@@ -40,7 +40,7 @@ typedef struct Abonnement
     int npenalites;
 } Abonnement;
 
-static int last_abonnement_id = -1 ;
+extern int last_abonnement_id;
 
 /**
  * cette fonction transformera une chaîne en une structure client

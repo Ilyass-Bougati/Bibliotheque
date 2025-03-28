@@ -5,8 +5,6 @@
 #include "string.h"
 #include "reader.h"
 
-// cette variable contient le dernier identifiant client généré
-int last_client_id = 0;
 
 Client *string_to_client(char *str)
 {

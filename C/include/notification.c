@@ -7,9 +7,6 @@
 #include "reader.h"
 
 
-// cette variable contient le dernier identifiant notification généré
-int last_notification_id = 0;
-
 
 Notification *string_to_notification(char *str)
 {

@@ -22,7 +22,7 @@ typedef struct Penalite
     Date date_penalite;
 } Penalite;
 
-static int last_penalite_id = -1;
+extern int last_penalite_id;
 
 /**
  * Cette fonction transformera une chaîne en une structure penalite

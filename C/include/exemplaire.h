@@ -21,7 +21,7 @@ typedef struct Exemplaire
     Livre *livre;
 } Exemplaire;
 
-static int last_exemplaire_id = -1;
+extern int last_exemplaire_id;
 
 /**
  * Cette fonction transformera une chaîne en une structure exemplaire

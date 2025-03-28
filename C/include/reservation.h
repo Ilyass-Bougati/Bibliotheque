@@ -14,7 +14,7 @@ typedef struct Reservation
     Date date_reservation;
 } Reservation;
 
-int last_reservation_id;
+extern int last_reservation_id;
 
 /**
  * Cette fonction transformera une chaîne en une structure reservation

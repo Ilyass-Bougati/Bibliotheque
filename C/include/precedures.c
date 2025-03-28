@@ -12,6 +12,7 @@
 /**
  * Exemplaires :
  */
+int last_exemplaire_id = 0;
 
  void insere_exemplaire(Database *db, Exemplaire *exemplaire)
  {
@@ -28,7 +29,7 @@
      db->exemplaires = (Exemplaire**)realloc(db->exemplaires , (db->nexemplaires++ +1) * sizeof(Exemplaire*));
      
      exemplaire->id = ++last_exemplaire_id;
-     db->emprunts[db->nemprunts - 1] = exemplaire;
+     db->exemplaires[db->nemprunts - 1] = exemplaire;
  }
  
  void supprime_exemplaire(Database *db, int id)
@@ -41,7 +42,7 @@
      
      bool found = false;
      int i;
-     for(i = 0 ; i < db->exemplaires ; i++)
+     for(i = 0 ; i < db->nexemplaires ; i++)
      {
          if(db->exemplaires[i]->id == id)
          {
@@ -339,7 +340,7 @@ void supprime_client(Database *db, int id)
 }
 void modifie_client(Database *db, int id, Client *new_client)
 {
-	int i, j;
+	int i;
 	for(i = 0; i < db->nclients ; i++)
 	{
 		if(db->clients[i]->id == id)
@@ -359,13 +360,13 @@ void insere_notification(Database *db, Notification *notification)
     if (temp == NULL)
     {
         printf("erreur d'integrite de la clé etrangere, l'ID client dans la notification n'existe pas dans la table client");
-        return NULL;
+        return;
     }
     
     temp->notifications = (Notification**) realloc(temp->notifications, (temp->nnotifications + 1) * sizeof(Notification*));
     for(int i = 0; i < temp->nnotifications ; i++)
     {
-    	if(temp->notifications[i]->id = notification->id)
+    	if(temp->notifications[i]->id == notification->id)
     		temp->notifications[(temp->nnotifications)++] = db->notifications[i];
 	}
     
@@ -416,7 +417,7 @@ void supprime_notification(Database *db, int id)
 	}
 	
 }
-void modifie_notification(Database *db, int id, Client *new_notification)
+void modifie_notification(Database *db, int id, Notification *new_notification)
 {
 	int i, k;
 	for(i = 0; i < db->nnotifications ; i++)
@@ -427,7 +428,7 @@ void modifie_notification(Database *db, int id, Client *new_notification)
 			if (temp == NULL)
             {
                 printf("erreur d'integrite de la clé etrangere, l'ID client dans la notification n'existe pas dans la table client");
-                return NULL;
+                return;
             }
 			
 			for(k = 0 ; k < temp->nnotifications ; k++)
@@ -451,13 +452,13 @@ void insere_reservation(Database *db, Reservation *reservation)
     if (temp == NULL)
     {
         printf("erreur d'integrite de la clé etrangere, l'ID client dans la reservation n'existe pas dans la table client");
-        return NULL;
+        return;
     }
     
     temp->reservations = (Reservation**) realloc(temp->reservations, (temp->nreservations + 1) * sizeof(Reservation*));
     for(int i = 0; i < temp->nreservations ; i++)
     {
-      if(temp->reservations[i]->id = reservation->id)
+      if(temp->reservations[i]->id == reservation->id)
         temp->reservations[(temp->nreservations)++] = db->reservations[i];
   }
     
@@ -509,10 +510,10 @@ void supprime_reservation(Database *db, int id)
 	
 }
 
-void modifie_reservation(Database *db, int id, Client *new_reservation)
+void modifie_reservation(Database *db, int id, Reservation *new_reservation)
 {
-		int i, j;
-	for(i = 0; i < db->reservations ; i++)
+	int i;
+	for(i = 0; i < db->nreservations ; i++)
 	{
 		if(db->reservations[i]->id == id)
 		{
@@ -529,7 +530,7 @@ void insere_review(Database *db, Review *review)
     if (temp == NULL)
     {
         printf("erreur d'integrite de la clé etrangere, l'ID client dans la notification n'existe pas dans la table client");
-        return NULL;
+        return;
     }
     
     temp->reviews = (Review**) realloc(temp->reviews, (temp->nreviews + 1) * sizeof(Review*));
@@ -597,7 +598,7 @@ void modifie_review(Database *db, int id, Review *new_review)
 			if (temp == NULL)
             {
                 printf("erreur d'integrite de la clé etrangere, l'ID client dans la notification n'existe pas dans la table client");
-                return NULL;
+                return;
             }
 			
 			for(k = 0 ; k < temp->nreviews ; k++)

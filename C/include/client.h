@@ -36,7 +36,7 @@ typedef struct Client
     int nreviews;
 } Client;
 
-int last_client_id;
+extern int last_client_id;
 
 /**
  * Cette fonction transformera une chaîne en une structure client

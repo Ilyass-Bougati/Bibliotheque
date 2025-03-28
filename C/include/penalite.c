@@ -89,11 +89,11 @@ char *penalite_to_string(Penalite *pen)
 
 Penalite **load_penalite(int *length)
 {
-    char *file = read_file(fichier_penalites) , **splitted_file = split_2nd(file , "\n");
     int size , i ;
-    for(size = 0 ; splitted_file[size] != NULL ; size++);
+    char *file = read_file(fichier_penalites) , **splitted_file = split(file , '\n', &size);
 
     *length = size;
+    
     Penalite** penalites = malloc(size * sizeof(Penalite*));
 
     for(i = 0 ; i < size ; i++)

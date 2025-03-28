@@ -44,7 +44,7 @@ void supprime_notification(Database *db, int id);
  * @param id l'identifiant du notification
  * @param new_notification le nouveau notification
  */
-void modifie_notification(Database *db, int id, Client *new_notification);
+void modifie_notification(Database *db, int id, Notification *new_notification);
 
 /**
  * Cette fonction insère un abonnement dans la base de données
