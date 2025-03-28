@@ -1,6 +1,8 @@
 #pragma once
 #include "abonnement.h"
 #include "notification.h"
+#include "reservation.h"
+#include "review.h"
 
 #ifndef ficher_clients
     #define ficher_clients "data/clients"
@@ -24,6 +26,14 @@ typedef struct Client
     // les notifications
     Notification **notifications;
     int nnotifications;
+
+    // les resevations
+    Reservation **reservations;
+    int nreservations;
+
+    // les avis
+    Review **reviews;
+    int nreviews;
 } Client;
 
 /**
