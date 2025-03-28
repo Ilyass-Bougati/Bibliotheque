@@ -4,8 +4,8 @@
 #include "penalite.h"
 #include "emprunt.h"
 
-#ifndef ficher_abonnements
-    #define ficher_abonnements "data/abonnements"
+#ifndef fichier_abonnements
+    #define fichier_abonnements "data/abonnements"
 #endif
 
 // le type d'un abonnement
@@ -32,8 +32,12 @@ typedef struct Abonnement
     Date date_debut;
 
     // les emprunts
-    Emprunt *emprunts;
+    Emprunt **emprunts;
     int nemprunts;
+
+    // les penalites
+    Penalite **penalites;
+    int npenalites;
 } Abonnement;
 
 /**
@@ -62,3 +66,11 @@ Abonnement **load_abonnements(int *length);
  * @param number la taille du tableau abonnements
  */
 void save_abonnements(Abonnement **abonnements, int number);
+
+/**
+ * cette fonction recherche un abonnement en utilisant son identifiant
+ * @param abonnements le tableau des abonnements
+ * @param len la taille du tableau
+ * @param id L'identifiant de l'abonnement que nous recherchons
+ */
+Abonnement *get_abonnement_by_id(Abonnement** abonnements, int len, int id);

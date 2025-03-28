@@ -2,12 +2,17 @@
 #include "exemplaire.h"
 #include "date.h"
 
+#ifndef fichier_emprunts
+    #define fichier_emprunts "data/emprunts"
+#endif
+
 typedef struct Emprunt
 {
     int id;
     int id_abonnement;
     Date date_emprunt;
     Date date_retour;
+    int id_exemplaire;
     Exemplaire *exemplaire;
 } Emprunt;
 

@@ -22,7 +22,6 @@ Reservation *string_to_reservation(char *str)
     // Vérification du nombre attendu de parties après split
     if (length != 3)
     {
-        printf("Erreur de lecture du fichier Reservation\n");
         for (int i = 0; i < length; i++) free(split_string[i]); // Libération des chaînes
         free(split_string);
         return NULL;
@@ -99,14 +98,13 @@ char *reservation_to_string(Reservation *reservation)
 
 Reservation **load_reservations(int *length)
 {
-    Reservation **reservations = (Reservation **) malloc(sizeof(Reservation *));
+    Reservation **reservations = (Reservation **) calloc(1, sizeof(Reservation *));
     *length = 0;
 
     // Lecture du fichier qui contient les réservations
-    char *file = read_file("reservations.txt"); 
+    char *file = read_file(fichier_reservations); 
     if (file == NULL)
     {
-        printf("Erreur de lecture du fichier de réservations\n");
         return NULL;
     }
 
@@ -120,7 +118,6 @@ Reservation **load_reservations(int *length)
         Reservation *reservation = string_to_reservation(reservation_strings[i]);
         if (reservation == NULL)
         {
-            printf("Erreur format de fichier pour la réservation à la ligne %d\n", i);
             return NULL;
         }
 
@@ -131,4 +128,21 @@ Reservation **load_reservations(int *length)
     }
 
     return reservations;
+}
+
+
+void save_reservations(Reservation **reservations, int number)
+{
+    FILE *fptr = fopen(fichier_reservations, "w");
+    if (fptr == NULL)
+    {
+        printf("Erreur de lecture du fichier client\n");
+        return;
+    }
+
+    for (int i = 0; i < number; i++)
+    {
+        fprintf(fptr, "%s\n", reservation_to_string(reservations[i]));
+    }
+    fclose(fptr);
 }

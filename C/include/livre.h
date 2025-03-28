@@ -2,6 +2,31 @@
 
 #define DEFAULT_ALLOCATION_SIZE 100
 
+
+// defining the file names
+#ifndef fichier_langues
+    #define fichier_langues "data/langues"
+#endif
+
+#ifndef fichier_auteurs
+    #define fichier_auteurs "data/auteurs"
+#endif
+
+#ifndef fichier_categories
+    #define fichier_categories "data/categories"
+#endif
+
+#ifndef fichier_editeurs
+    #define fichier_editeurs "data/editeurs"
+#endif
+
+#ifndef fichier_livres
+    #define fichier_livres "data/livres"
+#endif
+
+
+// defining the structures
+
 typedef struct {
     int id;
     char *nom_langue;

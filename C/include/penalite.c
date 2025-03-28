@@ -4,6 +4,7 @@
 #include "date.h"
 #include "utils.h"
 #include "penalite.h"
+#include "reader.h"
 
 Penalite *string_to_penalite(char* str)
 {
@@ -20,7 +21,7 @@ Penalite *string_to_penalite(char* str)
         return NULL;
     }
 
-    Penalite *penalite = (Penalite*)malloc(sizeof(Penalite));
+    Penalite *penalite = (Penalite*) calloc(1, sizeof(Penalite));
 
     penalite->id            = atoi(splitted_str[0]);
     penalite->id_abonnement = atoi(splitted_str[1]);
@@ -41,6 +42,7 @@ Penalite *string_to_penalite(char* str)
     {
         return NULL;
     }
+
     return penalite;
 }
 
@@ -53,7 +55,7 @@ char *penalite_to_string(Penalite *pen)
     *str_date_penalite = date_to_string(pen->date_penalite),
     *str_montant       = ftoa(pen->montant),
     *str_motif         = malloc((2048 + 1)*sizeof(char)),
-    *str_etat          = atoi(pen->etat_penalite);
+    *str_etat          = new_itoa(pen->etat_penalite);
 
     strncpy(str_motif , pen->motif , 2048);
 
@@ -87,7 +89,7 @@ char *penalite_to_string(Penalite *pen)
 
 Penalite **load_penalite(int *length)
 {
-    char *file = read_file("data/penalite") , **splitted_file = split_2nd(file , "\n");
+    char *file = read_file(fichier_penalites) , **splitted_file = split_2nd(file , "\n");
     int size , i ;
     for(size = 0 ; splitted_file[size] != NULL ; size++);
 
@@ -117,7 +119,7 @@ Penalite *get_penalite_by_id(Penalite** penalites, int len, int id)
 
 void save_penalites(Penalite **penalites, int number)
 {
-    FILE *fptr = fopen("data/penalite", "w");
+    FILE *fptr = fopen(fichier_penalites, "w");
     if (fptr == NULL)
     {
         printf("Erreur de lecture du fichier penalites\n");
@@ -126,7 +128,7 @@ void save_penalites(Penalite **penalites, int number)
 
     for (int i = 0; i < number; i++)
     {
-        fprintf(fptr, "%s\n", emprunt_to_string(penalites[i]));
+        fprintf(fptr, "%s\n", penalite_to_string(penalites[i]));
     }
     fclose(fptr);
 }

@@ -12,20 +12,21 @@ Emprunt *string_to_emprunt(char* str)
     {
         goto inv_emprunt;
     }
-    int len;
-    char** splitted_str = split(str , '#' , &len);
-
-    if(len != 4)
+    int i;
+    char** splitted_str = split(str , '#', &i);
+    
+    if(i != 4)
     {
         goto inv_emprunt;
     }
 
-    Emprunt* emprunt = (Emprunt*)malloc(sizeof(Emprunt));
+    Emprunt* emprunt = (Emprunt*) calloc(1, sizeof(Emprunt));
 
     emprunt->id             = atoi(splitted_str[0]);
     emprunt->id_abonnement  = atoi(splitted_str[1]);
-    emprunt->date_emprunt   = string_to_date(splitted_str[2]);
-    emprunt->date_retour    = string_to_date(splitted_str[3]);
+    emprunt->id_exemplaire  = atoi(splitted_str[2]);
+    emprunt->date_emprunt   = string_to_date(splitted_str[3]);
+    emprunt->date_retour    = string_to_date(splitted_str[4]);
     
     char isValid = (emprunt->id > 0)
                     &&(emprunt->id_abonnement > 0)
@@ -49,17 +50,22 @@ char *emprunt_to_string(Emprunt *emp)
 {
     char 
         *str_id = new_itoa(emp->id),
+        *str_id_exemplaire = new_itoa(emp->id_exemplaire),
         *str_id_abonnement = new_itoa(emp->id_abonnement),
         *str_date_emprunt = date_to_string(emp->date_emprunt) ,
         *str_date_retour = date_to_string(emp->date_retour);
 
     char* buffer = malloc(strlen(str_id)
+                        + strlen(str_id_exemplaire)
                         + strlen(str_id_abonnement)
                         + strlen(str_date_emprunt)
                         + strlen(str_date_retour) + 4);
 
     buffer[0] = '\0';
     strcat(buffer , str_id);
+    strcat(buffer , "#");
+
+    strcat(buffer , str_id_exemplaire);
     strcat(buffer , "#");
 
     strcat(buffer , str_id_abonnement);
@@ -76,16 +82,28 @@ char *emprunt_to_string(Emprunt *emp)
 
 Emprunt **load_emprunts(int *length)
 {
-    char *file = read_file("data/emprunt") , **splitted_file = split_2nd(file , "\n");
-    int size , i ;
-    for(size = 0 ; splitted_file[size] != NULL ; size++);
+    // the list of clients
+    Emprunt **emprunts = (Emprunt **) calloc(1, sizeof(Emprunt *));
+    *length = 0;
 
-    *length = size;
-    Emprunt** emprunts = malloc(size * sizeof(Emprunt*));
-
-    for(i = 0 ; i < size ; i++)
+    char *file = read_file(fichier_emprunts);
+    if (file == NULL)
     {
-        emprunts[i] = string_to_emprunt(splitted_file[i]);
+        return NULL;
+    }
+
+    int len;
+    char **emprunt_strings = split(file, '\n', &len);
+    for (int i = 0; i < len; i++)
+    {
+        Emprunt *emprunt = string_to_emprunt(emprunt_strings[i]);
+        if (emprunt == NULL)
+        {
+            return NULL;
+        }
+
+        emprunts[(*length)++] = emprunt;
+        emprunts = (Emprunt**) realloc(emprunts, (*length + 1) * sizeof(Emprunt*));
     }
 
     return emprunts;
@@ -105,7 +123,7 @@ Emprunt *get_emprunt_by_id(Emprunt** emprunts, int len, int id)
 
 void save_emprunts(Emprunt **emprunts, int number)
 {
-    FILE *fptr = fopen("data/emprunt", "w");
+    FILE *fptr = fopen(fichier_emprunts, "w");
     if (fptr == NULL)
     {
         printf("Erreur de lecture du fichier emprunts\n");

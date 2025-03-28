@@ -1,8 +1,8 @@
 #pragma once
 #include "date.h"
 
-#ifndef ficher_notifications
-    #define ficher_notifications "data/notifications"
+#ifndef fichier_notifications
+    #define fichier_notifications "data/notifications"
 #endif
 
 // le type de notification

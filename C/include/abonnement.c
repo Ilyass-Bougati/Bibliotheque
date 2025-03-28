@@ -23,7 +23,7 @@ Abonnement *string_to_abonnement(char *str)
     }
 
     // parsign the string
-    Abonnement *abonnement = (Abonnement *) malloc(sizeof(Abonnement));
+    Abonnement *abonnement = (Abonnement *) calloc(1, sizeof(Abonnement));
     abonnement->id = atoi(split_string[0]);
     abonnement->id_client = atoi(split_string[1]);
     abonnement->type_abonnement = atoi(split_string[2]);
@@ -67,10 +67,9 @@ Abonnement **load_abonnements(int *length)
     Abonnement **abonnements = (Abonnement **) malloc(sizeof(Abonnement *));
     *length = 0;
 
-    char *file = read_file(ficher_abonnements);
+    char *file = read_file(fichier_abonnements);
     if (file == NULL)
     {
-        printf("Erreur de lecture du fichier notification\n");
         return NULL;
     }
 
@@ -82,7 +81,6 @@ Abonnement **load_abonnements(int *length)
         Abonnement *abonnement = string_to_abonnement(abonnements_strings[i]);
         if (abonnement == NULL)
         {
-            printf("Erreur format de fichier\n");
             return NULL;
         }
 
@@ -95,10 +93,9 @@ Abonnement **load_abonnements(int *length)
 
 void save_abonnements(Abonnement **abonnements, int number)
 {
-    FILE *fptr = fopen(ficher_abonnements, "w");
+    FILE *fptr = fopen(fichier_abonnements, "w");
     if (fptr == NULL)
     {
-        printf("Erreur de lecture du fichier abonnement\n");
         return;
     }
 
@@ -107,4 +104,16 @@ void save_abonnements(Abonnement **abonnements, int number)
         fprintf(fptr, "%s\n", abonnement_to_string(abonnements[i]));
     }
     fclose(fptr);
+}
+
+Abonnement *get_abonnement_by_id(Abonnement** abonnements, int len, int id)
+{
+    for (int i = 0; i < len; i++)
+    {
+        if (abonnements[i]->id == id)
+        {
+            return abonnements[i];
+        }
+    }
+    return NULL;
 }

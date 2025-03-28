@@ -20,7 +20,6 @@ Notification *string_to_notification(char *str)
     // checking if all the fields are present
     if (length != 5)
     {
-        printf("Erreur de lecture du fichier notification");
         return NULL;
     }
 
@@ -64,13 +63,12 @@ char *notification_to_string(Notification *notification)
 Notification **load_notifications(int *length)
 {
     // the list of clients
-    Notification **notifications = (Notification **) malloc(sizeof(Notification *));
+    Notification **notifications = (Notification **) calloc(1, sizeof(Notification *));
     *length = 0;
 
-    char *file = read_file(ficher_notifications);
+    char *file = read_file(fichier_notifications);
     if (file == NULL)
     {
-        printf("Erreur de lecture du fichier notification\n");
         return NULL;
     }
 
@@ -82,7 +80,6 @@ Notification **load_notifications(int *length)
         Notification *notification = string_to_notification(notification_strings[i]);
         if (notification == NULL)
         {
-            printf("Erreur format de fichier\n");
             return NULL;
         }
 
@@ -95,7 +92,7 @@ Notification **load_notifications(int *length)
 
 void save_notifications(Notification **notifications, int number)
 {
-    FILE *fptr = fopen(ficher_notifications, "w");
+    FILE *fptr = fopen(fichier_notifications, "w");
     if (fptr == NULL)
     {
         printf("Erreur de lecture du fichier notifications\n");

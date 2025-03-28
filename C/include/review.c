@@ -21,12 +21,11 @@ Review *string_to_review(char *str)
 	// Vérification du nombre attendu de parties après split
     if (length != 2)
     {
-        printf("Erreur de lecture du fichier Review");
         return NULL;
     }
 
     // Allocation de la structure Review
-    Review *review = (Review *) malloc(sizeof(Review));
+    Review *review = (Review *) calloc(1, sizeof(Review));
     if(!review)
     {
     	printf("Erreur d'allocation de mémoire\n");
@@ -69,10 +68,9 @@ Review **load_reviews(int *length)
 {
 	Review **Reviews = (Review **)malloc(sizeof(Review));
 	*length = 0;
-	char *file = read_file("reviews.txt");
+	char *file = read_file(fichier_reviews);
 	if (file == NULL)
     {
-        printf("Erreur de lecture du fichier reviews\n");
         return NULL;
     }
 	int len;
@@ -82,7 +80,6 @@ Review **load_reviews(int *length)
         Review *review = string_to_review(review_strings[i]);
         if (review == NULL)
         {
-            printf("Erreur format de fichier\n");
             return NULL;
         }
 
@@ -91,4 +88,21 @@ Review **load_reviews(int *length)
     }
 
     return Reviews;
+}
+
+
+void save_reviews(Review **reviews, int number)
+{
+    FILE *fptr = fopen(fichier_reviews, "w");
+    if (fptr == NULL)
+    {
+        printf("Erreur de lecture du fichier reviews\n");
+        return;
+    }
+
+    for (int i = 0; i < number; i++)
+    {
+        fprintf(fptr, "%s\n", review_to_string(reviews[i]));
+    }
+    fclose(fptr);
 }

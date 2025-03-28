@@ -17,7 +17,6 @@ Client *string_to_client(char *str)
     // checking if all the fields are present
     if (length != 7)
     {
-        printf("Erreur de lecture du fichier client");
         return NULL;
     }
 
@@ -62,13 +61,12 @@ char *client_to_string(Client *client)
 Client **load_clients(int *length)
 {
     // the list of clients
-    Client **clients = (Client **) malloc(sizeof(Client *));
+    Client **clients = (Client **) calloc(1, sizeof(Client *));
     *length = 0;
 
-    char *file = read_file(ficher_clients);
+    char *file = read_file(fichier_clients);
     if (file == NULL)
     {
-        printf("Erreur de lecture du fichier client\n");
         return NULL;
     }
 
@@ -80,7 +78,6 @@ Client **load_clients(int *length)
         Client *client = string_to_client(client_strings[i]);
         if (client == NULL)
         {
-            printf("Erreur format de fichier\n");
             return NULL;
         }
 
@@ -95,7 +92,7 @@ Client **load_clients(int *length)
 
 void save_clients(Client **clients, int number)
 {
-    FILE *fptr = fopen(ficher_clients, "w");
+    FILE *fptr = fopen(fichier_clients, "w");
     if (fptr == NULL)
     {
         printf("Erreur de lecture du fichier client\n");
