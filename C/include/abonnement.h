@@ -40,6 +40,8 @@ typedef struct Abonnement
     int npenalites;
 } Abonnement;
 
+int last_abonnement_id;
+
 /**
  * cette fonction transformera une chaîne en une structure client
  * @param str la chaîne à convertir

@@ -196,6 +196,16 @@ Database *load_db()
         printf("Pas des livres\n");
     }
 
+    // setting the last ids
+    last_client_id = db->clients[db->nclients - 1]->id;
+    last_notification_id = db->notifications[db->nnotifications - 1]->id;
+    last_abonnement_id = db->abonnements[db->nabonnements - 1]->id;
+    last_penalite_id = db->penalites[db->npenalites - 1]->id;
+    last_emprunt_id = db->emprunts[db->nemprunts - 1]->id;
+    last_reservation_id = db->reservations[db->nreservations - 1]->id;
+
+    
+
 
     return db;
 }

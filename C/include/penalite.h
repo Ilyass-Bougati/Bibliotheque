@@ -22,6 +22,8 @@ typedef struct Penalite
     Date date_penalite;
 } Penalite;
 
+int last_penalite_id;
+
 /**
  * Cette fonction transformera une chaîne en une structure penalite
  * @param str la chaîne à convertir

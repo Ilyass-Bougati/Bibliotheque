@@ -21,6 +21,8 @@ typedef struct Notification
     Date date_notification;
 } Notification;
 
+int last_notification_id;
+
 /**
  * cette fonction transformera une chaîne en une structure client
  * @param str la chaîne à convertir

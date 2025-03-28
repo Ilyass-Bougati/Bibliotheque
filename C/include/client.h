@@ -36,6 +36,8 @@ typedef struct Client
     int nreviews;
 } Client;
 
+int last_client_id;
+
 /**
  * Cette fonction transformera une chaîne en une structure client
  * @param str la chaîne à convertir
