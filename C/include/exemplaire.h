@@ -1,4 +1,5 @@
 #pragma once
+#include "livre.h"
 
 #ifndef ficher_exemplaires
     #define ficher_exemplaires "data/exemplaires"
@@ -14,7 +15,10 @@ typedef struct Exemplaire
     int id;
     Disponibilite disponiblite;
     char *localisation;
-    // add link to livre
+
+    // le livre
+    int id_livre;
+    Livre *livre;
 } Exemplaire;
 
 

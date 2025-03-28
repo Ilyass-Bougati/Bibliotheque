@@ -12,7 +12,7 @@ Exemplaire *string_to_exemplaire(char *str)
     char **split_string = split(str, delimiter, &length);
 
     // checking if all the fields are present
-    if (length != 3)
+    if (length != 4)
     {
         return NULL;
     }
@@ -20,19 +20,23 @@ Exemplaire *string_to_exemplaire(char *str)
     // Creating the exemplaire
     Exemplaire *exemplaire   = (Exemplaire*) malloc(sizeof(Exemplaire));
     exemplaire->id           = atoi(split_string[0]);
-    exemplaire->disponiblite = atoi(split_string[1]);
-    exemplaire->localisation = split_string[2];
+    exemplaire->id_livre     = atoi(split_string[1]);
+    exemplaire->disponiblite = atoi(split_string[2]);
+    exemplaire->localisation = split_string[3];
 
     return exemplaire;
 }
 
 char *exemplaire_to_string(Exemplaire *exemplaire)
 {
-    char id[10], disponible[10];
+    char id[10], id_livre[10], disponible[10];
     itoa(exemplaire->id, id, 10);
     itoa(exemplaire->disponiblite, disponible, 10);
+    itoa(exemplaire->id_livre, id_livre, 10);
     char *buffer = (char *) calloc(2048,  sizeof(char));
     strcat(buffer, id);
+    strcat(buffer, "#");
+    strcat(buffer, id_livre);
     strcat(buffer, "#");
     strcat(buffer, disponible);
     strcat(buffer, "#");
