@@ -49,3 +49,12 @@ Exemplaire **load_exemplaires(int *length);
  */
 void save_exemplaires(Exemplaire **exemplaires, int number);
 
+
+/**
+ * Cette fonction trouve un exemplaire par son identifiant
+ * @param exemplaires le tableau des exemplaires
+ * @param len la taille du tableau
+ * @param id l'identifiant du exemplaire que nous recherchons
+ * @return renvoie NULL si aucun exemplaire n'a été trouvé
+ */
+Exemplaire *get_exemplaire_by_id(Exemplaire** exemplaires, int len, int id);

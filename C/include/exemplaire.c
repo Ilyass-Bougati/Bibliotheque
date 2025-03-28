@@ -90,3 +90,16 @@ void save_exemplaires(Exemplaire **exemplaires, int number)
     }
     fclose(fptr);
 }
+
+
+Exemplaire *get_exemplaire_by_id(Exemplaire** exemplaires, int len, int id)
+{
+    for (int i = 0; i < len; i++)
+    {
+        if (exemplaires[i]->id == id)
+        {
+            return exemplaires[i];
+        }
+    }
+    return NULL;
+}
