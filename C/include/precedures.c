@@ -306,3 +306,310 @@ void modifie_penalite(Database *db, int id, Penalite *new_penalite)
  
      printf("Aucun abonnement a cet identifiant !\n");
  }
+
+ void insere_client(Database *db, Client *client)
+{
+	
+	db->clients = (Client **)realloc(db->clients, (db->nclients + 1)*sizeof(Client*));
+	db->clients[db->nclients] = client;
+	db->nclients ++;
+	last_client_id ++;
+	
+}
+void supprime_client(Database *db, int id)
+{
+	int i, j;
+	for(i = 0; i < db->nclients ; i++)
+	{
+		if(db->clients[i]->id == id)
+		{
+			
+			for(j = i ; j < db->nclients - 1; j++)
+			{
+				db->clients[j] = db->clients[j+1];
+			}
+			db->nclients--;
+			db->clients = (Client **)realloc(db->clients, (db->nclients)*sizeof(Client*));
+			if(db->nclients == 0)
+				db->clients = NULL;
+			return;	
+		}
+	}
+	printf("\nLe client n existe pas dans la table des clients\n");
+}
+void modifie_client(Database *db, int id, Client *new_client)
+{
+	int i, j;
+	for(i = 0; i < db->nclients ; i++)
+	{
+		if(db->clients[i]->id == id)
+		{
+			db->clients[i] = new_client;
+			return ;
+		}
+	}
+	printf("\nLe client n existe pas dans la table des clients\n");
+}
+
+
+void insere_notification(Database *db, Notification *notification)
+{
+	
+    Client * temp = get_client_by_id(db->clients, db->nclients, notification->id_client);
+    if (temp == NULL)
+    {
+        printf("erreur d'integrite de la clé etrangere, l'ID client dans la notification n'existe pas dans la table client");
+        return NULL;
+    }
+    
+    temp->notifications = (Notification**) realloc(temp->notifications, (temp->nnotifications + 1) * sizeof(Notification*));
+    for(int i = 0; i < temp->nnotifications ; i++)
+    {
+    	if(temp->notifications[i]->id = notification->id)
+    		temp->notifications[(temp->nnotifications)++] = db->notifications[i];
+	}
+    
+    db->notifications = (Notification **)realloc(db->notifications, (db->nnotifications + 1)*sizeof(Notification*));
+	db->notifications[db->nnotifications] = notification;
+	db->nnotifications ++;
+    
+   
+}
+void supprime_notification(Database *db, int id)
+{
+	int i;
+	for(i = 0; i < db->nnotifications ; i++)
+	{
+		if(db->notifications[i]->id == id)
+		{
+			
+			Client * temp = get_client_by_id(db->clients, db->nclients, db->notifications[i]->id_client);
+			
+			for(int k = 0 ; k < temp->nnotifications ; k++)
+			{
+				if(id == temp->notifications[k]->id )
+				{
+					
+					
+					for(int j = k ; j < temp->nnotifications - 1; j++)
+					{
+						temp->notifications[j] = temp->notifications[j+1];
+					}	
+					
+				}
+				
+				
+			}
+			temp->nnotifications--;
+			temp->notifications = (Notification **)realloc(temp->notifications, (temp->nnotifications)*sizeof(Notification*));
+			
+			for(int j = i ; j < db->nnotifications - 1 ; j++)
+			{
+				db->notifications[j] = db->notifications[j+1];
+			}
+			db->nnotifications--;
+			db->notifications = (Notification **)realloc(db->notifications, (db->nnotifications)*sizeof(Notification*));
+			if(db->nnotifications == 0)
+				db->notifications = NULL;
+			return;	
+		}
+	}
+	
+}
+void modifie_notification(Database *db, int id, Client *new_notification)
+{
+	int i, k;
+	for(i = 0; i < db->nnotifications ; i++)
+	{
+		if(db->notifications[i]->id == id)
+		{
+			Client * temp = get_client_by_id(db->clients, db->nclients, db->notifications[i]->id_client);
+			if (temp == NULL)
+            {
+                printf("erreur d'integrite de la clé etrangere, l'ID client dans la notification n'existe pas dans la table client");
+                return NULL;
+            }
+			
+			for(k = 0 ; k < temp->nnotifications ; k++)
+			{
+				if(id == temp->notifications[k]->id )
+				{
+					temp->notifications[k] = new_notification;
+				}
+			}
+			db->notifications[i] = new_notification;
+			return ;
+		}
+	}
+	printf("\n la notification n existe pas dans la table des notifications\n");
+}
+
+void insere_reservation(Database *db, Reservation *reservation)
+{
+	
+    Client * temp = get_client_by_id(db->clients, db->nclients, reservation->id_client);
+    if (temp == NULL)
+    {
+        printf("erreur d'integrite de la clé etrangere, l'ID client dans la reservation n'existe pas dans la table client");
+        return NULL;
+    }
+    
+    temp->reservations = (Reservation**) realloc(temp->reservations, (temp->nreservations + 1) * sizeof(Reservation*));
+    for(int i = 0; i < temp->nreservations ; i++)
+    {
+      if(temp->reservations[i]->id = reservation->id)
+        temp->reservations[(temp->nreservations)++] = db->reservations[i];
+  }
+    
+    db->reservations = (Reservation **)realloc(db->reservations, (db->nreservations + 1)*sizeof(Reservation*));
+	db->reservations[db->nreservations] = reservation;
+	db->nreservations ++;
+
+}
+
+void supprime_reservation(Database *db, int id)
+{
+	int i;
+	for(i = 0; i < db->nreservations ; i++)
+	{
+		if(db->reservations[i]->id == id)
+		{
+			
+			Client * temp = get_client_by_id(db->clients, db->nclients, db->reservations[i]->id_client);
+			
+			for(int k = 0 ; k < temp->nreservations ; k++)
+			{
+				if(id == temp->reservations[k]->id )
+				{
+					
+					
+					for(int j = k ; j < temp->nreservations - 1; j++)
+					{
+						temp->reservations[j] = temp->reservations[j+1];
+					}	
+					
+				}
+				
+				
+			}
+			temp->nreservations--;
+			temp->reservations = (Reservation **)realloc(temp->reservations, (temp->nreservations)*sizeof(Reservation*));
+			
+			for(int j = i ; j < db->nreservations - 1 ; j++)
+			{
+				db->reservations[j] = db->reservations[j+1];
+			}
+			db->nreservations--;
+			db->reservations = (Reservation **)realloc(db->reservations, (db->nreservations)*sizeof(Reservation*));
+			if(db->nreservations == 0)
+				db->reservations = NULL;
+			return;	
+		}
+	}
+	
+}
+
+void modifie_reservation(Database *db, int id, Client *new_reservation)
+{
+		int i, j;
+	for(i = 0; i < db->reservations ; i++)
+	{
+		if(db->reservations[i]->id == id)
+		{
+			db->reservations[i] = new_reservation;
+			return ;
+		}
+	}
+	printf("\nLe client n existe pas dans la table des clients\n");
+}
+
+void insere_review(Database *db, Review *review)
+{
+	Client * temp = get_client_by_id(db->clients, db->nclients, review->id_client);
+    if (temp == NULL)
+    {
+        printf("erreur d'integrite de la clé etrangere, l'ID client dans la notification n'existe pas dans la table client");
+        return NULL;
+    }
+    
+    temp->reviews = (Review**) realloc(temp->reviews, (temp->nreviews + 1) * sizeof(Review*));
+    for(int i = 0; i < temp->nreviews ; i++)
+    {
+    	if(temp->reviews[i]->id == review->id)
+    		temp->reviews[(temp->nreviews)++] = db->reviews[i];
+	}
+    
+    temp->reviews = (Review **)realloc(db->reviews, (db->nreviews + 1)*sizeof(Review*));
+	db->reviews[db->nreviews] = review;
+	db->nreviews ++;
+}
+
+void supprime_review(Database *db, int id)
+{
+	int i;
+	for(i = 0; i < db->nreviews ; i++)
+	{
+		if(db->reviews[i]->id == id)
+		{
+			
+			Client * temp = get_client_by_id(db->clients, db->nclients, db->reviews[i]->id_client);
+			
+			for(int k = 0 ; k < temp->nreviews ; k++)
+			{
+				if(id == temp->reviews[k]->id )
+				{
+					
+					
+					for(int j = k ; j < temp->nreviews - 1; j++)
+					{
+						temp->reviews[j] = temp->reviews[j+1];
+					}	
+					
+				}
+				
+				
+			}
+			temp->nreviews--;
+			temp->reviews = (Review **)realloc(temp->reviews, (temp->nreviews)*sizeof(Review*));
+			
+			for(int j = i ; j < db->nreviews - 1 ; j++)
+			{
+				db->reviews[j] = db->reviews[j+1];
+			}
+			db->nreviews--;
+			db->reviews = (Review **)realloc(db->reviews, (db->nreviews)*sizeof(Review*));
+			if(db->nreviews == 0)
+				db->reviews = NULL;
+			return;	
+		}
+	}
+	
+}
+
+void modifie_review(Database *db, int id, Review *new_review)
+{
+	int i, k;
+	for(i = 0; i < db->nreviews ; i++)
+	{
+		if(db->reviews[i]->id == id)
+		{
+			Client * temp = get_client_by_id(db->clients, db->nclients, db->reviews[i]->id_client);
+			if (temp == NULL)
+            {
+                printf("erreur d'integrite de la clé etrangere, l'ID client dans la notification n'existe pas dans la table client");
+                return NULL;
+            }
+			
+			for(k = 0 ; k < temp->nreviews ; k++)
+			{
+				if(id == temp->reviews[k]->id )
+				{
+					temp->reviews[k] = new_review;
+				}
+			}
+			db->reviews[i] = new_review;
+			return ;
+		}
+	}
+	printf("\n la notification n existe pas dans la table des notifications\n");
+}

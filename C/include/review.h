@@ -7,6 +7,7 @@
 
 typedef struct Review
 {
+    int id;
     int id_client;
     Livre *livre;
     int review;

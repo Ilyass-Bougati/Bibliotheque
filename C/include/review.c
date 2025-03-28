@@ -34,8 +34,9 @@ Review *string_to_review(char *str)
         free(split_string);
 	}
 	// Conversion et affectation des valeurs
-    review->id_client = atoi(split_string[0]);
-    review->review	  = atoi(split_string[length-1]);
+    review->id        = atoi(split_string[0]);
+    review->id_client = atoi(split_string[1]);
+    review->review	  = atoi(split_string[2]);
     // Libération des chaînes après utilisation
     free(split_string[0]);
     free(split_string[1]);
@@ -45,8 +46,9 @@ Review *string_to_review(char *str)
 char *review_to_string(Review *review)
 {
 
-    char id_client[10], review_str[10];
-    itoa( review->id_client, id_client, 10);
+    char id_client[10], id[10], review_str[10];
+    itoa(review->id_client, id_client, 10);
+    itoa(review->id, id, 10);
     itoa(review->review, review_str, 10);
 
     int total_size = strlen(id_client)  + strlen(review_str) + 2; // +1 pour '#' et +1 le '\0'
@@ -58,6 +60,8 @@ char *review_to_string(Review *review)
     }
     
     // Formater la chaîne de caractères dans le buffer
+    strcpy(buffer, id);
+    strcat(buffer,"#");
     strcpy(buffer, id_client);
     strcat(buffer,"#");
     strcat(buffer, review_str);
