@@ -13,10 +13,8 @@ Emprunt *string_to_emprunt(char* str)
         goto inv_emprunt;
     }
     int i;
-    char** splitted_str = split_2nd(str , "#");
+    char** splitted_str = split(str , '#', &i);
     
-    for(i = 0 ; splitted_str[i] != NULL ; i++);
-
     if(i != 4)
     {
         goto inv_emprunt;
@@ -90,7 +88,6 @@ Emprunt **load_emprunts(int *length)
 
     int len;
     char **emprunt_strings = split(file, '\n', &len);
-
     for (int i = 0; i < len; i++)
     {
         Emprunt *emprunt = string_to_emprunt(emprunt_strings[i]);
