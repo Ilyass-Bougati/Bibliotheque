@@ -13,7 +13,7 @@
 
 Database *load_db()
 {
-    Database *db = (Database *) malloc(sizeof(Database));
+    Database *db = (Database *) calloc(1, sizeof(Database));
 
     // reading the clients
     db->clients       = load_clients(&(db->nclients));
@@ -31,7 +31,7 @@ Database *load_db()
                 return NULL;
             }
     
-            temp->notifications = (Notification**) realloc(temp->notifications, (temp->nnotifications + 1) * sizeof(Notification));
+            temp->notifications = (Notification**) realloc(temp->notifications, (temp->nnotifications + 1) * sizeof(Notification*));
             temp->notifications[(temp->nnotifications)++] = db->notifications[i];
         }
     } else {
@@ -52,7 +52,7 @@ Database *load_db()
                 return NULL;
             }
     
-            temp->abonnements = (Abonnement**) realloc(temp->abonnements, (temp->nabonnements + 1) * sizeof(Abonnement));
+            temp->abonnements = (Abonnement**) realloc(temp->abonnements, (temp->nabonnements + 1) * sizeof(Abonnement*));
             temp->abonnements[(temp->nabonnements)++] = db->abonnements[i];
         }
     } else {
@@ -73,7 +73,7 @@ Database *load_db()
                 return NULL;
             }
     
-            temp->reservations = (Reservation**) realloc(temp->reservations, (temp->nreservations + 1) * sizeof(Reservation));
+            temp->reservations = (Reservation**) realloc(temp->reservations, (temp->nreservations + 1) * sizeof(Reservation*));
             temp->reservations[(temp->nreservations)++] = db->reservations[i];
         }
     } else {
@@ -94,7 +94,7 @@ Database *load_db()
                 return NULL;
             }
     
-            temp->reviews = (Review**) realloc(temp->reviews, (temp->nreviews + 1) * sizeof(Review));
+            temp->reviews = (Review**) realloc(temp->reviews, (temp->nreviews + 1) * sizeof(Review*));
             temp->reviews[(temp->nreviews)++] = db->reviews[i];
         }
     } else {
@@ -114,12 +114,34 @@ Database *load_db()
                 return NULL;
             }
 
-            temp->emprunts = (Emprunt**) realloc(temp->emprunts, (temp->nemprunts + 1) * sizeof(Emprunt));
-            temp->emprunts[(temp->nemprunts)++] = db->emprunts[i];
+            temp->penalites = (Penalite**) realloc(temp->penalites, (temp->npenalites + 1) * sizeof(Penalite*));        
+            temp->penalites[(temp->npenalites)++] = db->penalites[i];
         }
     } else {
         printf("Pas de penalites\n");
     }
+
+    // loading emprunts
+    db->emprunts = load_emprunts(&(db->nemprunts));
+    if (db->emprunts != NULL)
+    {
+        for (int i = 0; i < db->nemprunts; i++)
+        {
+            Abonnement *temp = get_abonnement_by_id(db->abonnements, db->nabonnements, db->emprunts[i]->id_abonnement);
+            if (temp == NULL)
+            {
+                printf("erreur d'integrite de la cle etrangere, l'ID abonnement dans l'emprunt n'existe pas dans la table abonnements");
+                return NULL;
+            }
+
+            temp->emprunts = (Emprunt**) realloc(temp->emprunts, (temp->nemprunts + 1) * sizeof(Emprunt*));        
+            temp->emprunts[(temp->nemprunts)++] = db->emprunts[i];
+        }
+
+    } else {
+        printf("Pas de emprunts\n");
+    }
+
 
     return db;
 }
