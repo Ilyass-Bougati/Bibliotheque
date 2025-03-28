@@ -157,6 +157,45 @@ Database *load_db()
         printf("Pas de emprunts\n");
     }
 
+    // loading les langues, categories, editeurs and auteurs
+    db->langues    = load_langues(fichier_langues, &(db->nlangues));
+    if (db->langues == NULL)
+    {
+        printf("Pas des langues\n");
+    }
+
+    db->editeurs   = load_editeurs(fichier_editeurs, &(db->nediteurs));
+    if (db->editeurs == NULL)
+    {
+        printf("Pas des editeurs\n");
+    }
+
+    db->categories = load_categories(fichier_categories, &(db->ncategories));
+    if (db->categories == NULL)
+    {
+        printf("Pas des categories\n");
+    }
+
+    db->auteurs    = load_auteurs(fichier_auteurs, &(db->nauteurs));
+    if (db->auteurs == NULL)
+    {
+        printf("Pas des auteurs\n");
+    }
+
+    // loading livres
+    db->livres = load_livres(
+        fichier_livres,
+        db->langues,
+        db->auteurs,
+        db->categories,
+        db->editeurs,
+        &(db->nlivres)
+    );
+    if (db->livres == NULL)
+    {
+        printf("Pas des livres\n");
+    }
+
 
     return db;
 }
