@@ -1,8 +1,8 @@
 #pragma once
 #include "date.h"
 
-#ifndef ficher_penalites
-    #define ficher_penalites "data/penalites"
+#ifndef fichier_penalites
+    #define fichier_penalites "data/penalites"
 #endif
 
 typedef enum 

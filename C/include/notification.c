@@ -66,7 +66,7 @@ Notification **load_notifications(int *length)
     Notification **notifications = (Notification **) calloc(1, sizeof(Notification *));
     *length = 0;
 
-    char *file = read_file(ficher_notifications);
+    char *file = read_file(fichier_notifications);
     if (file == NULL)
     {
         return NULL;
@@ -92,7 +92,7 @@ Notification **load_notifications(int *length)
 
 void save_notifications(Notification **notifications, int number)
 {
-    FILE *fptr = fopen(ficher_notifications, "w");
+    FILE *fptr = fopen(fichier_notifications, "w");
     if (fptr == NULL)
     {
         printf("Erreur de lecture du fichier notifications\n");

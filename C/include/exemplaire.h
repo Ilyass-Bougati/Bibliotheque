@@ -1,8 +1,8 @@
 #pragma once
 #include "livre.h"
 
-#ifndef ficher_exemplaires
-    #define ficher_exemplaires "data/exemplaires"
+#ifndef fichier_exemplaires
+    #define fichier_exemplaires "data/exemplaires"
 #endif
 
 typedef enum Disponibilite

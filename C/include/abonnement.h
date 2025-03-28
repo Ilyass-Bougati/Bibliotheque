@@ -4,8 +4,8 @@
 #include "penalite.h"
 #include "emprunt.h"
 
-#ifndef ficher_abonnements
-    #define ficher_abonnements "data/abonnements"
+#ifndef fichier_abonnements
+    #define fichier_abonnements "data/abonnements"
 #endif
 
 // le type d'un abonnement

@@ -4,8 +4,8 @@
 #include "reservation.h"
 #include "review.h"
 
-#ifndef ficher_clients
-    #define ficher_clients "data/clients"
+#ifndef fichier_clients
+    #define fichier_clients "data/clients"
 #endif
 
 // la table des clients

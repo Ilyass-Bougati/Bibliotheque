@@ -67,7 +67,7 @@ Abonnement **load_abonnements(int *length)
     Abonnement **abonnements = (Abonnement **) malloc(sizeof(Abonnement *));
     *length = 0;
 
-    char *file = read_file(ficher_abonnements);
+    char *file = read_file(fichier_abonnements);
     if (file == NULL)
     {
         return NULL;
@@ -93,7 +93,7 @@ Abonnement **load_abonnements(int *length)
 
 void save_abonnements(Abonnement **abonnements, int number)
 {
-    FILE *fptr = fopen(ficher_abonnements, "w");
+    FILE *fptr = fopen(fichier_abonnements, "w");
     if (fptr == NULL)
     {
         return;

@@ -64,7 +64,7 @@ Client **load_clients(int *length)
     Client **clients = (Client **) calloc(1, sizeof(Client *));
     *length = 0;
 
-    char *file = read_file(ficher_clients);
+    char *file = read_file(fichier_clients);
     if (file == NULL)
     {
         return NULL;
@@ -92,7 +92,7 @@ Client **load_clients(int *length)
 
 void save_clients(Client **clients, int number)
 {
-    FILE *fptr = fopen(ficher_clients, "w");
+    FILE *fptr = fopen(fichier_clients, "w");
     if (fptr == NULL)
     {
         printf("Erreur de lecture du fichier client\n");

@@ -51,7 +51,7 @@ Exemplaire **load_exemplaires(int *length)
     Exemplaire **exemplaires = (Exemplaire**) calloc(1, sizeof(Exemplaire *));
     *length = 0;
 
-    char *file = read_file(ficher_exemplaires);
+    char *file = read_file(fichier_exemplaires);
     if (file == NULL)
     {
         return NULL;
@@ -77,7 +77,7 @@ Exemplaire **load_exemplaires(int *length)
 
 void save_exemplaires(Exemplaire **exemplaires, int number)
 {
-    FILE *fptr = fopen(ficher_exemplaires, "w");
+    FILE *fptr = fopen(fichier_exemplaires, "w");
     if (fptr == NULL)
     {
         printf("Erreur de lecture du fichier exemplaire\n");
