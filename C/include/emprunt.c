@@ -12,12 +12,10 @@ Emprunt *string_to_emprunt(char* str)
     {
         goto inv_emprunt;
     }
-    int i;
-    char** splitted_str = split_2nd(str , "#");
-    
-    for(i = 0 ; splitted_str[i] != NULL ; i++);
+    int len;
+    char** splitted_str = split(str , '#' , &len);
 
-    if(i != 4)
+    if(len != 4)
     {
         goto inv_emprunt;
     }
