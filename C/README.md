@@ -1,0 +1,2 @@
+# biblio
+les procedures de gestions des livres, categories, editeurs, langues et auteurs sont definis dans `livre.h` and implemente dabs `livre.c`. Alors que les autres procedures sont definis dans `procedures.h`,

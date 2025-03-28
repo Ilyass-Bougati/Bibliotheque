@@ -4,5 +4,5 @@
 
 int main()
 {
-    // for tests (nothing here)
+    Database *db = load_db();
 }
