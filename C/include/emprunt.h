@@ -33,3 +33,18 @@ char *emprunt_to_string(Emprunt *emp);
  * @param length cette variable contient la taille de la table renvoyée
  */
 Emprunt **load_emprunts(int *length);
+
+/**
+ * Cette fonction recupere un emprunt depuis un tableau a partir de son id
+ * @param emprunts Le tableau des emprunts
+ * @param len La taille du tableau
+ * @param id L'identifiant a rechercher
+ */
+Emprunt *get_emprunt_by_id(Emprunt** emprunts, int len, int id);
+
+/**
+ * Cette fonction sauveguarde un tableau d'emprunts dans le fichier approprie
+ * @param emprunts Le tableau des emprunts
+ * @param number la taille du tableau
+ */
+void save_emprunts(Emprunt **emprunts, int number);

@@ -37,6 +37,13 @@ bool check_isbn(char *str);
 char* new_strrev(char* str);
 
 /**
+ * cette fonction transforme un reel en une chaine de caracteres
+ * @param x le reel a changer
+ */
+char* ftoa(float x);
+
+
+/**
  * cette fonction transforme un entier en une chaine de caracteres
  * @param x l'entier a changer
  */
