@@ -17,9 +17,12 @@ Database *load_db()
 
     // reading the clients
     db->clients       = load_clients(&(db->nclients));
+    if (db->clients == NULL)
+    {
+        printf("Pas des clients\n");
+    }
     // reading notifications
     db->notifications = load_notifications(&(db->nnotifications));
-    // checking if notification file is empty
     if (db->notifications != NULL)
     {
         for (int i = 0; i < db->nnotifications; i++)
@@ -121,6 +124,9 @@ Database *load_db()
         printf("Pas de penalites\n");
     }
 
+    // loading les exemplaires
+    db->exemplaires = load_exemplaires(&(db->nexemplaires));
+
     // loading emprunts
     db->emprunts = load_emprunts(&(db->nemprunts));
     if (db->emprunts != NULL)
@@ -136,6 +142,15 @@ Database *load_db()
 
             temp->emprunts = (Emprunt**) realloc(temp->emprunts, (temp->nemprunts + 1) * sizeof(Emprunt*));        
             temp->emprunts[(temp->nemprunts)++] = db->emprunts[i];
+
+            // linking with exemplaires
+            Exemplaire *exmp = get_exemplaire_by_id(db->exemplaires, db->nexemplaires, db->emprunts[i]->id_exemplaire);
+            if (temp == NULL)
+            {
+                printf("erreur d'integrite de la cle etrangere, l'ID exemplaire dans l'emprunt n'existe pas dans la table exemplaires");
+                return NULL;
+            }
+            db->emprunts[i]->exemplaire = exmp;
         }
 
     } else {
