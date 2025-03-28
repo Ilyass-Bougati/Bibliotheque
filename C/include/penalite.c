@@ -4,7 +4,6 @@
 #include "date.h"
 #include "utils.h"
 #include "penalite.h"
-#include "emprunt.h"
 #include "reader.h"
 
     // int id;
