@@ -12,6 +12,7 @@ typedef struct Emprunt
     int id_abonnement;
     Date date_emprunt;
     Date date_retour;
+    int id_exemplaire;
     Exemplaire *exemplaire;
 } Emprunt;
 

@@ -15,7 +15,7 @@ Emprunt *string_to_emprunt(char* str)
     int i;
     char** splitted_str = split(str , '#', &i);
     
-    if(i != 4)
+    if(i != 5)
     {
         goto inv_emprunt;
     }
@@ -24,8 +24,9 @@ Emprunt *string_to_emprunt(char* str)
 
     emprunt->id             = atoi(splitted_str[0]);
     emprunt->id_abonnement  = atoi(splitted_str[1]);
-    emprunt->date_emprunt   = string_to_date(splitted_str[2]);
-    emprunt->date_retour    = string_to_date(splitted_str[3]);
+    emprunt->id_exemplaire  = atoi(splitted_str[2]);
+    emprunt->date_emprunt   = string_to_date(splitted_str[3]);
+    emprunt->date_retour    = string_to_date(splitted_str[4]);
     
     char isValid = (emprunt->id > 0)
                     &&(emprunt->id_abonnement > 0)
@@ -49,17 +50,22 @@ char *emprunt_to_string(Emprunt *emp)
 {
     char 
         *str_id = new_itoa(emp->id),
+        *str_id_exemplaire = new_itoa(emp->id_exemplaire),
         *str_id_abonnement = new_itoa(emp->id_abonnement),
         *str_date_emprunt = date_to_string(emp->date_emprunt) ,
         *str_date_retour = date_to_string(emp->date_retour);
 
     char* buffer = malloc(strlen(str_id)
+                        + strlen(str_id_exemplaire)
                         + strlen(str_id_abonnement)
                         + strlen(str_date_emprunt)
                         + strlen(str_date_retour) + 4);
 
     buffer[0] = '\0';
     strcat(buffer , str_id);
+    strcat(buffer , "#");
+
+    strcat(buffer , str_id_exemplaire);
     strcat(buffer , "#");
 
     strcat(buffer , str_id_abonnement);
