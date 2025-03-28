@@ -78,16 +78,29 @@ char *emprunt_to_string(Emprunt *emp)
 
 Emprunt **load_emprunts(int *length)
 {
-    char *file = read_file(fichier_emprunts) , **splitted_file = split_2nd(file , "\n");
-    int size , i ;
-    for(size = 0 ; splitted_file[size] != NULL ; size++);
+    // the list of clients
+    Emprunt **emprunts = (Emprunt **) calloc(1, sizeof(Emprunt *));
+    *length = 0;
 
-    *length = size;
-    Emprunt** emprunts = malloc(size * sizeof(Emprunt*));
-
-    for(i = 0 ; i < size ; i++)
+    char *file = read_file(fichier_emprunts);
+    if (file == NULL)
     {
-        emprunts[i] = string_to_emprunt(splitted_file[i]);
+        return NULL;
+    }
+
+    int len;
+    char **emprunt_strings = split(file, '\n', &len);
+
+    for (int i = 0; i < len; i++)
+    {
+        Emprunt *emprunt = string_to_emprunt(emprunt_strings[i]);
+        if (emprunt == NULL)
+        {
+            return NULL;
+        }
+
+        emprunts[(*length)++] = emprunt;
+        emprunts = (Emprunt**) realloc(emprunts, (*length + 1) * sizeof(Emprunt*));
     }
 
     return emprunts;
