@@ -2,6 +2,10 @@
 #include "exemplaire.h"
 #include "date.h"
 
+#ifndef fichier_emprunts
+    #define fichier_emprunts "data/emprunts"
+#endif
+
 typedef struct Emprunt
 {
     int id;

@@ -78,7 +78,7 @@ char *emprunt_to_string(Emprunt *emp)
 
 Emprunt **load_emprunts(int *length)
 {
-    char *file = read_file("data/emprunt") , **splitted_file = split_2nd(file , "\n");
+    char *file = read_file(fichier_emprunts) , **splitted_file = split_2nd(file , "\n");
     int size , i ;
     for(size = 0 ; splitted_file[size] != NULL ; size++);
 
@@ -107,7 +107,7 @@ Emprunt *get_emprunt_by_id(Emprunt** emprunts, int len, int id)
 
 void save_emprunts(Emprunt **emprunts, int number)
 {
-    FILE *fptr = fopen("data/emprunt", "w");
+    FILE *fptr = fopen(fichier_emprunts, "w");
     if (fptr == NULL)
     {
         printf("Erreur de lecture du fichier emprunts\n");
