@@ -108,3 +108,15 @@ void save_abonnements(Abonnement **abonnements, int number)
     }
     fclose(fptr);
 }
+
+Abonnement *get_abonnement_by_id(Abonnement** abonnements, int len, int id)
+{
+    for (int i = 0; i < len; i++)
+    {
+        if (abonnements[i]->id == id)
+        {
+            return abonnements[i];
+        }
+    }
+    return NULL;
+}

@@ -62,3 +62,11 @@ Abonnement **load_abonnements(int *length);
  * @param number la taille du tableau abonnements
  */
 void save_abonnements(Abonnement **abonnements, int number);
+
+/**
+ * cette fonction recherche un abonnement en utilisant son identifiant
+ * @param abonnements le tableau des abonnements
+ * @param len la taille du tableau
+ * @param id L'identifiant de l'abonnement que nous recherchons
+ */
+Abonnement *get_abonnement_by_id(Abonnement** abonnements, int len, int id);
