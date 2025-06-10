@@ -5,6 +5,10 @@
 #define delimiter      '#'
 #define date_delimiter '/'
 
+#ifndef itoa
+    void itoa(int origin, char *destination, int size);
+#endif
+
 /**
  * cette fonction coupe une chaîne de caractères à partir d'espaces à gauche et à droite
  * @param str la chaîne de caractères à couper

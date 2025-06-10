@@ -5,6 +5,21 @@
 #include "utils.h"
 #include "stdbool.h"
 
+#ifndef itoa
+void itoa(int origin, char *destination, int size) 
+{
+    int i;
+    // this is unsafe
+    char *des = new_itoa(origin);
+
+    for (i = 0; des[i] != '\0'; i++)
+    {
+        destination[i] = des[i];
+    }
+    des[i] = '\0';
+}
+#endif
+
 bool check_empty(char *str)
 {
     str = trim(str);

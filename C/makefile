@@ -2,12 +2,12 @@ CC = gcc
 FLAGS = -Wall -Wextra -pedantic
 
 clean:
-	rm -f *.exe *.o
+	rm -f biblio *.o
 
-biblio.exe: biblio.c
-	$(CC) $(FLAGS) -o biblio biblio.c include/*.c
+biblio: biblio.c
+	$(CC) -o biblio biblio.c include/*.c
 
-run: biblio.exe
-	./biblio.exe
+run: biblio
+	./biblio
 
 all: clean run

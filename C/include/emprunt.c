@@ -15,7 +15,7 @@ Emprunt *string_to_emprunt(char* str)
     int i;
     char** splitted_str = split(str , '#', &i);
     
-    if(i != 4)
+    if(i != 5)
     {
         goto inv_emprunt;
     }
