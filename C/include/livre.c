@@ -409,17 +409,19 @@ Livre* string_to_livre(char* str, Langue **langues, Auteur **authors, Categorie 
     if (!token) return NULL;
     char* titre = token;
 
+
     token = strtok_r(rest, delimiter, &rest);
     if (!token) return NULL;
     char* isbn = token;
 
     token = strtok_r(rest, delimiter, &rest);
     if (!token) return NULL;
+    id = atoi(token);
     
     Langue* langue = NULL;
     for (int i = 0; langues[i] != NULL; i++) 
     {
-        if (strcmp(langues[i]->nom_langue, token) == 0) 
+        if (langues[i]->id == id) 
         {
             langue = langues[i];
             break;

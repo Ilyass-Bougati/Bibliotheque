@@ -8,6 +8,7 @@
 #include "penalite.h"
 #include "abonnement.h"
 #include "precedures.h"
+#include "utils.h"
 
 /**
  * Exemplaires :
@@ -613,4 +614,108 @@ void modifie_review(Database *db, int id, Review *new_review)
 		}
 	}
 	printf("\n la notification n existe pas dans la table des notifications\n");
+}
+
+void select_all(Database *db)
+{
+    // affcher les clients
+    Client **clients = db->clients;
+
+    for (int i = 0; i < db->nclients; i++) 
+    {
+        Client *c = clients[i];
+        printf(
+            "%d, %s, %s, %s, %s, %s\n", 
+            c->id, 
+            c->email,
+            c->CIN,
+            c->nom,
+            c->prenom,
+            c->phone_number
+        );
+    }
+
+    Abonnement **abonnements = db->abonnements;
+
+    for(int i = 0 ; i < db->nabonnements ; i++)
+    {
+        Abonnement *a = abonnements[i];
+        int size ;
+        char** splitted = split(abonnement_to_string(a) , '#' , &size);
+        for(int j = 0 ; j < size ; j++)
+        {
+            printf("%s ", splitted[j]);
+        }
+        printf("\n");
+    }
+
+    Emprunt **emprunts = db->emprunts;
+
+    for(int i = 0 ; i < db->nemprunts ; i++)
+    {
+        Emprunt *e = emprunts[i];
+        int size ;
+        char** splitted = split(emprunt_to_string(e) , '#' , &size);
+        for(int j = 0 ; j < size ; j++)
+        {
+            printf("%s ", splitted[j]);
+        }
+        printf("\n");
+    }
+
+    Exemplaire **exemplaires = db->exemplaires;
+
+    for(int i = 0 ; i < db->nemprunts ; i++)
+    {
+        Exemplaire *e = exemplaires[i];
+        int size ;
+        char** splitted = split(exemplaire_to_string(e) , '#' , &size);
+        for(int j = 0 ; j < size ; j++)
+        {
+            printf("%s ", splitted[j]);
+        }
+        printf("\n");
+    }
+
+    Livre **livres = db->livres;
+
+    for(int i = 0 ; i < db->nlivres ; i++)
+    {
+        Livre *l = livres[i];
+        int size ;
+        char** splitted = split(livre_to_string(*l) , '#' , &size);
+        for(int j = 0 ; j < size ; j++)
+        {
+            printf("%s ", splitted[j]);
+        }
+        printf("\n");
+    }
+
+    Categorie **categories = db->categories;
+    
+    for(int i = 0 ; i < db->ncategories ; i++)
+    {
+        Categorie *c = categories[i];
+        int size ;
+        char** splitted = split(categorie_to_string(c) , '#' , &size);
+        for(int j = 0 ; j < size ; j++)
+        {
+            printf("%s ", splitted[j]);
+        }
+        printf("\n");
+    }
+
+    Langue **langues = db->langues;
+
+    for(int i = 0 ; i < db->nlangues ; i++)
+    {
+        Langue *l = langues[i];
+        int size ;
+        char** splitted = split(langue_to_string(l) , '#' , &size);
+        for(int j = 0 ; j < size ; j++)
+        {
+            printf("%s ", splitted[j]);
+        }
+        printf("\n");
+    }
 }

@@ -43,14 +43,11 @@ char *abonnement_to_string(Abonnement *abonnement)
 	itoa(abonnement->etat_abonnement, etat, 10);
 
     // the buffer
+    // TODO : add type and etat
     char *buffer = (char *) calloc(2048, sizeof(char));
     strcat(buffer, id);
     strcat(buffer, "#");
     strcat(buffer, client_id);
-    strcat(buffer, "#");
-    strcat(buffer, type);
-    strcat(buffer, "#");
-    strcat(buffer, etat);
     strcat(buffer, "#");
     strcat(buffer, date_to_string(abonnement->date_debut));
     return buffer;

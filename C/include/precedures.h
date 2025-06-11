@@ -291,3 +291,9 @@ void supprime_livre(Database *db, int id);
  * @param new_livre le nouveau livre
  */
 void modifie_livre(Database *db, int id, Livre *new_livre);
+
+/**
+ * Cette fonction affiche le contenu de toute les tables
+ * @param db la base de données
+ */
+void select_all(Database *db);

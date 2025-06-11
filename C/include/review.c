@@ -19,7 +19,7 @@ Review *string_to_review(char *str)
     }
     
 	// Vérification du nombre attendu de parties après split
-    if (length != 2)
+    if (length != 3)
     {
         return NULL;
     }
