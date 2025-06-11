@@ -76,3 +76,14 @@ void save_abonnements(Abonnement **abonnements, int number);
  * @param id L'identifiant de l'abonnement que nous recherchons
  */
 Abonnement *get_abonnement_by_id(Abonnement** abonnements, int len, int id);
+
+/**
+ * cette fonction cree un abonnement et l'ajoute a la table
+ * @param abonnements le tableau des abonnements
+ * @param id_client l'id du client
+ * @param type le type de l'abonnement
+ * @param etat l'etat de l'abonnement
+ * @param date la date de debut de l'abonnement
+ * @param len la taille du tableau
+ */
+void add_abonnement(Abonnement** abonnements ,int id_client ,Type_abonnement type ,Date date ,int* len);

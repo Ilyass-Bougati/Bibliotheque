@@ -811,7 +811,7 @@ int save_langues(const char* filename, Langue** langues, int nombre_langues)
     FILE* file = fopen(filename, "w");
     if (!file) return 0;
 
-    for (int i = 0; i < nombre_langues; i++) 
+    for (int i = 0; i < nombre_langues - 1; i++) 
     {
         char* str = langue_to_string(langues[i]);
         if (str) 
@@ -820,6 +820,12 @@ int save_langues(const char* filename, Langue** langues, int nombre_langues)
             free(str);
         }
     }
+    char* str = langue_to_string(langues[nombre_langues - 1]);
+        if (str) 
+        {
+            fprintf(file, "%s", str);
+            free(str);
+        }
 
     fclose(file);
     return 1;
@@ -830,7 +836,7 @@ int save_auteurs(const char* filename, Auteur** auteurs, int nombre_auteurs)
     FILE* file = fopen(filename, "w");
     if (!file) return 0;
 
-    for (int i = 0; i < nombre_auteurs; i++) 
+    for (int i = 0; i < nombre_auteurs - 1; i++) 
     {
         char* str = auteur_to_string(auteurs[i]);
         if (str) 
@@ -839,6 +845,13 @@ int save_auteurs(const char* filename, Auteur** auteurs, int nombre_auteurs)
             free(str);
         }
     }
+
+    char* str = auteur_to_string(auteurs[nombre_auteurs - 1]);
+        if (str) 
+        {
+            fprintf(file, "%s", str);
+            free(str);
+        }
 
     fclose(file);
     return 1;
@@ -849,7 +862,7 @@ int save_categories(const char* filename, Categorie** categories, int nombre_cat
     FILE* file = fopen(filename, "w");
     if (!file) return 0;
 
-    for (int i = 0; i < nombre_categories; i++) 
+    for (int i = 0; i < nombre_categories - 1; i++) 
     {
         char* str = categorie_to_string(categories[i]);
         if (str) 
@@ -858,6 +871,13 @@ int save_categories(const char* filename, Categorie** categories, int nombre_cat
             free(str);
         }
     }
+
+    char* str = categorie_to_string(categories[nombre_categories - 1]);
+        if (str) 
+        {
+            fprintf(file, "%s", str);
+            free(str);
+        }
 
     fclose(file);
     return 1;
@@ -868,7 +888,7 @@ int save_editeurs(const char* filename, Editeur** editeurs, int nombre_editeurs)
     FILE* file = fopen(filename, "w");
     if (!file) return 0;
 
-    for (int i = 0; i < nombre_editeurs; i++) 
+    for (int i = 0; i < nombre_editeurs - 1; i++) 
     {
         char* str = editeur_to_string(editeurs[i]);
         if (str) 
@@ -877,6 +897,13 @@ int save_editeurs(const char* filename, Editeur** editeurs, int nombre_editeurs)
             free(str);
         }
     }
+
+    char* str = editeur_to_string(editeurs[nombre_editeurs - 1]);
+        if (str) 
+        {
+            fprintf(file, "%s", str);
+            free(str);
+        }
 
     fclose(file);
     return 1;
@@ -887,7 +914,7 @@ int save_livres(const char* filename, Livre** livres, int nombre_livres)
     FILE* file = fopen(filename, "w");
     if (!file) return 0;
 
-    for (int i = 0; i < nombre_livres; i++) 
+    for (int i = 0; i < nombre_livres - 1; i++) 
     {
         char* str = livre_to_string(*livres[i]);
         if (str) 
@@ -896,6 +923,13 @@ int save_livres(const char* filename, Livre** livres, int nombre_livres)
             free(str);
         }
     }
+
+    char* str = livre_to_string(*livres[nombre_livres - 1]);
+        if (str) 
+        {
+            fprintf(file, "%s", str);
+            free(str);
+        }
 
     fclose(file);
     return 1;

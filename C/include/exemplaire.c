@@ -84,10 +84,11 @@ void save_exemplaires(Exemplaire **exemplaires, int number)
         return;
     }
 
-    for (int i = 0; i < number; i++)
+    for (int i = 0; i < number - 1; i++)
     {
         fprintf(fptr, "%s\n", exemplaire_to_string(exemplaires[i]));
     }
+    fprintf(fptr, "%s", exemplaire_to_string(exemplaires[number - 1]));
     fclose(fptr);
 }
 

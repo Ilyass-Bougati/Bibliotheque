@@ -126,10 +126,12 @@ void save_penalites(Penalite **penalites, int number)
         return;
     }
 
-    for (int i = 0; i < number; i++)
+    for (int i = 0; i < number - 1; i++)
     {
         fprintf(fptr, "%s\n", penalite_to_string(penalites[i]));
     }
+
+    fprintf(fptr, "%s", penalite_to_string(penalites[number - 1]));
     fclose(fptr);
 }
 

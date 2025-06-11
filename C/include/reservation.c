@@ -140,9 +140,11 @@ void save_reservations(Reservation **reservations, int number)
         return;
     }
 
-    for (int i = 0; i < number; i++)
+    for (int i = 0; i < number - 1; i++)
     {
         fprintf(fptr, "%s\n", reservation_to_string(reservations[i]));
     }
+
+    fprintf(fptr, "%s", reservation_to_string(reservations[number - 1]));
     fclose(fptr);
 }

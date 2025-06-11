@@ -49,6 +49,10 @@ char *abonnement_to_string(Abonnement *abonnement)
     strcat(buffer, "#");
     strcat(buffer, client_id);
     strcat(buffer, "#");
+    strcat(buffer, type);
+    strcat(buffer, "#");
+    strcat(buffer, etat);
+    strcat(buffer, "#");
     strcat(buffer, date_to_string(abonnement->date_debut));
     return buffer;
 }
@@ -93,10 +97,11 @@ void save_abonnements(Abonnement **abonnements, int number)
         return;
     }
 
-    for (int i = 0; i < number; i++)
+    for (int i = 0; i < number - 1; i++)
     {
         fprintf(fptr, "%s\n", abonnement_to_string(abonnements[i]));
     }
+    fprintf(fptr, "%s", abonnement_to_string(abonnements[number -1]));
     fclose(fptr);
 }
 
@@ -110,4 +115,21 @@ Abonnement *get_abonnement_by_id(Abonnement** abonnements, int len, int id)
         }
     }
     return NULL;
+}
+
+void add_abonnement(Abonnement** abonnements ,int id_client ,Type_abonnement type ,Date date ,int* len)
+{
+    abonnements = (Abonnement**)realloc(abonnements , (++*len)*sizeof(Abonnement*));
+    Abonnement* new = (Abonnement*)malloc(sizeof(Abonnement));
+    *new = (Abonnement){.id= ++last_abonnement_id,
+                        .id_client = id_client ,
+                        .date_debut = date ,
+                        .type_abonnement = type ,
+                        .etat_abonnement = actif ,
+                        .emprunts = (Emprunt**)malloc(sizeof(Emprunt*)),
+                        .nemprunts = 0,
+                        .penalites = (Penalite**)malloc(sizeof(Penalite*)),
+                        .npenalites = 0
+                        };
+    abonnements[*len - 1] = new;
 }

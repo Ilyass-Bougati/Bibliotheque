@@ -621,6 +621,10 @@ void select_all(Database *db)
     // affcher les clients
     Client **clients = db->clients;
 
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des clients :\n");
+
     for (int i = 0; i < db->nclients; i++) 
     {
         Client *c = clients[i];
@@ -634,6 +638,10 @@ void select_all(Database *db)
             c->phone_number
         );
     }
+
+    for(int i = 0 ; i < 20 ; i++)
+            printf("-");
+        printf("Table des abonnements :\n");
 
     Abonnement **abonnements = db->abonnements;
 
@@ -649,6 +657,11 @@ void select_all(Database *db)
         printf("\n");
     }
 
+
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des emprunts :\n");
+
     Emprunt **emprunts = db->emprunts;
 
     for(int i = 0 ; i < db->nemprunts ; i++)
@@ -662,6 +675,10 @@ void select_all(Database *db)
         }
         printf("\n");
     }
+
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des exemplaires :\n");
 
     Exemplaire **exemplaires = db->exemplaires;
 
@@ -677,6 +694,10 @@ void select_all(Database *db)
         printf("\n");
     }
 
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des livres :\n");
+
     Livre **livres = db->livres;
 
     for(int i = 0 ; i < db->nlivres ; i++)
@@ -690,6 +711,10 @@ void select_all(Database *db)
         }
         printf("\n");
     }
+
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des categories :\n");
 
     Categorie **categories = db->categories;
     
@@ -705,6 +730,10 @@ void select_all(Database *db)
         printf("\n");
     }
 
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des langues :\n");
+
     Langue **langues = db->langues;
 
     for(int i = 0 ; i < db->nlangues ; i++)
@@ -712,6 +741,78 @@ void select_all(Database *db)
         Langue *l = langues[i];
         int size ;
         char** splitted = split(langue_to_string(l) , '#' , &size);
+        for(int j = 0 ; j < size ; j++)
+        {
+            printf("%s ", splitted[j]);
+        }
+        printf("\n");
+    }
+
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des penalites :\n");
+
+    Penalite **penalite = db->penalites;
+
+    for(int i = 0 ; i < db->npenalites ; i++)
+    {
+        Penalite *p = penalite[i];
+        int size ;
+        char** splitted = split(penalite_to_string(p) , '#' , &size);
+        for(int j = 0 ; j < size ; j++)
+        {
+            printf("%s ", splitted[j]);
+        }
+        printf("\n");
+    }
+
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des notifications :\n");
+
+    Notification **notifications = db->notifications;
+
+    for(int i = 0 ; i < db->nnotifications ; i++)
+    {
+        Notification *n = notifications[i];
+        int size ;
+        char** splitted = split(notification_to_string(n) , '#' , &size);
+        for(int j = 0 ; j < size ; j++)
+        {
+            printf("%s ", splitted[j]);
+        }
+        printf("\n");
+    }
+
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des reservations :\n");
+    
+    Reservation **reservations = db->reservations;
+
+    for(int i = 0 ; i < db->nreservations ; i++)
+    {
+        Reservation *r = reservations[i];
+        int size ;
+        char** splitted = split(reservation_to_string(r) , '#' , &size);
+        for(int j = 0 ; j < size ; j++)
+        {
+            printf("%s ", splitted[j]);
+        }
+        printf("\n");
+    }
+
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des reviews :\n");
+
+    Review **reviews = db->reviews;
+
+    for(int i = 0 ; i < db->nreviews ; i++)
+    {
+        Review *r = reviews[i];
+        int size ;
+        char** splitted = split(review_to_string(r) , '#' , &size);
         for(int j = 0 ; j < size ; j++)
         {
             printf("%s ", splitted[j]);

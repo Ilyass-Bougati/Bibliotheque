@@ -130,9 +130,10 @@ void save_emprunts(Emprunt **emprunts, int number)
         return;
     }
 
-    for (int i = 0; i < number; i++)
+    for (int i = 0; i < number - 1; i++)
     {
         fprintf(fptr, "%s\n", emprunt_to_string(emprunts[i]));
     }
+    fprintf(fptr, "%s", emprunt_to_string(emprunts[number - 1]));
     fclose(fptr);
 }
