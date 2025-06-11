@@ -37,9 +37,9 @@ char *notification_to_string(Notification *notification)
     char id[10];
     char client_id[10];
     char type[10];
-    itoa(notification->id, id, 10);
-	itoa(notification->id_client, client_id, 10);
-	itoa(notification->notification_type, type, 10);
+    my_itoa(notification->id, id, 10);
+	my_itoa(notification->id_client, client_id, 10);
+	my_itoa(notification->notification_type, type, 10);
 
     // the buffer
     char *buffer = (char *) calloc(2048, sizeof(char));

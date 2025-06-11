@@ -1,13 +1,12 @@
 #pragma once
 #include <stdbool.h>
+#include <stdlib.h>
 
 // c'est le délimiteur qui sépare les champs lors de la conversion de chaînes en structures
 #define delimiter      '#'
 #define date_delimiter '/'
 
-#ifndef itoa
-    void itoa(int origin, char *destination, int size);
-#endif
+void my_itoa(int origin, char *destination, int size);
 
 /**
  * cette fonction coupe une chaîne de caractères à partir d'espaces à gauche et à droite

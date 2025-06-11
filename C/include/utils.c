@@ -5,8 +5,7 @@
 #include "utils.h"
 #include "stdbool.h"
 
-#ifndef itoa
-void itoa(int origin, char *destination, int size) 
+void my_itoa(int origin, char *destination, int size) 
 {
     int i;
     // this is unsafe
@@ -18,7 +17,7 @@ void itoa(int origin, char *destination, int size)
     }
     des[i] = '\0';
 }
-#endif
+
 
 bool check_empty(char *str)
 {

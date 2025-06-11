@@ -47,9 +47,9 @@ char *review_to_string(Review *review)
 {
 
     char id_client[10], id[10], review_str[10];
-    itoa(review->id_client, id_client, 10);
-    itoa(review->id, id, 10);
-    itoa(review->review, review_str, 10);
+    my_itoa(review->id_client, id_client, 10);
+    my_itoa(review->id, id, 10);
+    my_itoa(review->review, review_str, 10);
 
     int total_size = strlen(id_client)  + strlen(review_str) + 2; // +1 pour '#' et +1 le '\0'
     char *buffer = (char *)calloc(total_size, sizeof(char));

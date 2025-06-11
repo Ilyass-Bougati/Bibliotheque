@@ -30,9 +30,9 @@ Exemplaire *string_to_exemplaire(char *str)
 char *exemplaire_to_string(Exemplaire *exemplaire)
 {
     char id[10], id_livre[10], disponible[10];
-    itoa(exemplaire->id, id, 10);
-    itoa(exemplaire->disponiblite, disponible, 10);
-    itoa(exemplaire->id_livre, id_livre, 10);
+    my_itoa(exemplaire->id, id, 10);
+    my_itoa(exemplaire->disponiblite, disponible, 10);
+    my_itoa(exemplaire->id_livre, id_livre, 10);
     char *buffer = (char *) calloc(2048,  sizeof(char));
     strcat(buffer, id);
     strcat(buffer, "#");

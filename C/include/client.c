@@ -39,7 +39,7 @@ char *client_to_string(Client *client)
     // this is the buffer used to store the string
     char *buffer = (char *) calloc(2048, sizeof(char));
     char id[10];
-	itoa(client->id, id, 10);
+	my_itoa(client->id, id, 10);
     strcpy(buffer, id);
     strcat(buffer, "#");
     strcat(buffer, client->nom);
