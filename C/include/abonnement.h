@@ -8,27 +8,20 @@
     #define fichier_abonnements "data/abonnements"
 #endif
 
-// le type d'un abonnement
-typedef enum 
+// le type et l'etat d'un abonnement
+typedef struct 
 {
-    etudiant,
-    familly
-} Type_abonnement;
-
-// le type d'un abonnement
-typedef enum 
-{
-    suspendue,
-    actif
-} Etat_abonnement;
+    char* intitule ;
+    int id ;
+} Type_abonnement , Etat_abonnement , Booleenne_abonnement;
 
 // le tableau de l'abonnement
 typedef struct Abonnement
 {
     int id;
     int id_client;
-    Type_abonnement type_abonnement;
-    Etat_abonnement etat_abonnement;
+    Type_abonnement *type_abonnement;
+    Etat_abonnement *etat_abonnement;
     Date date_debut;
 
     // les emprunts
@@ -41,6 +34,54 @@ typedef struct Abonnement
 } Abonnement;
 
 extern int last_abonnement_id;
+
+/**
+ * cette fonction transformera une chaîne en une structure Booleenne_abonnement
+ * @param str la chaîne à convertir
+ * @return renvoie NULL si le format n'est pas valide
+ */
+Booleenne_abonnement *string_to_BA(char *str); 
+
+/**
+ * Cette fonction transformera une structure en une chaîne de caractères à écrire dans un fichier
+ * @param Booleenne_abonnement la structure à convertir
+ * @return renvoie NULL en cas d'erreur
+ */
+char *BA_to_string(Booleenne_abonnement *abonnement);
+
+/**
+ * Cette fonction charge tous les types d'abonnements sur le fichier abonnement
+ * @param length cette variable contient la taille de la table renvoyée
+ */
+Type_abonnement **load_type_abonnement(int *length);
+
+/**
+ * Cette fonction charge tous les etats d'abonnements sur le fichier abonnement
+ * @param length cette variable contient la taille de la table renvoyée
+ */
+Etat_abonnement **load_etat_abonnement(int *length);
+
+/**
+ * cette fonction recherche une booleenne abonnement en utilisant son identifiant
+ * @param BAs le tableau des booleennes abonnements
+ * @param len la taille du tableau
+ * @param id L'identifiant de l'abonnement que nous recherchons
+ */
+Booleenne_abonnement *get_BA_by_id(Booleenne_abonnement** BAs, int len, int id);
+
+/**
+ * Cette fonction enregistre tous les types d'abonnements sur le fichier abonnement
+ * @param length cette variable contient la taille de la table renvoyée
+ */
+void save_type_abonnement(Type_abonnement** typesAbonnement , int *length);
+
+/**
+ * Cette fonction enregistre tous les etats d'abonnements sur le fichier abonnement
+ * @param length cette variable contient la taille de la table renvoyée
+ */
+void save_etat_abonnement(Etat_abonnement** etatsAbonnement , int *length);
+
+
 
 /**
  * cette fonction transformera une chaîne en une structure client
