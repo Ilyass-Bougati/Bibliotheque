@@ -197,7 +197,7 @@ char* ftoa(float x)
 
 char* new_itoa(int x)
 {
-    bool isNegative = x < 0 ? true : false ;
+    bool isNegative = x < 0 ;
     int i = 0 ;
     char* out = malloc(sizeof(char));
 

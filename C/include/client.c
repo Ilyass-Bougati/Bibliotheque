@@ -97,10 +97,11 @@ void save_clients(Client **clients, int number)
         return;
     }
 
-    for (int i = 0; i < number; i++)
+    for (int i = 0; i < number-1; i++)
     {
         fprintf(fptr, "%s\n", client_to_string(clients[i]));
     }
+    fprintf(fptr, "%s", client_to_string(clients[number-1]));
     fclose(fptr);
 }
 

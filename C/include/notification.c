@@ -96,9 +96,11 @@ void save_notifications(Notification **notifications, int number)
         return;
     }
 
-    for (int i = 0; i < number; i++)
+    for (int i = 0; i < number - 1; i++)
     {
         fprintf(fptr, "%s\n", notification_to_string(notifications[i]));
     }
+
+    fprintf(fptr, "%s", notification_to_string(notifications[number - 1]));
     fclose(fptr);
 }

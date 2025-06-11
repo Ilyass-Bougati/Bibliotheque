@@ -104,9 +104,10 @@ void save_reviews(Review **reviews, int number)
         return;
     }
 
-    for (int i = 0; i < number; i++)
+    for (int i = 0; i < number - 1; i++)
     {
         fprintf(fptr, "%s\n", review_to_string(reviews[i]));
     }
+    fprintf(fptr, "%s", review_to_string(reviews[number - 1]));
     fclose(fptr);
 }
