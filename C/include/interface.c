@@ -47,9 +47,9 @@ void afficher_client_par_id(Database *db , int id)
 
     for (int i = 0; i < db->nclients; i++) 
     {
-        if(i == id)
+        Client *c = clients[i];
+        if(c->id == id)
         {
-            Client *c = clients[i];
             printf(
                 "%d, %s, %s, %s, %s, %s\n", 
                 c->id, 
@@ -91,9 +91,9 @@ void afficher_abonnements_par_id(Database *db , int id)
 
     for(int i = 0 ; i < db->nabonnements ; i++)
     {
-        if(i == id)
+        Abonnement *a = abonnements[i];
+        if(a->id == id)
         {
-            Abonnement *a = abonnements[i];
             int size ;
             char** splitted = split(abonnement_to_string(a) , '#' , &size);
             for(int j = 0 ; j < size ; j++)
@@ -133,9 +133,9 @@ void afficher_emprunts_par_id(Database *db , int id)
 
     for(int i = 0 ; i < db->nemprunts ; i++)
     {
-        if(i == id)
+        Emprunt *e = emprunts[i];
+        if(e->id == id)
         {
-            Emprunt *e = emprunts[i];
             int size ;
             char** splitted = split(emprunt_to_string(e) , '#' , &size);
             for(int j = 0 ; j < size ; j++)
@@ -175,9 +175,9 @@ void afficher_exemplaires_par_id(Database *db , int id)
 
     for(int i = 0 ; i < db->nemprunts ; i++)
     {
-        if(i == id)
-        {
-            Exemplaire *e = exemplaires[i];
+        Exemplaire *e = exemplaires[i];
+        if(e->id == id)
+        {   
             int size ;
             char** splitted = split(exemplaire_to_string(e) , '#' , &size);
             for(int j = 0 ; j < size ; j++)
@@ -217,9 +217,9 @@ void afficher_livres_par_id(Database *db , int id)
 
     for(int i = 0 ; i < db->nlivres ; i++)
     {
-        if(i == id)
+        Livre *l = livres[i];
+        if(l->id == id)
         {
-            Livre *l = livres[i];
             int size ;
             char** splitted = split(livre_to_string(*l) , '#' , &size);
             for(int j = 0 ; j < size ; j++)
@@ -260,13 +260,17 @@ void afficher_categories_par_id(Database *db , int id)
     for(int i = 0 ; i < db->ncategories ; i++)
     {
         Categorie *c = categories[i];
-        int size ;
-        char** splitted = split(categorie_to_string(c) , '#' , &size);
-        for(int j = 0 ; j < size ; j++)
+        if(c->id == id)
         {
-            printf("%s ", splitted[j]);
+            int size ;
+            char** splitted = split(categorie_to_string(c) , '#' , &size);
+            for(int j = 0 ; j < size ; j++)
+            {
+                printf("%s ", splitted[j]);
+            }
+            printf("\n");
+            break;
         }
-        printf("\n");
     }
 }
 
@@ -291,6 +295,27 @@ void afficher_langues(Database *db)
     }
 }
 
+void afficher_langues_par_id(Database *db , int id)
+{
+    Langue **langues = db->langues;
+
+    for(int i = 0 ; i < db->nlangues ; i++)
+    {
+        Langue *l = langues[i];
+        if(l->id == id)
+        {
+            int size ;
+            char** splitted = split(langue_to_string(l) , '#' , &size);
+            for(int j = 0 ; j < size ; j++)
+            {
+                printf("%s ", splitted[j]);
+            }
+            printf("\n");
+            break;
+        }
+    }
+}
+
 void afficher_penalites(Database *db)
 {
     for(int i = 0 ; i < 20 ; i++)
@@ -309,6 +334,27 @@ void afficher_penalites(Database *db)
             printf("%s ", splitted[j]);
         }
         printf("\n");
+    }
+}
+
+void afficher_penalites_par_id(Database *db , int id)
+{
+    Penalite **penalite = db->penalites;
+
+    for(int i = 0 ; i < db->npenalites ; i++)
+    {
+        Penalite *p = penalite[i];
+        if(p->id == id)
+        {
+            int size ;
+            char** splitted = split(penalite_to_string(p) , '#' , &size);
+            for(int j = 0 ; j < size ; j++)
+            {
+                printf("%s ", splitted[j]);
+            }
+            printf("\n");
+            break;
+        }
     }
 }
 
@@ -333,6 +379,26 @@ void afficher_notifications(Database *db)
     }
 }
 
+void afficher_notifications_par_id(Database *db , int id)
+{
+    Notification **notifications = db->notifications;
+
+    for(int i = 0 ; i < db->nnotifications ; i++)
+    {
+         Notification *n = notifications[i];
+        if(n->id == id)
+        {  
+            int size ;
+            char** splitted = split(notification_to_string(n) , '#' , &size);
+            for(int j = 0 ; j < size ; j++)
+            {
+                printf("%s ", splitted[j]);
+            }
+            printf("\n");
+        }
+    }
+}
+
 void afficher_reservations(Database *db)
 {
     for(int i = 0 ; i < 20 ; i++)
@@ -351,6 +417,26 @@ void afficher_reservations(Database *db)
             printf("%s ", splitted[j]);
         }
         printf("\n");
+    }
+}
+
+void afficher_reservations_par_id(Database *db , int id)
+{
+    Reservation **reservations = db->reservations;
+
+    for(int i = 0 ; i < db->nreservations ; i++)
+    {
+        Reservation *r = reservations[i];
+        if(r->id == id)
+        {
+            int size ;
+            char** splitted = split(reservation_to_string(r) , '#' , &size);
+            for(int j = 0 ; j < size ; j++)
+            {
+                printf("%s ", splitted[j]);
+            }
+            printf("\n");
+        }
     }
 }
 
@@ -375,6 +461,31 @@ void afficher_auteurs(Database *db)
     }
 }
 
+void afficher_auteurs_par_id(Database *db , int id)
+{
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des auteurs :\n");
+    
+    Auteur **auteurs = db->auteurs;
+
+    for(int i = 0 ; i < db->nauteurs ; i++)
+    {
+        Auteur *a = auteurs[i];
+        if(a->id == id)
+        {
+            int size ;
+            char** splitted = split(auteur_to_string(a) , '#' , &size);
+            for(int j = 0 ; j < size ; j++)
+            {
+                printf("%s ", splitted[j]);
+            }
+            printf("\n");
+            break;
+        }
+    }
+}
+
 void afficher_reviews(Database *db)
 {
     for(int i = 0 ; i < 20 ; i++)
@@ -396,6 +507,30 @@ void afficher_reviews(Database *db)
     }
 }
 
+void afficher_reviews_par_id(Database *db , int id)
+{
+    for(int i = 0 ; i < 20 ; i++)
+        printf("-");
+    printf("Table des reviews :\n");
+
+    Review **reviews = db->reviews;
+
+    for(int i = 0 ; i < db->nreviews ; i++)
+    {
+        Review *r = reviews[i];
+        if(r->id == id)
+        {
+            int size ;
+            char** splitted = split(review_to_string(r) , '#' , &size);
+            for(int j = 0 ; j < size ; j++)
+            {
+                printf("%s ", splitted[j]);
+            }
+            printf("\n");
+        }
+    }
+}
+
 void afficher_editeurs(Database *db)
 {
     for(int i = 0 ; i < 20 ; i++)
@@ -414,6 +549,27 @@ void afficher_editeurs(Database *db)
             printf("%s ", splitted[j]);
         }
         printf("\n");
+    }
+}
+
+void afficher_editeurs_par_id(Database *db , int id)
+{
+    Editeur **editeurs = db->editeurs;
+
+    for(int i = 0 ; i < db->nediteurs ; i++)
+    {
+        Editeur *e = editeurs[i];
+        if(e->id == id)
+        {
+            int size ;
+            char** splitted = split(editeur_to_string(e) , '#' , &size);
+            for(int j = 0 ; j < size ; j++)
+            {
+                printf("%s ", splitted[j]);
+            }
+            printf("\n");
+            break;
+        }
     }
 }
 
@@ -454,45 +610,99 @@ void interface(Database *db)
                         input = read_file(stdin);
                         choix = atoi(input);
 
+                        system("clear");
+
                         switch(choix)
                         {
                             case 1:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_client_par_id(db , id);
                             break;
 
                             case 2:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_notifications_par_id(db , id);
                             break;
 
                             case 3:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_abonnements_par_id(db , id);
                             break;
 
                             case 4:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_reservations_par_id(db , id);
                             break;
 
                             case 5:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_penalites_par_id(db , id);
                             break;
 
                             case 6:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_reviews_par_id(db , id);
                             break;
 
                             case 7:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_livres_par_id(db , id);
                             break;
 
                             case 8:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_categories_par_id(db , id);
                             break;
 
                             case 9:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_langues_par_id(db , id);
                             break;
 
                             case 10:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_auteurs_par_id(db , id);
                             break;
 
                             case 11:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_editeurs_par_id(db , id);
                             break;
 
                             case 12:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_emprunts_par_id(db , id);
                             break;
 
                             case 13:
+                                printf("Entrez l'id \n");
+                                int id = atoi(read_file(stdin));
+
+                                afficher_exemplaires_par_id(db , id);
                             break;
 
                             default : printf(" Choix invalide .");
