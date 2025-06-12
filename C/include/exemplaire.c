@@ -29,7 +29,7 @@ Exemplaire *string_to_exemplaire(char *str)
 
 char *exemplaire_to_string(Exemplaire *exemplaire)
 {
-    char id[10], id_livre[10], disponible[10];
+    char id[10] = {0}, id_livre[10] = {0}, disponible[10] = {0};
     my_itoa(exemplaire->id, id, 10);
     my_itoa(exemplaire->disponiblite, disponible, 10);
     my_itoa(exemplaire->id_livre, id_livre, 10);

@@ -33,14 +33,14 @@ Abonnement *string_to_abonnement(char *str)
 
 char *abonnement_to_string(Abonnement *abonnement)
 {
-    char id[10];
-    char client_id[10];
-    char type[10];
-    char etat[10];
+    char id[10] = {0};
+    char client_id[10] = {0};
+    char type[10] = {0};
+    char etat[10] = {0};
     my_itoa(abonnement->id, id, 10);
 	my_itoa(abonnement->id_client, client_id, 10);
-	my_itoa(abonnement->type_abonnement, type, 10);
-	my_itoa(abonnement->etat_abonnement, etat, 10);
+	my_itoa((int) abonnement->type_abonnement, type, 10);
+	my_itoa((int) abonnement->etat_abonnement, etat, 10);
 
     // the buffer
     // TODO : add type and etat
