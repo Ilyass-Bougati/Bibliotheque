@@ -53,7 +53,7 @@ Database *load_db()
     // checking if the abonnements file is empty
     if (db->abonnements != NULL)
     {
-        for (int i = 0; i < db->nnotifications; i++)
+        for (int i = 0; i < db->nabonnements; i++)
         {
             Client * temp = get_client_by_id(db->clients, db->nclients, db->abonnements[i]->id_client);
             if (temp == NULL)
