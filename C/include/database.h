@@ -10,26 +10,22 @@
 
 typedef struct Database
 {
-    Client           **clients;
-    Type_abonnement  **TAs;
-    Etat_abonnement  **EAs;
-    Notification     **notifications;
-    Abonnement       **abonnements;
-    Reservation      **reservations;
-    Penalite         **penalites;
-    Review           **reviews;
-    Livre            **livres;
-    Categorie        **categories;
-    Langue           **langues;
-    Auteur           **auteurs;
-    Editeur          **editeurs;
-    Emprunt          **emprunts;
-    Exemplaire       **exemplaires;
+    Client       **clients;
+    Notification **notifications;
+    Abonnement   **abonnements;
+    Reservation  **reservations;
+    Penalite     **penalites;
+    Review       **reviews;
+    Livre        **livres;
+    Categorie    **categories;
+    Langue       **langues;
+    Auteur       **auteurs;
+    Editeur      **editeurs;
+    Emprunt      **emprunts;
+    Exemplaire   **exemplaires;
 
     // Ces variables contiennent la taille de chaque table
     int nclients;
-    int nTa;
-    int nEa;
     int nnotifications;
     int nabonnements;
     int nreservations;

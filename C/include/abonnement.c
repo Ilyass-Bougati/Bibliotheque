@@ -4,7 +4,6 @@
 #include "stdio.h"
 #include "string.h"
 #include "reader.h"
-#include "database.h"
 
 
 Abonnement *string_to_abonnement(char *str)
@@ -118,19 +117,19 @@ Abonnement *get_abonnement_by_id(Abonnement** abonnements, int len, int id)
     return NULL;
 }
 
-void add_abonnement(Database* db ,int id_client ,Type_abonnement* type ,Date date ,int* len)
+void add_abonnement(Abonnement** abonnements ,int id_client ,Type_abonnement type ,Date date ,int* len)
 {
-    db->abonnements = (Abonnement**)realloc(db->abonnements , (++*len)*sizeof(Abonnement*));
+    abonnements = (Abonnement**)realloc(abonnements , (++*len)*sizeof(Abonnement*));
     Abonnement* new = (Abonnement*)malloc(sizeof(Abonnement));
     *new = (Abonnement){.id= ++last_abonnement_id,
                         .id_client = id_client ,
                         .date_debut = date ,
                         .type_abonnement = type ,
-                        .etat_abonnement = get_BA_by_id(db->EAs , db->nEa , 1) ,
+                        .etat_abonnement = actif ,
                         .emprunts = (Emprunt**)malloc(sizeof(Emprunt*)),
                         .nemprunts = 0,
                         .penalites = (Penalite**)malloc(sizeof(Penalite*)),
                         .npenalites = 0
                         };
-    db->abonnements[*len - 1] = new;
+    abonnements[*len - 1] = new;
 }
