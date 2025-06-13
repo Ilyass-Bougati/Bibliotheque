@@ -1034,110 +1034,111 @@ void interface(Database *db)
                         input = saisir_chaine();
                         choix = atoi(input);
 
+                        int id; 
                         switch(choix)
                         {
                             case 1:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 supprime_client(db,id);
+                                getchar();
                             break;
 
                             case 2:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 supprime_notification(db,id);
+                                getchar();
                             break;
 
                             case 3:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 supprime_abonnement(db,id);
+                                getchar();
                             break;
 
                             case 4:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 supprime_reservation(db,id);
+                                getchar();
                             break;
 
                             case 5:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 supprime_penalite(db,id);
+                                getchar();
                             break;
 
                             case 6:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 supprime_review(db,id);
+                                getchar();
                             break;
 
                             case 7:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 //supprime_livre(db,id);
+                                getchar();
                             break;
 
                             case 8:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 // supprime_categorie(db,id);
+                                getchar();
                             break;
 
                             case 9:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 // supprime_langue(db,id);
+                                getchar();
                             break;
 
                             case 10:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 // supprime_auteur(db,id);
+                                getchar();
                             break;
 
                             case 11:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 // supprime_editeur(db,id);
+                                getchar();
                             break;
 
                             case 12:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 supprime_emprunt(db,id);
+                                getchar();
                             break;
 
                             case 13:
                                 printf("Entrez l'id :\n");
 
-                                int id ;
                                 scanf("%d" , &id);
                                 supprime_exemplaire(db,id);
+                                getchar();
                             break;
                         }
                     break;
