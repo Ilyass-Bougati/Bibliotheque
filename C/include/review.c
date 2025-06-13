@@ -45,8 +45,7 @@ Review *string_to_review(char *str)
 }
 char *review_to_string(Review *review)
 {
-
-    char id_client[10], id[10], review_str[10];
+    char id_client[10] = {0} , id[10] = {0}, review_str[10] = {0};
     my_itoa(review->id_client, id_client, 10);
     my_itoa(review->id, id, 10);
     my_itoa(review->review, review_str, 10);
@@ -55,14 +54,16 @@ char *review_to_string(Review *review)
     char *buffer = (char *)calloc(total_size, sizeof(char));
     if (!buffer)
     {
-        printf("Erreur d allocationd de memoire\n");
+        printf("Erreur d allocation de memoire\n");
         return NULL;
     }
     
+    buffer[0] = '\0';
+
     // Formater la chaîne de caractères dans le buffer
-    strcpy(buffer, id);
+    strcat(buffer, id);
     strcat(buffer,"#");
-    strcpy(buffer, id_client);
+    strcat(buffer, id_client);
     strcat(buffer,"#");
     strcat(buffer, review_str);
     return buffer;

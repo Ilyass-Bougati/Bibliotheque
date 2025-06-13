@@ -1,5 +1,8 @@
 #include "interface.h"
 #include "reader.h"
+#include "utils.h"
+#include "livre.h"
+#include "precedures.h"
 
 void afficher_les_noms_des_tables()
 {
@@ -39,6 +42,7 @@ void afficher_clients(Database *db)
             c->phone_number
         );
     }
+    getchar();
 }
 
 void afficher_client_par_id(Database *db , int id)
@@ -62,6 +66,7 @@ void afficher_client_par_id(Database *db , int id)
             break;
         }
     }
+    getchar();
 }
 
 void afficher_abonnements(Database *db)
@@ -83,6 +88,7 @@ void afficher_abonnements(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_abonnements_par_id(Database *db , int id)
@@ -104,6 +110,7 @@ void afficher_abonnements_par_id(Database *db , int id)
             break;
         }
     }
+    getchar();
 }
 
 void afficher_emprunts(Database *db)
@@ -125,6 +132,7 @@ void afficher_emprunts(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_emprunts_par_id(Database *db , int id)
@@ -146,6 +154,7 @@ void afficher_emprunts_par_id(Database *db , int id)
             break;
         }
     }
+    getchar();
 }
 
 void afficher_exemplaires(Database *db)
@@ -167,6 +176,7 @@ void afficher_exemplaires(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_exemplaires_par_id(Database *db , int id)
@@ -188,6 +198,7 @@ void afficher_exemplaires_par_id(Database *db , int id)
             break;
         }
     }
+    getchar();
 }
 
 void afficher_livres(Database *db)
@@ -209,6 +220,7 @@ void afficher_livres(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_livres_par_id(Database *db , int id)
@@ -230,6 +242,7 @@ void afficher_livres_par_id(Database *db , int id)
             break;
         }
     }
+    getchar();
 }
 
 void afficher_categories(Database *db)
@@ -251,6 +264,7 @@ void afficher_categories(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_categories_par_id(Database *db , int id)
@@ -272,6 +286,7 @@ void afficher_categories_par_id(Database *db , int id)
             break;
         }
     }
+    getchar();
 }
 
 void afficher_langues(Database *db)
@@ -293,6 +308,7 @@ void afficher_langues(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_langues_par_id(Database *db , int id)
@@ -314,6 +330,7 @@ void afficher_langues_par_id(Database *db , int id)
             break;
         }
     }
+    getchar();
 }
 
 void afficher_penalites(Database *db)
@@ -335,6 +352,7 @@ void afficher_penalites(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_penalites_par_id(Database *db , int id)
@@ -356,6 +374,7 @@ void afficher_penalites_par_id(Database *db , int id)
             break;
         }
     }
+    getchar();
 }
 
 void afficher_notifications(Database *db)
@@ -377,6 +396,7 @@ void afficher_notifications(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_notifications_par_id(Database *db , int id)
@@ -395,8 +415,10 @@ void afficher_notifications_par_id(Database *db , int id)
                 printf("%s ", splitted[j]);
             }
             printf("\n");
+            break;
         }
     }
+    getchar();
 }
 
 void afficher_reservations(Database *db)
@@ -418,6 +440,7 @@ void afficher_reservations(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_reservations_par_id(Database *db , int id)
@@ -436,8 +459,10 @@ void afficher_reservations_par_id(Database *db , int id)
                 printf("%s ", splitted[j]);
             }
             printf("\n");
+            break;
         }
     }
+    getchar();
 }
 
 void afficher_auteurs(Database *db)
@@ -459,6 +484,7 @@ void afficher_auteurs(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_auteurs_par_id(Database *db , int id)
@@ -484,6 +510,7 @@ void afficher_auteurs_par_id(Database *db , int id)
             break;
         }
     }
+    getchar();
 }
 
 void afficher_reviews(Database *db)
@@ -505,6 +532,7 @@ void afficher_reviews(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_reviews_par_id(Database *db , int id)
@@ -529,6 +557,7 @@ void afficher_reviews_par_id(Database *db , int id)
             printf("\n");
         }
     }
+    getchar();
 }
 
 void afficher_editeurs(Database *db)
@@ -550,6 +579,7 @@ void afficher_editeurs(Database *db)
         }
         printf("\n");
     }
+    getchar();
 }
 
 void afficher_editeurs_par_id(Database *db , int id)
@@ -571,6 +601,7 @@ void afficher_editeurs_par_id(Database *db , int id)
             break;
         }
     }
+    getchar();
 }
 
 void interface(Database *db)
@@ -586,9 +617,10 @@ void interface(Database *db)
         printf(" Choisissez une option : \n");
         printf("1)- Afficher le contenu d'une table \n");
         printf("2)- Modifier le contenu d'une table \n");
-        printf("3)- Quitter le programme \n");
+        printf("3)- Sauvegarder la base de donnees \n");
+        printf("4)- Quitter le programme \n");
 
-        char* input = read_file(stdin);
+        char* input = saisir_chaine();
         int choix = atoi(input);
         switch(choix)
         {
@@ -597,7 +629,7 @@ void interface(Database *db)
                 printf(" 1 )- Afficher par ID\n");
                 printf(" 2 )- Afficher la table en entier\n");
 
-                input = read_file(stdin);
+                input = saisir_chaine();
                 choix = atoi(input);
 
                 switch(choix)
@@ -607,100 +639,101 @@ void interface(Database *db)
                         printf(" Choisissez la table a afficher :\n");
                         afficher_les_noms_des_tables();
 
-                        input = read_file(stdin);
+                        input = saisir_chaine();
                         choix = atoi(input);
 
                         system("clear");
 
                         switch(choix)
                         {
+                            int id ;
                             case 1:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_client_par_id(db , id);
                             break;
 
                             case 2:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_notifications_par_id(db , id);
                             break;
 
                             case 3:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_abonnements_par_id(db , id);
                             break;
 
                             case 4:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_reservations_par_id(db , id);
                             break;
 
                             case 5:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_penalites_par_id(db , id);
                             break;
 
                             case 6:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_reviews_par_id(db , id);
                             break;
 
                             case 7:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_livres_par_id(db , id);
                             break;
 
                             case 8:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_categories_par_id(db , id);
                             break;
 
                             case 9:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_langues_par_id(db , id);
                             break;
 
                             case 10:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_auteurs_par_id(db , id);
                             break;
 
                             case 11:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_editeurs_par_id(db , id);
                             break;
 
                             case 12:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_emprunts_par_id(db , id);
                             break;
 
                             case 13:
                                 printf("Entrez l'id \n");
-                                int id = atoi(read_file(stdin));
+                                id = atoi(saisir_chaine());
 
                                 afficher_exemplaires_par_id(db , id);
                             break;
@@ -715,7 +748,7 @@ void interface(Database *db)
                         printf(" Choisissez la table a afficher :\n");
                         afficher_les_noms_des_tables();
 
-                        input = read_file(stdin);
+                        input = saisir_chaine();
                         choix = atoi(input);
 
                         switch(choix)
@@ -781,11 +814,345 @@ void interface(Database *db)
 
             case 2:
                 system("clear");
-                printf(" Choisissez la table a modifier :\n");
-                afficher_les_noms_des_tables();
+                printf(" Choisissez une action :\n");
+                printf("1 )- Inserer un element \n");
+                printf("2 )- Modifier un element \n");
+                printf("3 )- Supprimer un element \n");
+
+                input = saisir_chaine();
+                choix = atoi(input);
+
+                switch(choix)
+                {
+                    case 1 :
+                        system("clear");
+                        printf("Choisissez la table : \n");
+                        afficher_les_noms_des_tables();
+
+                        input = saisir_chaine();
+                        choix = atoi(input);
+
+                        void* toAdd;
+                        switch(choix)
+                        {
+                            case 1:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#Nom#Prenom#CIN#Email#Telephone#Ville\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_client(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                insere_client(db , (Client*)toAdd);
+                            break;
+
+                            case 2:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#IdClient#Type#Texte#Date\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_notification(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                insere_notification(db , (Notification*)toAdd);
+                            break;
+
+                            case 3:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#IdClient#Type#Etat#Date\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_abonnement(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                insere_abonnement(db , (Abonnement*)toAdd);
+                            break;
+
+                            case 4:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#IdClient#Date\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_reservation(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                insere_reservation(db , (Reservation*)toAdd);
+                            break;
+
+                            case 5:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#IdAbonnement#Montant#Etat#Motif#Date\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_penalite(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                insere_penalite(db , (Penalite*)toAdd);
+                            break;
+
+                            case 6:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#IdClient#Review\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_review(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                insere_review(db , (Review*)toAdd);
+                            break;
+
+                            case 7:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#Titre#ISBN#Langue\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_livre(input,db->langues,db->auteurs,db->categories,db->editeurs);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                //insere_livre(db , (Livre*)toAdd);
+                            break;
+
+                            case 8:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#NomCategorie\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_categorie(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                //insere_categorie(db , (Categorie*)toAdd);
+                            break;
+
+                            case 9:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#NomLangue\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_langue(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                //insere_langue(db , (Langue*)toAdd);
+                            break;
+
+                            case 10:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#PrenomAuteur#NomAuteur\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_auteur(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                //insere_auteur(db , (Auteur*)toAdd);
+                            break;
+
+                            case 11:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#NomEditeur\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_editeur(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                //insere_editeur(db , (Editeur*)toAdd);
+                            break;
+
+                            case 12:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#IdAbonnement#IdExemplaire#DateEmprunt#DateRetour\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_emprunt(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                insere_emprunt(db , (Emprunt*)toAdd);
+                            break;
+
+                            case 13:
+                                system("clear");
+                                printf("Entrez la ligne comme indique : \n");
+                                printf("Id#IdLivre#Disponibilite#Localisation\n");
+                                input = saisir_chaine();
+                                toAdd = (void*)string_to_exemplaire(input);
+                                if(!toAdd)
+                                {
+                                    printf("Erreur de reconnaissance de la ligne !");
+                                    exit(1);
+                                }
+                                insere_exemplaire(db , (Exemplaire*)toAdd);
+                            break;
+                        }
+                    break;
+
+                    case 2 :
+                        system("clear");
+                        printf("Choisissez la table : \n");
+                        afficher_les_noms_des_tables();
+                        
+                    break;
+
+                    case 3 :
+                        system("clear");
+                        printf("Choisissez la table : \n");
+                        afficher_les_noms_des_tables();
+
+                        input = saisir_chaine();
+                        choix = atoi(input);
+
+                        switch(choix)
+                        {
+                            case 1:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                supprime_client(db,id);
+                            break;
+
+                            case 2:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                supprime_notification(db,id);
+                            break;
+
+                            case 3:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                supprime_abonnement(db,id);
+                            break;
+
+                            case 4:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                supprime_reservation(db,id);
+                            break;
+
+                            case 5:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                supprime_penalite(db,id);
+                            break;
+
+                            case 6:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                supprime_review(db,id);
+                            break;
+
+                            case 7:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                //supprime_livre(db,id);
+                            break;
+
+                            case 8:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                // supprime_categorie(db,id);
+                            break;
+
+                            case 9:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                // supprime_langue(db,id);
+                            break;
+
+                            case 10:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                // supprime_auteur(db,id);
+                            break;
+
+                            case 11:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                // supprime_editeur(db,id);
+                            break;
+
+                            case 12:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                supprime_emprunt(db,id);
+                            break;
+
+                            case 13:
+                                printf("Entrez l'id :\n");
+
+                                int id ;
+                                scanf("%d" , &id);
+                                supprime_exemplaire(db,id);
+                            break;
+                        }
+                    break;
+
+                    default : printf("Choix invalide . ");
+                    exit(1);
+                }
             break;
 
             case 3:
+                printf("SAUVEGARDE EN COURS ..");
+                commit(db);
+            break;
+
+            case 4:
                 printf(" PROGRAMME EN COURS DE FERMETURE ..");
                 exit(0);
             break;

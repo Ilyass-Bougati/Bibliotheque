@@ -226,9 +226,9 @@ void commit(Database *db)
     save_exemplaires(db->exemplaires, db->nexemplaires);
     save_reservations(db->reservations, db->nreservations);
     save_reviews(db->reviews, db->nreviews);
-    save_livres(fichier_livres, db->livres, db->nlivres);
-    save_categories(fichier_categories, db->categories, db->ncategories);
-    save_langues(fichier_langues, db->langues, db->nlangues);
-    save_editeurs(fichier_editeurs, db->editeurs, db->nediteurs);
-    save_auteurs(fichier_auteurs, db->auteurs, db->nauteurs);
+    // save_livres(fichier_livres, db->livres, db->nlivres);
+    // save_categories(fichier_categories, db->categories, db->ncategories);
+    // save_langues(fichier_langues, db->langues, db->nlangues);
+    // save_editeurs(fichier_editeurs, db->editeurs, db->nediteurs);
+    // save_auteurs(fichier_auteurs, db->auteurs, db->nauteurs);
 }
