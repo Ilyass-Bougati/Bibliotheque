@@ -34,9 +34,9 @@ Notification *string_to_notification(char *str)
 
 char *notification_to_string(Notification *notification)
 {
-    char id[10];
-    char client_id[10];
-    char type[10];
+    char id[10] = {0};
+    char client_id[10] = {0};
+    char type[10] = {0};
     my_itoa(notification->id, id, 10);
 	my_itoa(notification->id_client, client_id, 10);
 	my_itoa(notification->notification_type, type, 10);

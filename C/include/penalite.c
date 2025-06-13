@@ -72,16 +72,16 @@ char *penalite_to_string(Penalite *pen)
     strcat(buffer , str_id_abonnement);
     strcat(buffer , "#");
     
-    strcat(buffer , str_date_penalite);
+    strcat(buffer , str_montant);
     strcat(buffer , "#");
 
-    strcat(buffer , str_montant);
+    strcat(buffer , str_etat);
     strcat(buffer , "#");
 
     strcat(buffer , str_motif);
     strcat(buffer , "#");
 
-    strcat(buffer , str_etat);
+    strcat(buffer , str_date_penalite);
 
     return buffer;
 }
